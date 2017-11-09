@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using Pixie.Terminal.Render;
 
 namespace Pixie.Terminal
 {
@@ -7,13 +9,42 @@ namespace Pixie.Terminal
     /// </summary>
     public sealed class TerminalLog : ILog
     {
-        public TerminalLog()
+        /// <summary>
+        /// Creates a terminal log from the given terminal.
+        /// </summary>
+        /// <param name="terminal">A terminal handle.</param>
+        public TerminalLog(TerminalBase terminal)
+            : this(new RenderState(terminal))
+        { }
+
+        /// <summary>
+        /// Creates a terminal log from the given base render state.
+        /// </summary>
+        /// <param name="baseRenderState">A base render state.</param>
+        public TerminalLog(RenderState baseRenderState)
         {
+            this.BaseRenderState = baseRenderState;
+            this.renderLock = new object();
         }
 
+        /// <summary>
+        /// Gets the base render state for this terminal log.
+        /// </summary>
+        /// <returns>The base render state.</returns>
+        public RenderState BaseRenderState { get; private set; }
+
+        private object renderLock;
+
+        /// <summary>
+        /// Logs the given entry in this log.
+        /// </summary>
+        /// <param name="entry">The entry to log.</param>
         public void Log(LogEntry entry)
         {
-            Console.WriteLine();
+            lock (renderLock)
+            {
+                BaseRenderState.Render(entry.Contents);
+            }
         }
     }
 }

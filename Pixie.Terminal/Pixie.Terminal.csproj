@@ -31,7 +31,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Terminal.cs" />
+    <Compile Include="TerminalBase.cs" />
     <Compile Include="TerminalLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\NodeRenderer.cs" />

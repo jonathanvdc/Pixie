@@ -19,5 +19,8 @@ namespace Pixie.Markup
         /// </summary>
         /// <returns>A text string.</returns>
         public string Text { get; private set; }
+
+        /// <inheritdoc/>
+        public override MarkupNode Fallback => null;
     }
 }

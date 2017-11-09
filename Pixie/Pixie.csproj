@@ -34,7 +34,9 @@
     <Compile Include="ILog.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="MarkupNode.cs" />
+    <Compile Include="PixieException.cs" />
     <Compile Include="Severity.cs" />
+    <Compile Include="UnsupportedNodeException.cs" />
     <Compile Include="Markup\TextNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
