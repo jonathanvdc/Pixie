@@ -1,4 +1,4 @@
-namespace Pixie
+namespace Pixie.Markup
 {
     /// <summary>
     /// A markup node that renders a string of text.

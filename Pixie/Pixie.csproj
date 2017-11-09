@@ -31,8 +31,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILog.cs" />
+    <Compile Include="LogEntry.cs" />
     <Compile Include="MarkupNode.cs" />
-    <Compile Include="TextNode.cs" />
+    <Compile Include="Severity.cs" />
+    <Compile Include="Markup\TextNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
