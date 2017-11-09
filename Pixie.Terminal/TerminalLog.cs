@@ -6,7 +6,7 @@ using Pixie.Terminal.Render;
 namespace Pixie.Terminal
 {
     /// <summary>
-    /// A log implement that logs messages to standard output.
+    /// A log implementation that logs messages to a terminal.
     /// </summary>
     public sealed class TerminalLog : ILog
     {
