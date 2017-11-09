@@ -14,7 +14,8 @@ namespace Pixie.Terminal
         /// </summary>
         /// <param name="terminal">A terminal handle.</param>
         public TerminalLog(TerminalBase terminal)
-            : this(new RenderState(terminal))
+            : this(new RenderState(terminal).WithRenderers(
+                TextRenderer.Instance))
         { }
 
         /// <summary>

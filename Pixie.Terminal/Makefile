@@ -1,5 +1,6 @@
 files = \
 	*.cs \
+	Devices/*.cs \
 	Render/*.cs
 
 libraries = \
