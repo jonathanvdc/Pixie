@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie/Pixie", "Pixie/Pixie.csproj", "{0F4FC8AB-8928-473C-9EF1-C68089AAE644}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie", "Pixie\Pixie.csproj", "{0F4FC8AB-8928-473C-9EF1-C68089AAE644}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie.Terminal", "Pixie.Terminal\Pixie.Terminal.csproj", "{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +15,9 @@ Global
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
