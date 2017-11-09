@@ -23,6 +23,7 @@ namespace Pixie.Markup
         public string Contents { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback => new Sequence(new Text("# " + Contents), NewLine.Instance);
+        public override MarkupNode Fallback => new Paragraph(
+            new Text(Contents.ToUpper()), Alignment.Center);
     }
 }
