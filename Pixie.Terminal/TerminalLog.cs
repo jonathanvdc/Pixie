@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Pixie.Terminal.Devices;
 using Pixie.Terminal.Render;
 
 namespace Pixie.Terminal
@@ -49,6 +50,15 @@ namespace Pixie.Terminal
             {
                 BaseRenderState.Render(entry.Contents);
             }
+        }
+
+        /// <summary>
+        /// Acquires a terminal log for the current environment.
+        /// </summary>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog Acquire()
+        {
+            return new TerminalLog(new ConsoleTerminal());
         }
     }
 }
