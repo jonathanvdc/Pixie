@@ -1,0 +1,18 @@
+version: 0.11.0.{build}
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+clone_script:
+  - cmd: git clone -q --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git %APPVEYOR_BUILD_FOLDER%
+  - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%
+
+build_script:
+  # Restore NuGet packages
+  - nuget restore Pixie.sln
+  # Build Pixie with csc
+  - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln

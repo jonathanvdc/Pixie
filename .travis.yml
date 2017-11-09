@@ -1,0 +1,11 @@
+language: csharp
+install:
+  # Restore nuget packages
+  - make nuget
+
+script:
+  # Build Pixie using csc
+  - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
+
+  # Build Pixie using ecsc
+  - make
