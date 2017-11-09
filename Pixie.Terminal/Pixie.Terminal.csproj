@@ -35,8 +35,10 @@
     <Compile Include="TerminalLog.cs" />
     <Compile Include="Devices\ConsoleTerminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render\NewLineRenderer.cs" />
     <Compile Include="Render\NodeRenderer.cs" />
     <Compile Include="Render\RenderState.cs" />
+    <Compile Include="Render\SequenceRenderer.cs" />
     <Compile Include="Render\TextRenderer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

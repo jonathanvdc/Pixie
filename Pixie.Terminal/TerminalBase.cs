@@ -11,5 +11,10 @@ namespace Pixie.Terminal
         /// </summary>
         /// <param name="text">The text to print.</param>
         public abstract void Write(string text);
+
+        /// <summary>
+        /// Writes an end-of-line sequence to the terminal.
+        /// </summary>
+        public abstract void WriteLine();
     }
 }

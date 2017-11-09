@@ -48,16 +48,25 @@ namespace Pixie.Terminal.Render
         /// <returns>A renderer, if one is found; otherwise, <c>null</c>.</returns>
         public NodeRenderer GetRendererOrNull(MarkupNode node)
         {
-            foreach (var item in renderers)
+            if (renderers != null)
             {
-                if (item.CanRender(node))
-                    return item;
+                foreach (var item in renderers)
+                {
+                    if (item.CanRender(node))
+                    {
+                        return item;
+                    }
+                }
             }
 
             if (HasParent)
+            {
                 return parentState.GetRendererOrNull(node);
+            }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>

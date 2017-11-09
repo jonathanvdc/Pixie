@@ -16,5 +16,11 @@ namespace Pixie.Terminal.Devices
         {
             Console.Write(text);
         }
+
+        /// <inheritdoc/>
+        public override void WriteLine()
+        {
+            Console.WriteLine();
+        }
     }
 }

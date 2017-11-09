@@ -3,27 +3,27 @@ using Pixie.Markup;
 namespace Pixie.Terminal.Render
 {
     /// <summary>
-    /// A markup node renderer for text nodes.
+    /// A markup node renderer for newline nodes.
     /// </summary>
-    public sealed class TextRenderer : NodeRenderer
+    public sealed class NewLineRenderer : NodeRenderer
     {
-        private TextRenderer() { }
+        private NewLineRenderer() { }
 
         /// <summary>
-        /// An instance of a text node renderer.
+        /// An instance of a newline renderer.
         /// </summary>
-        public static readonly TextRenderer Instance = new TextRenderer();
+        public static readonly NewLineRenderer Instance = new NewLineRenderer();
 
         /// <inheritdoc/>
         public override bool CanRender(MarkupNode node)
         {
-            return node is Text;
+            return node is NewLine;
         }
 
         /// <inheritdoc/>
         public override RenderState Render(MarkupNode node, RenderState state)
         {
-            state.Terminal.Write(((Text)node).Contents);
+            state.Terminal.WriteLine();
             return state;
         }
     }
