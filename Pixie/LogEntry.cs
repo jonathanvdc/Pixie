@@ -1,3 +1,5 @@
+using Pixie.Markup;
+
 namespace Pixie
 {
     /// <summary>
@@ -15,6 +17,18 @@ namespace Pixie
             this = default(LogEntry);
             this.Severity = severity;
             this.Contents = contents;
+        }
+
+        /// <summary>
+        /// Creates a log entry with the given severity and contents.
+        /// </summary>
+        /// <param name="severity">The log entry's severity.</param>
+        /// <param name="contents">The log entry's contents.</param>
+        public LogEntry(Severity severity, params MarkupNode[] contents)
+        {
+            this = default(LogEntry);
+            this.Severity = severity;
+            this.Contents = new Sequence(contents);
         }
 
         /// <summary>
