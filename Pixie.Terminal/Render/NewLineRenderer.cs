@@ -21,10 +21,9 @@ namespace Pixie.Terminal.Render
         }
 
         /// <inheritdoc/>
-        public override RenderState Render(MarkupNode node, RenderState state)
+        public override void Render(MarkupNode node, RenderState state)
         {
             state.Terminal.WriteLine();
-            return state;
         }
     }
 }

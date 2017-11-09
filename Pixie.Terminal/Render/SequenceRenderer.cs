@@ -21,16 +21,14 @@ namespace Pixie.Terminal.Render
         }
 
         /// <inheritdoc/>
-        public override RenderState Render(MarkupNode node, RenderState state)
+        public override void Render(MarkupNode node, RenderState state)
         {
             var children = ((Sequence)node).Contents;
-            var newState = state;
             int count = children.Count;
             for (int i = 0; i < count; i++)
             {
-                newState = newState.Render(children[i]);
+                state.Render(children[i]);
             }
-            return newState;
         }
     }
 }

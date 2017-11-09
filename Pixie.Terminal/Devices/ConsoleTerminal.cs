@@ -8,7 +8,7 @@ namespace Pixie.Terminal.Devices
     public sealed class ConsoleTerminal : TextWriterTerminal
     {
         public ConsoleTerminal()
-            : base(Console.Out)
+            : base(Console.Out, Console.WindowWidth)
         {
         }
     }

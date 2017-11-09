@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Pixie.Markup;
 using Pixie.Terminal.Devices;
 using Pixie.Terminal.Render;
 
@@ -18,6 +19,7 @@ namespace Pixie.Terminal
             : this(
                 new RenderState(terminal).WithRenderers(
                     NewLineRenderer.Instance,
+                    ParagraphRenderer.Instance,
                     SequenceRenderer.Instance,
                     TextRenderer.Instance))
         { }
@@ -48,7 +50,7 @@ namespace Pixie.Terminal
         {
             lock (renderLock)
             {
-                BaseRenderState.Render(entry.Contents);
+                BaseRenderState.Render(new Paragraph(entry.Contents));
             }
         }
 

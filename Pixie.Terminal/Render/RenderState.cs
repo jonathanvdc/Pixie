@@ -42,6 +42,17 @@ namespace Pixie.Terminal.Render
         }
 
         /// <summary>
+        /// Creates a new render state that inherits all information from this
+        /// state, except for the terminal, which it replaces.
+        /// </summary>
+        /// <param name="newTerminal">The terminal to use in the new state.</param>
+        /// <returns>A new render state.</returns>
+        public RenderState WithTerminal(TerminalBase newTerminal)
+        {
+            return new RenderState(newTerminal) { parentState = this };
+        }
+
+        /// <summary>
         /// Gets the renderer for a markup node.
         /// </summary>
         /// <param name="node">The node to find a renderer for.</param>
@@ -74,7 +85,7 @@ namespace Pixie.Terminal.Render
         /// </summary>
         /// <param name="node">The node to render.</param>
         /// <returns>The render state to use for the node's successor.</returns>
-        public RenderState Render(MarkupNode node)
+        public void Render(MarkupNode node)
         {
             var renderer = GetRendererOrNull(node);
             if (renderer == null)
@@ -84,11 +95,11 @@ namespace Pixie.Terminal.Render
                 {
                     throw new UnsupportedNodeException(node);
                 }
-                return Render(fallback);
+                Render(fallback);
             }
             else
             {
-                return renderer.Render(node, this);
+                renderer.Render(node, this);
             }
         }
     }

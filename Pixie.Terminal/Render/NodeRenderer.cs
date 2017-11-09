@@ -21,6 +21,6 @@ namespace Pixie.Terminal.Render
         /// <returns>
         /// A new render state, to be used by the node's next neighbor, if there is one.
         /// </returns>
-        public abstract RenderState Render(MarkupNode node, RenderState state);
+        public abstract void Render(MarkupNode node, RenderState state);
     }
 }
