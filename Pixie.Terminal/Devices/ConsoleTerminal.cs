@@ -9,7 +9,6 @@ namespace Pixie.Terminal.Devices
     {
         public ConsoleTerminal()
             : base(Console.Out, Console.WindowWidth)
-        {
-        }
+        { }
     }
 }

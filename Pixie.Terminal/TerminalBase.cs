@@ -13,6 +13,16 @@ namespace Pixie.Terminal
         public abstract int Width { get; }
 
         /// <summary>
+        /// Tells if this terminal can render a particular
+        /// character string.
+        /// </summary>
+        /// <param name="text">A string to render.</param>
+        /// <returns>
+        /// <c>true</c> if the text can be rendered; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool CanRender(string text);
+
+        /// <summary>
         /// Prints a string of characters to the terminal.
         /// </summary>
         /// <param name="text">The text to print.</param>

@@ -66,6 +66,12 @@ namespace Pixie.Terminal.Devices
         private int lineLength;
 
         /// <inheritdoc/>
+        public override bool CanRender(string text)
+        {
+            return UnalignedTerminal.CanRender(text);
+        }
+
+        /// <inheritdoc/>
         public override void Write(string text)
         {
             Write(new StringInfo(text));
