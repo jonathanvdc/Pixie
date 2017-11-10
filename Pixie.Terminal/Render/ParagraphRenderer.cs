@@ -26,15 +26,11 @@ namespace Pixie.Terminal.Render
         {
             var para = (Paragraph)node;
             var newState = state;
-            if (para.Alignment != Alignment.Left)
-            {
-                var alignedTerm = new AlignedTerminal(para.Alignment, state.Terminal);
-                newState = state.WithTerminal(alignedTerm);
-            }
-
-            newState.Terminal.WriteSeparator(2);
-            newState.Render(para.Body);
-            newState.Terminal.WriteSeparator(2);
+            var alignedTerm = AlignedTerminal.Align(state.Terminal, para.Alignment);
+            newState = state.WithTerminal(alignedTerm);
+            alignedTerm.WriteSeparator(2);
+            newState.Render(para.Contents);
+            alignedTerm.WriteSeparator(2);
         }
     }
 }

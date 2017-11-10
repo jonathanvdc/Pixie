@@ -15,20 +15,20 @@ namespace Pixie.Markup
         /// <summary>
         /// Creates a paragraph from a body node.
         /// </summary>
-        /// <param name="body">A node to insulate in whitespace.</param>
-        public Paragraph(MarkupNode body)
+        /// <param name="contents">A node to insulate in whitespace.</param>
+        public Paragraph(MarkupNode contents)
         {
-            this.Body = body;
+            this.Contents = contents;
         }
 
         /// <summary>
         /// Creates a paragraph from a body node and an alignment.
         /// </summary>
-        /// <param name="body">A node to insulate in whitespace.</param>
+        /// <param name="contents">A node to insulate in whitespace.</param>
         /// <param name="Alignment">The alignment for the paragraph.</param>
-        public Paragraph(MarkupNode body, Alignment alignment)
+        public Paragraph(MarkupNode contents, Alignment alignment)
         {
-            this.Body = body;
+            this.Contents = contents;
             this.Alignment = alignment;
         }
 
@@ -36,7 +36,7 @@ namespace Pixie.Markup
         /// Gets the paragraph's body.
         /// </summary>
         /// <returns>The paragraph's body.</returns>
-        public MarkupNode Body { get; private set; }
+        public MarkupNode Contents { get; private set; }
 
         /// <summary>
         /// Gets the paragraph's alignment.
@@ -46,6 +46,6 @@ namespace Pixie.Markup
 
         /// <inheritdoc/>
         public override MarkupNode Fallback =>
-            new Sequence(NewLine.Instance, Body, NewLine.Instance);
+            new Sequence(NewLine.Instance, Contents, NewLine.Instance);
     }
 }

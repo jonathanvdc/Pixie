@@ -38,6 +38,7 @@
     <Compile Include="Devices\OutputTerminalBase.cs" />
     <Compile Include="Devices\TextWriterTerminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render\BoxRenderer.cs" />
     <Compile Include="Render\NewLineRenderer.cs" />
     <Compile Include="Render\NodeRenderer.cs" />
     <Compile Include="Render\ParagraphRenderer.cs" />

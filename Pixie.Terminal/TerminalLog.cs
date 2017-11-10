@@ -18,6 +18,7 @@ namespace Pixie.Terminal
         public TerminalLog(TerminalBase terminal)
             : this(
                 new RenderState(terminal).WithRenderers(
+                    BoxRenderer.Instance,
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
                     SequenceRenderer.Instance,
