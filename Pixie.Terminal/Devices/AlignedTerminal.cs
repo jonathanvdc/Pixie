@@ -12,9 +12,21 @@ namespace Pixie.Terminal.Devices
     public sealed class AlignedTerminal : TerminalBase
     {
         public AlignedTerminal(Alignment alignment, TerminalBase unalignedTerminal)
+            : this(alignment, unalignedTerminal, "", unalignedTerminal.Width)
+        { }
+
+        public AlignedTerminal(
+            Alignment alignment, TerminalBase unalignedTerminal,
+            string leftPadding, int width)
         {
             this.Alignment = alignment;
             this.UnalignedTerminal = unalignedTerminal;
+            this.LeftPadding = leftPadding;
+            this.width = width;
+            if (width <= 0)
+            {
+                throw new ArgumentException(nameof(width));
+            }
             Reset();
         }
 
@@ -25,13 +37,22 @@ namespace Pixie.Terminal.Devices
         public Alignment Alignment { get; private set; }
 
         /// <summary>
+        /// Gets the padding that is added to the left of each
+        /// non-empty line.
+        /// </summary>
+        /// <value>The left padding.</value>
+        public string LeftPadding { get; private set; }
+
+        private int width;
+
+        /// <summary>
         /// Gets the unaligned terminal to which aligned lines are written.
         /// </summary>
         /// <returns>A terminal.</returns>
         public TerminalBase UnalignedTerminal { get; private set; }
 
         /// <inheritdoc/>
-        public override int Width => UnalignedTerminal.Width;
+        public override int Width => width;
 
         private List<Action<TerminalBase>> commandBuffer;
 
@@ -40,7 +61,15 @@ namespace Pixie.Terminal.Devices
         /// <inheritdoc/>
         public override void Write(string text)
         {
-            lineLength += new StringInfo(text).LengthInTextElements;
+            var textInfo = new StringInfo(text); 
+            lineLength += textInfo.LengthInTextElements;
+            /*
+            if (lineLength > width)
+            {
+                // Split the text.
+                
+            }
+            */
             commandBuffer.Add(new TerminalWriteCommand(text).Run);
         }
 
