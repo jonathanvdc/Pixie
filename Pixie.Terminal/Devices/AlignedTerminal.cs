@@ -67,12 +67,15 @@ namespace Pixie.Terminal.Devices
         /// </summary>
         public void Flush()
         {
-            // Write padding.
-            int padding = GetLeftPaddingSize(
-                Alignment, lineLength, UnalignedTerminal.Width);
-            for (int i = 0; i < padding; i++)
+            if (lineLength > 0)
             {
-                UnalignedTerminal.Write(' ');
+                // Write padding.
+                int padding = GetLeftPaddingSize(
+                    Alignment, lineLength, UnalignedTerminal.Width);
+                for (int i = 0; i < padding; i++)
+                {
+                    UnalignedTerminal.Write(' ');
+                }
             }
 
             // Flush the command buffer.
