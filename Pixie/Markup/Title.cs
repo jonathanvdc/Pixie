@@ -32,7 +32,10 @@ namespace Pixie.Markup
         public MarkupNode Contents { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback => new Paragraph(
-            Contents, Alignment.Center);
+        public override MarkupNode Fallback =>
+            new Paragraph(
+                new AlignBox(
+                    Contents,
+                    Alignment.Center));
     }
 }

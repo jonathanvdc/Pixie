@@ -25,12 +25,9 @@ namespace Pixie.Terminal.Render
         public override void Render(MarkupNode node, RenderState state)
         {
             var para = (Paragraph)node;
-            var newState = state;
-            var alignedTerm = AlignedTerminal.Align(state.Terminal, para.Alignment);
-            newState = state.WithTerminal(alignedTerm);
-            alignedTerm.WriteSeparator(2);
-            newState.Render(para.Contents);
-            alignedTerm.WriteSeparator(2);
+            state.Terminal.WriteSeparator(2);
+            state.Render(para.Contents);
+            state.Terminal.WriteSeparator(2);
         }
     }
 }

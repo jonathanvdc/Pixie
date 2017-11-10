@@ -18,11 +18,12 @@ namespace Pixie.Terminal
         public TerminalLog(TerminalBase terminal)
             : this(
                 new RenderState(terminal).WithRenderers(
-                    BoxRenderer.Instance,
+                    AlignBoxRenderer.Instance,
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
                     SequenceRenderer.Instance,
-                    TextRenderer.Instance))
+                    TextRenderer.Instance,
+                    WrapBoxRenderer.Instance))
         { }
 
         /// <summary>

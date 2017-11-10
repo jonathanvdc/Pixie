@@ -4,34 +4,30 @@ using Pixie.Terminal.Devices;
 namespace Pixie.Terminal.Render
 {
     /// <summary>
-    /// A renderer for box nodes.
+    /// A renderer for align-box nodes.
     /// </summary>
-    public sealed class BoxRenderer : NodeRenderer
+    public sealed class AlignBoxRenderer : NodeRenderer
     {
-        private BoxRenderer() { }
+        private AlignBoxRenderer() { }
 
         /// <summary>
-        /// An instance of a box node renderer.
+        /// An instance of an align-box node renderer.
         /// </summary>
-        public static readonly BoxRenderer Instance = new BoxRenderer();
+        public static readonly AlignBoxRenderer Instance = new AlignBoxRenderer();
 
         /// <inheritdoc/>
         public override bool CanRender(MarkupNode node)
         {
-            return node is Box;
+            return node is AlignBox;
         }
 
         /// <inheritdoc/>
         public override void Render(MarkupNode node, RenderState state)
         {
-            var boxNode = (Box)node;
+            var boxNode = (AlignBox)node;
             var newState = state;
-            var newTerm = AlignedTerminal.Wrap(
-                AlignedTerminal.AddHorizontalMargin(
-                    state.Terminal,
-                    boxNode.LeftMargin,
-                    boxNode.RightMargin),
-                boxNode.Wrapping);
+            var newTerm = AlignedTerminal.Align(
+                state.Terminal, boxNode.Alignment);
 
             newState = state.WithTerminal(newTerm);
             newTerm.WriteSeparator(1);

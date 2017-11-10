@@ -23,7 +23,7 @@ namespace Pixie.Markup
     /// Wraps contents to fit in a box specified by left and right
     /// margins.
     /// </summary>
-    public sealed class Box : MarkupNode
+    public sealed class WrapBox : MarkupNode
     {
         /// <summary>
         /// Creates a box that wraps its contents according to a
@@ -31,7 +31,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="contents">The contents of the box.</param>
         /// <param name="wrapping">The wrapping strategy for the box.</param>
-        public Box(
+        public WrapBox(
             MarkupNode contents,
             WrappingStrategy wrapping)
             : this(contents, wrapping, 0, 0)
@@ -46,7 +46,7 @@ namespace Pixie.Markup
         /// A uniform margin that is applied both to the left and the
         /// right of the box.
         /// </param>
-        public Box(
+        public WrapBox(
             MarkupNode contents,
             int margin)
             : this(contents, margin, margin)
@@ -62,7 +62,7 @@ namespace Pixie.Markup
         /// A uniform margin that is applied both to the left and the
         /// right of the box.
         /// </param>
-        public Box(
+        public WrapBox(
             MarkupNode contents,
             WrappingStrategy wrapping,
             int margin)
@@ -77,7 +77,7 @@ namespace Pixie.Markup
         /// <param name="contents">The contents of the box.</param>
         /// <param name="leftMargin">A left margin.</param>
         /// <param name="rightMargin">A right margin.</param>
-        public Box(
+        public WrapBox(
             MarkupNode contents,
             int leftMargin,
             int rightMargin)
@@ -96,7 +96,7 @@ namespace Pixie.Markup
         /// <param name="wrapping">The wrapping strategy for the box.</param>
         /// <param name="leftMargin">A left margin.</param>
         /// <param name="rightMargin">A right margin.</param>
-        public Box(
+        public WrapBox(
             MarkupNode contents,
             WrappingStrategy wrapping,
             int leftMargin,
@@ -133,6 +133,7 @@ namespace Pixie.Markup
         public int RightMargin { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback => Contents;
+        public override MarkupNode Fallback =>
+            new Sequence(NewLine.Instance, Contents, NewLine.Instance);
     }
 }

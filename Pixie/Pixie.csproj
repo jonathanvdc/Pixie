@@ -37,12 +37,13 @@
     <Compile Include="PixieException.cs" />
     <Compile Include="Severity.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
-    <Compile Include="Markup\Box.cs" />
+    <Compile Include="Markup\AlignBox.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\Sequence.cs" />
     <Compile Include="Markup\Text.cs" />
     <Compile Include="Markup\Title.cs" />
+    <Compile Include="Markup\WrapBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -22,7 +22,7 @@ namespace ConsoleDriver
             log.Log(new LogEntry(
                 Severity.Info,
                 "Hello world",
-                new Box(
+                new WrapBox(
                     new Sequence(
                         LoremIpsum
                             .Split('\n')
