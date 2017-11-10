@@ -13,7 +13,12 @@ namespace ConsoleDriver
             log.Log(new LogEntry(
                 Severity.Progress,
                 new Title("Hello world"),
-                new Text("This is a hello world example")));
+                new Box(
+                    new Text(
+                        "This is a hello world example. Wow this is a really long piece of text!!! " +
+                        "I wonder if this'll fit on a single line."),
+                    WrappingStrategy.Word,
+                    4)));
         }
     }
 }
