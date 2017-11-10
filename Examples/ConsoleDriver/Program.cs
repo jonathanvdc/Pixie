@@ -21,7 +21,7 @@ namespace ConsoleDriver
             // we would like to print.
             log.Log(new LogEntry(
                 Severity.Progress,
-                new Title("Hello world"),
+                "Hello world",
                 new Box(
                     new Sequence(
                         LoremIpsum
