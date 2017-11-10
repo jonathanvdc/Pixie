@@ -9,7 +9,7 @@ namespace Pixie
         /// The severity level for messages that are printed
         /// to inform the user of progress that is being made.
         /// </summary>
-        Progress,
+        Info,
 
         /// <summary>
         /// The severity level for messages to the user without

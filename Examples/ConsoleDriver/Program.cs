@@ -20,7 +20,7 @@ namespace ConsoleDriver
             // Write an entry to the log that contains the things
             // we would like to print.
             log.Log(new LogEntry(
-                Severity.Progress,
+                Severity.Info,
                 "Hello world",
                 new Box(
                     new Sequence(
