@@ -120,7 +120,7 @@ namespace Pixie.Terminal.Devices
             {
                 // Write padding.
                 int padding = GetLeftPaddingSize(
-                    Alignment, lineLength, UnalignedTerminal.Width);
+                    Alignment, lineLength, width);
                 for (int i = 0; i < padding; i++)
                 {
                     UnalignedTerminal.Write(' ');
