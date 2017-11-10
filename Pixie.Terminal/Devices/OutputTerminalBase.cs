@@ -21,15 +21,16 @@ namespace Pixie.Terminal
         /// <inheritdoc/>
         public override void WriteSeparator(int lineCount)
         {
+            int oldSepLineCounter = sepLineCounter;
             sepLineCounter = Math.Max(lineCount, sepLineCounter);
+            for (int i = oldSepLineCounter; i < sepLineCounter; i++)
+            {
+                WriteLineImpl();
+            }
         }
 
         protected void EndSeparator()
         {
-            for (int i = 0; i < sepLineCounter; i++)
-            {
-                WriteLineImpl();
-            }
             sepLineCounter = 0;
         }
     }
