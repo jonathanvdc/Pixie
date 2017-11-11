@@ -23,7 +23,7 @@ namespace Pixie.Markup
     /// Wraps contents to fit in a box specified by left and right
     /// margins.
     /// </summary>
-    public sealed class WrapBox : MarkupNode
+    public sealed class WrapBox : ContainerNode
     {
         /// <summary>
         /// Creates a box that wraps its contents according to a
@@ -101,18 +101,12 @@ namespace Pixie.Markup
             WrappingStrategy wrapping,
             int leftMargin,
             int rightMargin)
+            : base(contents)
         {
-            this.Contents = contents;
             this.Wrapping = wrapping;
             this.LeftMargin = leftMargin;
             this.RightMargin = rightMargin;
         }
-
-        /// <summary>
-        /// Gets the contents of the box.
-        /// </summary>
-        /// <returns>The contents node.</returns>
-        public MarkupNode Contents { get; private set; }
 
         /// <summary>
         /// Gets the line wrapping of the box's contents.

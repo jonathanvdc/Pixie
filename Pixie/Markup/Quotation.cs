@@ -5,7 +5,7 @@ namespace Pixie.Markup
     /// <summary>
     /// A markup node that puts quotation signs around another node.
     /// </summary>
-    public sealed class Quotation : MarkupNode
+    public sealed class Quotation : ContainerNode
     {
         /// <summary>
         /// Creates a quotation node from a quoted contents
@@ -31,8 +31,8 @@ namespace Pixie.Markup
         /// the contents.
         /// </param>
         public Quotation(MarkupNode contents, int numberOfQuotes)
+            : base(contents)
         {
-            this.Contents = contents;
             this.NumberOfQuotes = numberOfQuotes;
         }
 
@@ -42,12 +42,6 @@ namespace Pixie.Markup
         /// </summary>
         /// <returns>The number of quotation signs.</returns>
         public int NumberOfQuotes { get; private set; }
-
-        /// <summary>
-        /// Gets contents that are quoted by this node.
-        /// </summary>
-        /// <returns>The quoted contents.</returns>
-        public MarkupNode Contents { get; private set; }
 
         public override MarkupNode Fallback
         {
