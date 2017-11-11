@@ -23,31 +23,26 @@ namespace ConsoleDriver
                 Severity.Info,
                 "Hello world",
                 new WrapBox(
-                    new Sequence(
+                    new BulletedList(
                         LoremIpsum
-                            .Split('\n')
-                            .Select<string, MarkupNode>(StringToParagraph)
-                            .ToArray<MarkupNode>()),
+                            .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select<string, MarkupNode>(QuoteString)
+                            .ToArray<MarkupNode>(),
+                        true),
                     WrappingStrategy.Word,
                     4)));
         }
 
-        private static MarkupNode StringToParagraph(string text)
+        private static MarkupNode QuoteString(string text)
         {
-            // Turn a string into a paragraph and double-quote each
-            // non-empty paragraph. The rendering engine does not emit
-            // additional whitespace for empty paragraphs, so not
-            // quoting empty strings effectively deletes them.
+            // Quote each string using double quotes.
             //
             // On terminals that support them, Unicode quotes will be
             // used to quote text. On terminals that don't, the
             // rendering engine will use regular ASCII quotes.
             string trimmedText = text.Trim();
             MarkupNode textNode = new Text(trimmedText);
-            return new Paragraph(
-                string.IsNullOrWhiteSpace(text)
-                ? textNode
-                : new Quotation(textNode, 2));
+            return new Quotation(textNode, 2);
         }
 
         private const string LoremIpsum = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tempor ornare luctus. Etiam a vulputate tellus. Nullam ultrices ante ac metus tempor elementum. Nam facilisis sit amet massa sit amet lacinia. Phasellus hendrerit ultrices consectetur. Praesent dignissim libero sapien, nec ullamcorper sem malesuada sit amet. Nullam rhoncus nulla eu ante congue ultricies. Duis consectetur iaculis dolor, sed egestas lectus accumsan a. Nullam orci nibh, dignissim nec nulla non, interdum luctus dui. Donec semper feugiat felis in facilisis. Cras viverra, nisi vitae pretium tincidunt, lectus leo vulputate odio, et faucibus urna lorem in urna. Nam porttitor, libero pulvinar volutpat tristique, libero tellus egestas velit, a ultrices risus eros non nisi. Ut porttitor odio vitae velit fringilla volutpat.

@@ -65,6 +65,23 @@ namespace Pixie.Terminal.Devices
 
         private int lineLength;
 
+        /// <summary>
+        /// Gets the length of the line that is currently in the buffer,
+        /// measured in text elements.
+        /// </summary>
+        /// <returns>The current line length.</returns>
+        public int BufferedLineLength => lineLength;
+
+        private bool suppressNextLinePadding;
+
+        /// <summary>
+        /// Suppresses the padding for a single line.
+        /// </summary>
+        public void SuppressPadding()
+        {
+            suppressNextLinePadding = true;
+        }
+
         /// <inheritdoc/>
         public override bool CanRender(string text)
         {
@@ -122,7 +139,7 @@ namespace Pixie.Terminal.Devices
         /// </summary>
         public void Flush()
         {
-            if (lineLength > 0)
+            if (lineLength > 0 && !suppressNextLinePadding)
             {
                 // Write padding.
                 int padding = GetLeftPaddingSize(
@@ -133,6 +150,7 @@ namespace Pixie.Terminal.Devices
                 }
                 UnalignedTerminal.Write(LeftPadding);
             }
+            suppressNextLinePadding = false;
 
             // Flush the command buffer.
             for (int i = 0; i < commandBuffer.Count; i++)

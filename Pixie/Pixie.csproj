@@ -38,9 +38,11 @@
     <Compile Include="Severity.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
     <Compile Include="Markup\AlignBox.cs" />
+    <Compile Include="Markup\BulletedList.cs" />
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
+    <Compile Include="Markup\PrefixBox.cs" />
     <Compile Include="Markup\Quotation.cs" />
     <Compile Include="Markup\Sequence.cs" />
     <Compile Include="Markup\Text.cs" />

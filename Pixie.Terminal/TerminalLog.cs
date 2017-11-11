@@ -22,6 +22,7 @@ namespace Pixie.Terminal
                     DegradableTextRenderer.Instance,
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
+                    PrefixBoxRenderer.Instance,
                     SequenceRenderer.Instance,
                     TextRenderer.Instance,
                     WrapBoxRenderer.Instance))

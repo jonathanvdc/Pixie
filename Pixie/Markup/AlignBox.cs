@@ -27,7 +27,7 @@ namespace Pixie.Markup
     public sealed class AlignBox : MarkupNode
     {
         /// <summary>
-        /// Creates a align-box from a body node.
+        /// Creates an align-box from a body node.
         /// </summary>
         /// <param name="contents">A node to insulate in whitespace.</param>
         public AlignBox(MarkupNode contents)
@@ -35,7 +35,7 @@ namespace Pixie.Markup
         { }
 
         /// <summary>
-        /// Creates a AlignBox from a body node and an alignment.
+        /// Creates an align-box from a body node and an alignment.
         /// </summary>
         /// <param name="contents">A node to insulate in whitespace.</param>
         /// <param name="alignment">The alignment for the align-box.</param>
