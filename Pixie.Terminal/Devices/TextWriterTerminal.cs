@@ -10,10 +10,14 @@ namespace Pixie.Terminal.Devices
     /// </summary>
     public class TextWriterTerminal : OutputTerminalBase
     {
-        public TextWriterTerminal(TextWriter writer, int width)
+        public TextWriterTerminal(
+            TextWriter writer,
+            int width,
+            StyleManager styleManager)
         {
             this.Writer = writer;
             this.termWidth = width;
+            this.styleManager = styleManager;
 
             renderableTestEncoding = (Encoding)Writer.Encoding.Clone();
             renderableTestEncoding.EncoderFallback = new RenderableEncoderFallback();
@@ -26,6 +30,10 @@ namespace Pixie.Terminal.Devices
         private Encoding renderableTestEncoding;
 
         public override int Width => termWidth;
+
+        private StyleManager styleManager;
+
+        public override StyleManager Style => styleManager;
 
         /// <inheritdoc/>
         public override void Write(string text)

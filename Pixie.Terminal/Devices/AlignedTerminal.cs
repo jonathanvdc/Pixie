@@ -28,8 +28,14 @@ namespace Pixie.Terminal.Devices
             {
                 throw new ArgumentException(nameof(width));
             }
+            this.style = new BufferingStyleManager(commandBuffer);
             Reset();
         }
+
+        private StyleManager style;
+
+        /// <inheritdoc/>
+        public override StyleManager Style => style;
 
         /// <summary>
         /// Tells how this terminal aligns lines.
@@ -402,6 +408,37 @@ namespace Pixie.Terminal.Devices
         }
     }
 
+    internal sealed class BufferingStyleManager : StyleManager
+    {
+        public BufferingStyleManager(
+            List<Action<TerminalBase>> commandBuffer)
+        {
+            this.commandBuffer = commandBuffer;
+        }
+
+        private List<Action<TerminalBase>> commandBuffer;
+
+        public override void PushForegroundColor(Color color)
+        {
+            commandBuffer.Add(new ForegroundColorCommand(color).Run);
+        }
+
+        public override void PushBackgroundColor(Color color)
+        {
+            commandBuffer.Add(new BackgroundColorCommand(color).Run);
+        }
+
+        public override void PopStyle()
+        {
+            commandBuffer.Add(PopStyle);
+        }
+
+        private static void PopStyle(TerminalBase terminal)
+        {
+            terminal.Style.PopStyle();
+        }
+    }
+
     internal sealed class TerminalWriteCommand
     {
         public TerminalWriteCommand(string text)
@@ -414,6 +451,36 @@ namespace Pixie.Terminal.Devices
         public void Run(TerminalBase terminal)
         {
             terminal.Write(Text);
+        }
+    }
+
+    internal sealed class ForegroundColorCommand
+    {
+        public ForegroundColorCommand(Color color)
+        {
+            this.Color = color;
+        }
+
+        public Color Color { get; private set; }
+
+        public void Run(TerminalBase terminal)
+        {
+            terminal.Style.PushForegroundColor(Color);
+        }
+    }
+
+    internal sealed class BackgroundColorCommand
+    {
+        public BackgroundColorCommand(Color color)
+        {
+            this.Color = color;
+        }
+
+        public Color Color { get; private set; }
+
+        public void Run(TerminalBase terminal)
+        {
+            terminal.Style.PushBackgroundColor(Color);
         }
     }
 }

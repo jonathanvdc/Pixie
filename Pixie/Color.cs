@@ -144,13 +144,19 @@ namespace Pixie
         /// Gets the color black.
         /// </summary>
         /// <returns>The color black.</returns>
-        public static Color Black => new Color(0.0, 0.0, 0.0);
+        public static Color Black => new Color(0.0);
 
         /// <summary>
         /// Gets the color white.
         /// </summary>
         /// <returns>The color white.</returns>
-        public static Color White => new Color(1.0, 1.0, 1.0);
+        public static Color White => new Color(1.0);
+
+        /// <summary>
+        /// Gets the color gray.
+        /// </summary>
+        /// <returns>The color gray.</returns>
+        public static Color Gray => new Color(0.5);
 
         /// <summary>
         /// Gets the color red.

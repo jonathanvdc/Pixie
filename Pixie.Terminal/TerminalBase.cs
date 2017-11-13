@@ -7,6 +7,12 @@ namespace Pixie.Terminal
     public abstract class TerminalBase
     {
         /// <summary>
+        /// Gets the style manager for this terminal.
+        /// </summary>
+        /// <returns>The style manager.</returns>
+        public abstract StyleManager Style { get; }
+
+        /// <summary>
         /// Gets the terminal's width, in characters.
         /// </summary>
         /// <returns>The terminal's width.</returns>
