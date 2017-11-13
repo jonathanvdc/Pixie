@@ -127,4 +127,65 @@ namespace Pixie
             return new Color(r, g, b, a);
         }
     }
+
+    /// <summary>
+    /// Defines common colors.
+    /// </summary>
+    public static class Colors
+    {
+        /// <summary>
+        /// Gets the transparent color, which does nothing when merged on
+        /// top of another color.
+        /// </summary>
+        /// <returns>The transparent color.</returns>
+        public static Color Transparent => new Color(0.0, 0.0, 0.0, 0.0);
+
+        /// <summary>
+        /// Gets the color black.
+        /// </summary>
+        /// <returns>The color black.</returns>
+        public static Color Black => new Color(0.0, 0.0, 0.0);
+
+        /// <summary>
+        /// Gets the color white.
+        /// </summary>
+        /// <returns>The color white.</returns>
+        public static Color White => new Color(1.0, 1.0, 1.0);
+
+        /// <summary>
+        /// Gets the color red.
+        /// </summary>
+        /// <returns>The color red.</returns>
+        public static Color Red => new Color(1.0, 0.0, 0.0);
+
+        /// <summary>
+        /// Gets the color green.
+        /// </summary>
+        /// <returns>The color green.</returns>
+        public static Color Green => new Color(0.0, 1.0, 0.0);
+
+        /// <summary>
+        /// Gets the color blue.
+        /// </summary>
+        /// <returns>The color blue.</returns>
+        public static Color Blue => new Color(0.0, 0.0, 1.0);
+
+        /// <summary>
+        /// Gets the color yellow.
+        /// </summary>
+        /// <returns>The color yellow.</returns>
+        public static Color Yellow => new Color(1.0, 1.0, 0.0);
+
+        /// <summary>
+        /// Gets the color magenta.
+        /// </summary>
+        /// <returns>The color magenta.</returns>
+        public static Color Magenta => new Color(1.0, 0.0, 1.0);
+
+        /// <summary>
+        /// Gets the color cyan.
+        /// </summary>
+        /// <returns>The color cyan.</returns>
+        public static Color Cyan => new Color(0.0, 1.0, 1.0);
+    }
 }
