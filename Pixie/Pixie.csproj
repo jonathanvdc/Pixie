@@ -40,6 +40,7 @@
     <Compile Include="UnsupportedNodeException.cs" />
     <Compile Include="Markup\AlignBox.cs" />
     <Compile Include="Markup\BulletedList.cs" />
+    <Compile Include="Markup\ColorNode.cs" />
     <Compile Include="Markup\ContainerNode.cs" />
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\NewLine.cs" />
