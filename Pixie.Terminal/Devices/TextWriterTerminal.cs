@@ -113,7 +113,9 @@ namespace Pixie.Terminal.Devices
                 return new TextWriterTerminal(
                     writer,
                     Console.BufferWidth,
-                    new ConsoleStyleManager());
+                    IsAnsiTerminalIdentifier(EnvironmentTerminalIdentifier.ToLowerInvariant())
+                        ? (StyleManager)new AnsiStyleManager(writer)
+                        : (StyleManager)new ConsoleStyleManager());
             }
         }
 
@@ -169,6 +171,20 @@ namespace Pixie.Terminal.Devices
         public static TextWriterTerminal FromErrorStream()
         {
             return FromConsoleStream(Console.Error, Console.IsErrorRedirected);
+        }
+
+        /// <summary>
+        /// Gets the environment's terminal identifier, if any.
+        /// </summary>
+        /// <returns>A terminal identifier.</returns>
+        public static string EnvironmentTerminalIdentifier =>
+            Environment.GetEnvironmentVariable("TERM");
+
+        private static bool IsAnsiTerminalIdentifier(string identifier)
+        {
+            return identifier.StartsWith("vt")
+                || identifier.StartsWith("xterm")
+                || identifier == "linux";
         }
     }
 
