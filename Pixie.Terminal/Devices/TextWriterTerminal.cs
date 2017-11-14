@@ -10,6 +10,25 @@ namespace Pixie.Terminal.Devices
     /// </summary>
     public class TextWriterTerminal : OutputTerminalBase
     {
+        /// <summary>
+        /// Creates a text writer terminal from a text writer
+        /// and a terminal width.
+        /// </summary>
+        /// <param name="writer">A text writer to send output to.</param>
+        /// <param name="width">The width of the output document.</param>
+        public TextWriterTerminal(
+            TextWriter writer,
+            int width)
+            : this(writer, width, NoStyleManager.Instance)
+        { }
+
+        /// <summary>
+        /// Creates a text writer terminal from a text writer,
+        /// a terminal width and a style manager.
+        /// </summary>
+        /// <param name="writer">A text writer to send output to.</param>
+        /// <param name="width">The width of the output document.</param>
+        /// <param name="styleManager">A style manager for the output document.</param>
         public TextWriterTerminal(
             TextWriter writer,
             int width,
@@ -23,16 +42,22 @@ namespace Pixie.Terminal.Devices
             renderableTestEncoding.EncoderFallback = new RenderableEncoderFallback();
         }
 
+        /// <summary>
+        /// Gets the text writer to which output is sent by this terminal.
+        /// </summary>
+        /// <returns>A text writer.</returns>
         public TextWriter Writer { get; private set; }
 
         private int termWidth;
 
         private Encoding renderableTestEncoding;
 
+        /// <inheritdoc/>
         public override int Width => termWidth;
 
         private StyleManager styleManager;
 
+        /// <inheritdoc/>
         public override StyleManager Style => styleManager;
 
         /// <inheritdoc/>
