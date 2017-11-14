@@ -35,7 +35,6 @@
     <Compile Include="TerminalBase.cs" />
     <Compile Include="TerminalLog.cs" />
     <Compile Include="Devices\ConsoleStyleManager.cs" />
-    <Compile Include="Devices\ConsoleTerminal.cs" />
     <Compile Include="Devices\LayoutTerminal.cs" />
     <Compile Include="Devices\NoStyleManager.cs" />
     <Compile Include="Devices\OutputTerminalBase.cs" />

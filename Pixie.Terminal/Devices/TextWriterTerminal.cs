@@ -88,6 +88,88 @@ namespace Pixie.Terminal.Devices
             renderableTestEncoding.GetBytes(text);
             return !fallback.FoundUnencodable;
         }
+
+        /// <summary>
+        /// Creates a text writer terminal from the given console stream and
+        /// a flag that tells if said stream's output is being redirected.
+        /// <param name="writer">
+        /// A writer to write output to.
+        /// </param>
+        /// </summary>
+        /// <param name="isRedirected">
+        /// Tells if the writer's output is being redirected.
+        /// </param>
+        /// <returns>A text writer terminal.</returns>
+        private static TextWriterTerminal FromConsoleStream(
+            TextWriter writer,
+            bool isRedirected)
+        {
+            if (isRedirected)
+            {
+                return new TextWriterTerminal(writer, 80, NoStyleManager.Instance);
+            }
+            else
+            {
+                return new TextWriterTerminal(
+                    writer,
+                    Console.BufferWidth,
+                    new ConsoleStyleManager());
+            }
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console output stream,
+        /// the width of the output buffer and a style manager.
+        /// </summary>
+        /// <param name="width">
+        /// The width of the output buffer.
+        /// </param>
+        /// <param name="styleManager">
+        /// A style manager to style the output with.
+        /// </param>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromOutputStream(
+            int width,
+            StyleManager styleManager)
+        {
+            return new TextWriterTerminal(Console.Out, width, styleManager);
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console output stream.
+        /// </summary>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromOutputStream()
+        {
+            return FromConsoleStream(Console.Out, Console.IsOutputRedirected);
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console error stream,
+        /// the width of the output buffer and a style manager.
+        /// </summary>
+        /// <param name="width">
+        /// The width of the output buffer.
+        /// </param>
+        /// <param name="styleManager">
+        /// A style manager to style the output with.
+        /// </param>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromErrorStream(
+            int width,
+            StyleManager styleManager)
+        {
+            return new TextWriterTerminal(Console.Error, width, styleManager);
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console error stream.
+        /// </summary>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromErrorStream()
+        {
+            return FromConsoleStream(Console.Error, Console.IsErrorRedirected);
+        }
     }
 
     internal sealed class RenderableEncoderFallback : EncoderFallback

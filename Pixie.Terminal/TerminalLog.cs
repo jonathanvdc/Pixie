@@ -65,7 +65,7 @@ namespace Pixie.Terminal
         /// <returns>A terminal log.</returns>
         public static TerminalLog Acquire()
         {
-            return new TerminalLog(new ConsoleTerminal());
+            return new TerminalLog(TextWriterTerminal.FromErrorStream());
         }
     }
 }
