@@ -10,9 +10,9 @@ namespace Pixie.Terminal.Devices
     /// A terminal that buffers lines, aligns them, word-wraps them
     /// and writes them to another terminal.
     /// </summary>
-    public sealed class AlignedTerminal : TerminalBase
+    public sealed class LayoutTerminal : TerminalBase
     {
-        public AlignedTerminal(
+        public LayoutTerminal(
             TerminalBase unalignedTerminal,
             Alignment alignment,
             WrappingStrategy wrapping,
@@ -307,13 +307,13 @@ namespace Pixie.Terminal.Devices
         /// The alignment of the contents to print.
         /// </param>
         /// <returns>An aligned terminal.</returns>
-        public static AlignedTerminal Align(
+        public static LayoutTerminal Align(
             TerminalBase terminal, Alignment alignment)
         {
-            if (terminal is AlignedTerminal)
+            if (terminal is LayoutTerminal)
             {
-                var alignedTerm = (AlignedTerminal)terminal;
-                return new AlignedTerminal(
+                var alignedTerm = (LayoutTerminal)terminal;
+                return new LayoutTerminal(
                     alignedTerm.UnalignedTerminal,
                     alignment,
                     alignedTerm.Wrapping,
@@ -322,7 +322,7 @@ namespace Pixie.Terminal.Devices
             }
             else
             {
-                return new AlignedTerminal(
+                return new LayoutTerminal(
                     terminal,
                     alignment,
                     WrappingStrategy.Character,
@@ -342,13 +342,13 @@ namespace Pixie.Terminal.Devices
         /// The wrapping strategy to use.
         /// </param>
         /// <returns>A wrapping terminal.</returns>
-        public static AlignedTerminal Wrap(
+        public static LayoutTerminal Wrap(
             TerminalBase terminal, WrappingStrategy wrapping)
         {
-            if (terminal is AlignedTerminal)
+            if (terminal is LayoutTerminal)
             {
-                var alignedTerm = (AlignedTerminal)terminal;
-                return new AlignedTerminal(
+                var alignedTerm = (LayoutTerminal)terminal;
+                return new LayoutTerminal(
                     alignedTerm.UnalignedTerminal,
                     alignedTerm.Alignment,
                     wrapping,
@@ -357,7 +357,7 @@ namespace Pixie.Terminal.Devices
             }
             else
             {
-                return new AlignedTerminal(
+                return new LayoutTerminal(
                     terminal,
                     Alignment.Left,
                     wrapping,
@@ -380,17 +380,17 @@ namespace Pixie.Terminal.Devices
         /// The size of the right margin.
         /// </param>
         /// <returns>A margin-inserting terminal.</returns>
-        public static AlignedTerminal AddHorizontalMargin(
+        public static LayoutTerminal AddHorizontalMargin(
             TerminalBase terminal, int leftMargin, int rightMargin)
         {
             var leftPadding = new StringBuilder()
                 .Append(' ', leftMargin)
                 .ToString();
 
-            if (terminal is AlignedTerminal)
+            if (terminal is LayoutTerminal)
             {
-                var alignedTerm = (AlignedTerminal)terminal;
-                return new AlignedTerminal(
+                var alignedTerm = (LayoutTerminal)terminal;
+                return new LayoutTerminal(
                     alignedTerm.UnalignedTerminal,
                     alignedTerm.Alignment,
                     alignedTerm.Wrapping,
@@ -399,7 +399,7 @@ namespace Pixie.Terminal.Devices
             }
             else
             {
-                return new AlignedTerminal(
+                return new LayoutTerminal(
                     terminal,
                     Alignment.Left,
                     WrappingStrategy.Character,

@@ -26,8 +26,8 @@ namespace Pixie.Terminal.Render
         {
             var boxNode = (WrapBox)node;
             var newState = state;
-            var newTerm = AlignedTerminal.Wrap(
-                AlignedTerminal.AddHorizontalMargin(
+            var newTerm = LayoutTerminal.Wrap(
+                LayoutTerminal.AddHorizontalMargin(
                     state.Terminal,
                     boxNode.LeftMargin,
                     boxNode.RightMargin),

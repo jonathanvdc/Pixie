@@ -26,7 +26,7 @@ namespace Pixie.Terminal.Render
         {
             var boxNode = (PrefixBox)node;
             var newState = state;
-            var newTerm = AlignedTerminal.Align(
+            var newTerm = LayoutTerminal.Align(
                 state.Terminal, Alignment.Left);
 
             newState = state.WithTerminal(newTerm);
@@ -35,7 +35,7 @@ namespace Pixie.Terminal.Render
             int lineLength = newTerm.BufferedLineLength;
             newTerm.Flush();
 
-            newTerm = AlignedTerminal.AddHorizontalMargin(
+            newTerm = LayoutTerminal.AddHorizontalMargin(
                 state.Terminal,
                 lineLength,
                 0);

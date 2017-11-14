@@ -34,8 +34,8 @@
     <Compile Include="StyleManager.cs" />
     <Compile Include="TerminalBase.cs" />
     <Compile Include="TerminalLog.cs" />
-    <Compile Include="Devices\AlignedTerminal.cs" />
     <Compile Include="Devices\ConsoleTerminal.cs" />
+    <Compile Include="Devices\LayoutTerminal.cs" />
     <Compile Include="Devices\OutputTerminalBase.cs" />
     <Compile Include="Devices\TextWriterTerminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

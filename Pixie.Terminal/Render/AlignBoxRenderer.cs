@@ -26,7 +26,7 @@ namespace Pixie.Terminal.Render
         {
             var boxNode = (AlignBox)node;
             var newState = state;
-            var newTerm = AlignedTerminal.Align(
+            var newTerm = LayoutTerminal.Align(
                 state.Terminal, boxNode.Alignment);
 
             newState = state.WithTerminal(newTerm);
