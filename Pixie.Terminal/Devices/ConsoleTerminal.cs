@@ -29,7 +29,8 @@ namespace Pixie.Terminal.Devices
             this.styleStack.Push(
                 new ConsoleStyle(
                     defaultForegroundColor,
-                    defaultBackgroundColor));
+                    defaultBackgroundColor,
+                    true));
         }
 
         private Stack<ConsoleStyle> styleStack;
@@ -69,22 +70,51 @@ namespace Pixie.Terminal.Devices
 
     internal sealed class ConsoleStyle
     {
-        public ConsoleStyle(Color foregroundColor, Color backgroundColor)
+        public ConsoleStyle(
+            Color foregroundColor,
+            Color backgroundColor)
+            : this(foregroundColor, backgroundColor, false)
+        { }
+
+        public ConsoleStyle(
+            Color foregroundColor,
+            Color backgroundColor,
+            bool isRootStyle)
         {
             this.ForegroundColor = foregroundColor;
             this.BackgroundColor = backgroundColor;
+            this.IsRootStyle = isRootStyle;
         }
 
         public Color ForegroundColor { get; private set; }
 
         public Color BackgroundColor { get; private set; }
 
+        public bool IsRootStyle { get; private set; }
+
         /// <summary>
         /// Applies this style, given a previous style.
         /// </summary>
         public void Apply(ConsoleStyle style)
         {
-            // TODO: implement this
+            var newFg = ToConsoleColor(ForegroundColor);
+            var newBg = ToConsoleColor(BackgroundColor);
+
+            if (IsRootStyle)
+            {
+                Console.ResetColor();
+                return;
+            }
+
+            if (Console.ForegroundColor != newFg)
+            {
+                Console.ForegroundColor = newFg;
+            }
+
+            if (Console.BackgroundColor != newBg)
+            {
+                Console.BackgroundColor = newBg;
+            }
         }
 
         static ConsoleStyle()
@@ -108,16 +138,9 @@ namespace Pixie.Terminal.Devices
                 { ConsoleColor.DarkRed, MakeDark(Colors.Red) },
                 { ConsoleColor.DarkYellow, MakeDark(Colors.Yellow) }
             };
-
-            invColorMap = new Dictionary<Color, ConsoleColor>();
-            foreach (var pair in colorMap)
-            {
-                invColorMap[pair.Value] = pair.Key;
-            }
         }
 
         private static Dictionary<ConsoleColor, Color> colorMap;
-        private static Dictionary<Color, ConsoleColor> invColorMap;
 
         private static Color MakeDark(Color color)
         {
@@ -132,6 +155,26 @@ namespace Pixie.Terminal.Devices
         public static Color ToPixieColor(ConsoleColor color)
         {
             return colorMap[color];
+        }
+
+        public static ConsoleColor ToConsoleColor(Color color)
+        {
+            var nearestColor = ConsoleColor.Gray;
+            var nearestColorDistSqr = 3.0;
+            foreach (var pair in colorMap)
+            {
+                var otherColor = pair.Value;
+                var distR = otherColor.Red - color.Red;
+                var distG = otherColor.Green - color.Green;
+                var distB = otherColor.Blue - color.Blue;
+                var distSqr = distR * distR + distG * distG + distB * distB;
+                if (distSqr < nearestColorDistSqr)
+                {
+                    nearestColorDistSqr = distSqr;
+                    nearestColor = pair.Key;
+                }
+            }
+            return nearestColor;
         }
     }
 }

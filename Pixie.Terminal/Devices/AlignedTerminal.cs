@@ -28,7 +28,8 @@ namespace Pixie.Terminal.Devices
             {
                 throw new ArgumentException(nameof(width));
             }
-            this.style = new BufferingStyleManager(commandBuffer);
+            this.commandBuffer = new List<Action<TerminalBase>>();
+            this.style = new BufferingStyleManager(this.commandBuffer);
             Reset();
         }
 
@@ -170,7 +171,7 @@ namespace Pixie.Terminal.Devices
 
         private void Reset()
         {
-            commandBuffer = new List<Action<TerminalBase>>();
+            commandBuffer.Clear();
             lineLength = 0;
         }
 
