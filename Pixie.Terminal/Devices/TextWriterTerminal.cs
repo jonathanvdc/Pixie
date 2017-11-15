@@ -106,13 +106,16 @@ namespace Pixie.Terminal.Devices
         {
             if (isRedirected)
             {
-                return new TextWriterTerminal(writer, 80, NoStyleManager.Instance);
+                return new TextWriterTerminal(
+                    writer,
+                    DefaultTerminalWidth,
+                    NoStyleManager.Instance);
             }
             else
             {
                 return new TextWriterTerminal(
                     writer,
-                    Console.BufferWidth,
+                    GetTerminalWidth(),
                     IsAnsiTerminalIdentifier(EnvironmentTerminalIdentifier.ToLowerInvariant())
                         ? (StyleManager)new AnsiStyleManager(writer)
                         : (StyleManager)new ConsoleStyleManager());
@@ -185,6 +188,27 @@ namespace Pixie.Terminal.Devices
             return identifier.StartsWith("vt")
                 || identifier.StartsWith("xterm")
                 || identifier == "linux";
+        }
+
+        private const int DefaultTerminalWidth = 80;
+
+        private static int GetTerminalWidth()
+        {
+            int result = 0;
+            try
+            {
+                result = Console.BufferWidth;
+            }
+            catch (Exception)
+            {
+                // Console.BufferWidth can throw when using the
+                // .NET framework on Cygwin. We'll just ignore
+                // the error and pick the default size.
+            }
+
+            return result <= 0
+                ? DefaultTerminalWidth
+                : result;
         }
     }
 
