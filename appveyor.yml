@@ -19,4 +19,4 @@ build_script:
 
 test_script:
   # Run example programs
-  - ./Examples/FormattedList/bin/Release/FormattedList.exe
+  - Examples\FormattedList\bin\Release\FormattedList.exe
