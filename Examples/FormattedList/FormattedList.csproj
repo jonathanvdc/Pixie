@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4AE2009A-41E5-4282-9394-2870FFC8BBD1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleDriver</RootNamespace>
-    <AssemblyName>ConsoleDriver</AssemblyName>
+    <RootNamespace>FormattedList</RootNamespace>
+    <AssemblyName>FormattedList</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie", "Pixie\Pixie.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie.Terminal", "Pixie.Terminal\Pixie.Terminal.csproj", "{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleDriver", "Examples\ConsoleDriver\ConsoleDriver.csproj", "{4AE2009A-41E5-4282-9394-2870FFC8BBD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormattedList", "Examples\FormattedList\FormattedList.csproj", "{4AE2009A-41E5-4282-9394-2870FFC8BBD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

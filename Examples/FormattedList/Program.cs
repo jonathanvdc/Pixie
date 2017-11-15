@@ -4,7 +4,7 @@ using Pixie;
 using Pixie.Terminal;
 using Pixie.Markup;
 
-namespace ConsoleDriver
+namespace FormattedList
 {
     public static class Program
     {
