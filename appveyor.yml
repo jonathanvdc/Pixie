@@ -16,3 +16,7 @@ build_script:
   - nuget restore Pixie.sln
   # Build Pixie with csc
   - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
+
+test_script:
+  # Run example programs
+  - ./Examples/FormattedList/bin/Release/FormattedList.exe
