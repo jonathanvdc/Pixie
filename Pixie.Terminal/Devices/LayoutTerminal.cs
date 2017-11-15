@@ -419,16 +419,27 @@ namespace Pixie.Terminal.Devices
 
         private List<Action<TerminalBase>> commandBuffer;
 
+        /// <inheritdoc/>
         public override void PushForegroundColor(Color color)
         {
             commandBuffer.Add(new ForegroundColorCommand(color).Run);
         }
 
+        /// <inheritdoc/>
         public override void PushBackgroundColor(Color color)
         {
             commandBuffer.Add(new BackgroundColorCommand(color).Run);
         }
 
+        /// <inheritdoc/>
+        public override void PushDecoration(
+            TextDecoration decoration,
+            Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
+        {
+            commandBuffer.Add(new DecorationCommand(decoration, updateDecoration).Run);
+        }
+
+        /// <inheritdoc/>
         public override void PopStyle()
         {
             commandBuffer.Add(PopStyle);
@@ -482,6 +493,26 @@ namespace Pixie.Terminal.Devices
         public void Run(TerminalBase terminal)
         {
             terminal.Style.PushBackgroundColor(Color);
+        }
+    }
+
+    internal sealed class DecorationCommand
+    {
+        public DecorationCommand(
+            TextDecoration decoration,
+            Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
+        {
+            this.Decoration = decoration;
+            this.UpdateDecoration = updateDecoration;
+        }
+
+        public TextDecoration Decoration { get; private set; }
+
+       public  Func<TextDecoration, TextDecoration, TextDecoration> UpdateDecoration { get; private set; }
+
+        public void Run(TerminalBase terminal)
+        {
+            terminal.Style.PushDecoration(Decoration, UpdateDecoration);
         }
     }
 }

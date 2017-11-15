@@ -1,3 +1,6 @@
+using System;
+using Pixie.Markup;
+
 namespace Pixie.Terminal.Devices
 {
     /// <summary>
@@ -31,5 +34,11 @@ namespace Pixie.Terminal.Devices
         {
 
         }
+
+        /// <inheritdoc/>
+        public override void PushDecoration(
+            TextDecoration decoration,
+            Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
+        { }
     }
 }

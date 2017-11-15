@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Pixie.Markup;
 
 namespace Pixie.Terminal.Devices
 {
@@ -42,7 +43,8 @@ namespace Pixie.Terminal.Devices
             this.styleStack.Push(
                 new AnsiStyle(
                     default(Nullable<Color>),
-                    default(Nullable<Color>)));
+                    default(Nullable<Color>),
+                    TextDecoration.None));
         }
 
         private Stack<AnsiStyle> styleStack;
@@ -65,7 +67,8 @@ namespace Pixie.Terminal.Devices
             PushStyle(
                 new AnsiStyle(
                     Over(color, curStyle.ForegroundColor, defaultForegroundColor),
-                    curStyle.BackgroundColor));
+                    curStyle.BackgroundColor,
+                    curStyle.Decoration));
         }
 
         /// <inheritdoc/>
@@ -75,7 +78,21 @@ namespace Pixie.Terminal.Devices
             PushStyle(
                 new AnsiStyle(
                     curStyle.ForegroundColor,
-                    Over(color, curStyle.BackgroundColor, defaultBackgroundColor)));
+                    Over(color, curStyle.BackgroundColor, defaultBackgroundColor),
+                    curStyle.Decoration));
+        }
+
+        /// <inheritdoc/>
+        public override void PushDecoration(
+            TextDecoration decoration,
+            Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
+        {
+            var curStyle = CurrentStyle;
+            PushStyle(
+                new AnsiStyle(
+                    curStyle.ForegroundColor,
+                    curStyle.BackgroundColor,
+                    updateDecoration(curStyle.Decoration, decoration)));
         }
 
         private void PushStyle(AnsiStyle style)
@@ -112,6 +129,11 @@ namespace Pixie.Terminal.Devices
         Reset = 0,
         Bold = 1,
         Faint = 2,
+        Italic = 3,
+        Underline = 4,
+        BlinkSlow = 5,
+        BlinkFast = 6,
+        Strikethrough = 9,
 
         ForegroundBlack = 30,
         ForegroundRed = 31,
@@ -136,15 +158,19 @@ namespace Pixie.Terminal.Devices
     {
         public AnsiStyle(
             Nullable<Color> foregroundColor,
-            Nullable<Color> backgroundColor)
+            Nullable<Color> backgroundColor,
+            TextDecoration decoration)
         {
             this.ForegroundColor = foregroundColor;
             this.BackgroundColor = backgroundColor;
+            this.Decoration = decoration;
         }
 
         public Nullable<Color> ForegroundColor { get; private set; }
 
         public Nullable<Color> BackgroundColor { get; private set; }
+
+        public TextDecoration Decoration { get; private set; }
 
         private void WriteControlSequence(
             TextWriter writer,
@@ -196,7 +222,30 @@ namespace Pixie.Terminal.Devices
                         ConsoleStyle.ToConsoleColor(BackgroundColor.Value)));
             }
 
+            // Apply decorations
+            if (HasDecoration(TextDecoration.Bold))
+            {
+                commands.Add(AnsiControlCode.Bold);
+            }
+            if (HasDecoration(TextDecoration.Italic))
+            {
+                commands.Add(AnsiControlCode.Italic);
+            }
+            if (HasDecoration(TextDecoration.Underline))
+            {
+                commands.Add(AnsiControlCode.Underline);
+            }
+            if (HasDecoration(TextDecoration.Strikethrough))
+            {
+                commands.Add(AnsiControlCode.Strikethrough);
+            }
+
             WriteControlSequence(writer, commands);
+        }
+
+        private bool HasDecoration(TextDecoration decor)
+        {
+            return (Decoration & decor) == decor;
         }
 
         /// <summary>
@@ -204,7 +253,8 @@ namespace Pixie.Terminal.Devices
         /// </summary>
         public void Apply(TextWriter writer, AnsiStyle style)
         {
-            if (!QuantizedColorEquals(ForegroundColor, style.ForegroundColor)
+            if (Decoration != style.Decoration
+                || !QuantizedColorEquals(ForegroundColor, style.ForegroundColor)
                 || !QuantizedColorEquals(BackgroundColor, style.BackgroundColor))
             {
                 Apply(writer);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Terminal.Devices
 {
@@ -58,6 +59,15 @@ namespace Pixie.Terminal.Devices
                 new ConsoleStyle(
                     curStyle.ForegroundColor,
                     color.Over(curStyle.BackgroundColor)));
+        }
+
+        public override void PushDecoration(
+            TextDecoration decoration,
+            Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
+        {
+            // 'System.Console' doesn't support text decorations. Just push
+            // the current style.
+            PushStyle(CurrentStyle);
         }
 
         private void PushStyle(ConsoleStyle style)

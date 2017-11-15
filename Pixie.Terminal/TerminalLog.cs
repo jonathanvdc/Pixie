@@ -20,6 +20,7 @@ namespace Pixie.Terminal
                 new RenderState(terminal).WithRenderers(
                     AlignBoxRenderer.Instance,
                     ColorSpanRenderer.Instance,
+                    DecorationSpanRenderer.Instance,
                     DegradableTextRenderer.Instance,
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
