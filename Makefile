@@ -1,10 +1,12 @@
 exe:
 	make -C Pixie dll
 	make -C Pixie.Terminal dll
+	make -C Examples exe
 
 all:
 	make -C Pixie all
 	make -C Pixie.Terminal all
+	make -C Examples all
 
 dll:
 	make -C Pixie dll
@@ -12,7 +14,8 @@ dll:
 
 flo:
 	make -C Pixie all
-	make -C Pixie.Terminal flo
+	make -C Pixie.Terminal all
+	make -C Examples flo
 
 nuget:
 	nuget restore Pixie.sln
@@ -20,5 +23,6 @@ nuget:
 clean: clean-ecsc
 	make -C Pixie clean
 	make -C Pixie.Terminal clean
+	make -C Examples clean
 
 include flame-make-scripts/use-ecsc.mk

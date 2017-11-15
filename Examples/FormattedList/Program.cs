@@ -19,18 +19,22 @@ namespace FormattedList
 
             // Write an entry to the log that contains the things
             // we would like to print.
-            log.Log(new LogEntry(
-                Severity.Info,
-                new Title(new ColorSpan(new Text("Hello world"), Colors.Green)),
-                new WrapBox(
-                    new BulletedList(
-                        LoremIpsum
-                            .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select<string, MarkupNode>(QuoteString)
-                            .ToArray<MarkupNode>(),
-                        true),
-                    WrappingStrategy.Word,
-                    4)));
+            log.Log(
+                new LogEntry(
+                    Severity.Info,
+                    new MarkupNode[]
+                    {
+                        new Title(new ColorSpan(new Text("Hello world"), Colors.Green)),
+                        new WrapBox(
+                            new BulletedList(
+                                LoremIpsum
+                                    .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select<string, MarkupNode>(QuoteString)
+                                    .ToArray<MarkupNode>(),
+                                true),
+                            WrappingStrategy.Word,
+                            4)
+                    }));
         }
 
         private static MarkupNode QuoteString(string text)
