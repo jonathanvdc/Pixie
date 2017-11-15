@@ -4,27 +4,27 @@ using Pixie.Terminal.Devices;
 namespace Pixie.Terminal.Render
 {
     /// <summary>
-    /// A renderer for color nodes.
+    /// A renderer for color spans.
     /// </summary>
-    public sealed class ColorNodeRenderer : NodeRenderer
+    public sealed class ColorSpanRenderer : NodeRenderer
     {
-        private ColorNodeRenderer() { }
+        private ColorSpanRenderer() { }
 
         /// <summary>
-        /// An instance of a color node renderer.
+        /// An instance of a color span renderer.
         /// </summary>
-        public static readonly ColorNodeRenderer Instance = new ColorNodeRenderer();
+        public static readonly ColorSpanRenderer Instance = new ColorSpanRenderer();
 
         /// <inheritdoc/>
         public override bool CanRender(MarkupNode node)
         {
-            return node is ColorNode;
+            return node is ColorSpan;
         }
 
         /// <inheritdoc/>
         public override void Render(MarkupNode node, RenderState state)
         {
-            var colorNode = (ColorNode)node;
+            var colorNode = (ColorSpan)node;
 
             state.Terminal.Style.PushForegroundColor(colorNode.ForegroundColor);
             state.Terminal.Style.PushBackgroundColor(colorNode.BackgroundColor);

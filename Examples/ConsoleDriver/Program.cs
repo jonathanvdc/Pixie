@@ -21,7 +21,7 @@ namespace ConsoleDriver
             // we would like to print.
             log.Log(new LogEntry(
                 Severity.Info,
-                new Title(new ColorNode(new Text("Hello world"), Colors.Green)),
+                new Title(new ColorSpan(new Text("Hello world"), Colors.Green)),
                 new WrapBox(
                     new BulletedList(
                         LoremIpsum
