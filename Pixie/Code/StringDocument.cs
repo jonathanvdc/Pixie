@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -19,6 +20,7 @@ namespace Pixie.Code
         {
             this.ident = identifier;
             this.Contents = contents;
+            this.lineOffsets = ComputeLineOffsets(contents);
         }
 
         private string ident;
@@ -28,6 +30,8 @@ namespace Pixie.Code
         /// </summary>
         /// <returns>The document's contents string.</returns>
         public string Contents { get; private set; }
+
+        private List<int> lineOffsets;
 
         /// <inheritdoc/>
         public override string Identifier => ident;
@@ -56,6 +60,60 @@ namespace Pixie.Code
         public override string GetText(int offset, int length)
         {
             return Contents.Substring(offset, length);
+        }
+
+        /// <inheritdoc/>
+        public override GridPosition GetGridPosition(int offset)
+        {
+            int lineIndex = 0;
+            int lineStartOffset = 0;
+            for (int i = 0; i < lineOffsets.Count; i++)
+            {
+                if (lineOffsets[i] >= offset)
+                {
+                    lineIndex--;
+                    break;
+                }
+                lineIndex++;
+                lineStartOffset = lineOffsets[i];
+            }
+
+            return new GridPosition(lineIndex, offset - lineStartOffset);
+        }
+
+        /// <summary>
+        /// Computes the offsets at which new lines start in a particular string.
+        /// </summary>
+        /// <param name="str">The string to examine.</param>
+        /// <returns>The offsets at which new lines start.</returns>
+        private static List<int> ComputeLineOffsets(string str)
+        {
+            var results = new List<int>();
+            results.Add(0);
+            int i = 0;
+            while (i < str.Length)
+            {
+                // Skip to the next newline.
+                i = str.IndexOf('\n', i);
+
+                if (i < 0)
+                {
+                    break;
+                }
+
+                i++;
+
+                // Skip carriage returns.
+                while (i < str.Length && str.Substring(i, 1) == "\r")
+                {
+                    i++;
+                }
+
+                // Log the first character of the new line.
+                results.Add(i);
+            }
+
+            return results;
         }
     }
 }

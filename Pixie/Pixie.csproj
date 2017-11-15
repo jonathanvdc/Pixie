@@ -38,6 +38,7 @@
     <Compile Include="PixieException.cs" />
     <Compile Include="Severity.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
+    <Compile Include="Code\GridPosition.cs" />
     <Compile Include="Code\SourceDocument.cs" />
     <Compile Include="Code\SourceRegion.cs" />
     <Compile Include="Code\SourceSpan.cs" />
@@ -48,11 +49,13 @@
     <Compile Include="Markup\ContainerNode.cs" />
     <Compile Include="Markup\DecorationSpan.cs" />
     <Compile Include="Markup\DegradableText.cs" />
+    <Compile Include="Markup\HighlightedSource.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\PrefixBox.cs" />
     <Compile Include="Markup\Quotation.cs" />
     <Compile Include="Markup\Sequence.cs" />
+    <Compile Include="Markup\SourceReference.cs" />
     <Compile Include="Markup\Text.cs" />
     <Compile Include="Markup\Title.cs" />
     <Compile Include="Markup\WrapBox.cs" />

@@ -31,6 +31,14 @@ namespace Pixie.Code
         public abstract TextReader Open(int offset);
 
         /// <summary>
+        /// Gets the (line index, line offset) pair that corresponds to the
+        /// character in the document at a particular offset.
+        /// </summary>
+        /// <param name="offset">The offset to a character in the document.</param>
+        /// <returns>A (line index, line offset) pair.</returns>
+        public abstract GridPosition GetGridPosition(int offset);
+
+        /// <summary>
         /// Gets a span of text in the document.
         /// </summary>
         /// <param name="offset">
