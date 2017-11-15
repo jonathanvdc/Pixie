@@ -3,7 +3,7 @@ using System;
 namespace Pixie.Code
 {
     /// <summary>
-    /// Specifies a span of source code.
+    /// Specifies a contiguous span of text in a document.
     /// </summary>
     public struct SourceSpan
     {

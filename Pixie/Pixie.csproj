@@ -39,6 +39,7 @@
     <Compile Include="Severity.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
     <Compile Include="Code\SourceDocument.cs" />
+    <Compile Include="Code\SourceRegion.cs" />
     <Compile Include="Code\SourceSpan.cs" />
     <Compile Include="Code\StringDocument.cs" />
     <Compile Include="Markup\AlignBox.cs" />

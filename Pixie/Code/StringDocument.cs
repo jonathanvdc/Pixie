@@ -5,7 +5,7 @@ using System.Text;
 namespace Pixie.Code
 {
     /// <summary>
-    /// A document of source code that is stored as a string
+    /// A document of source code that is stored as a string.
     /// </summary>
     public sealed class StringDocument : SourceDocument
     {
