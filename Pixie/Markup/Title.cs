@@ -27,7 +27,10 @@ namespace Pixie.Markup
         public override MarkupNode Fallback =>
             new Paragraph(
                 new AlignBox(
-                    Contents,
+                    new DecorationSpan(
+                        Contents,
+                        TextDecoration.Bold,
+                        DecorationSpan.UnifyDecorations),
                     Alignment.Center));
     }
 }

@@ -42,6 +42,7 @@
     <Compile Include="Markup\BulletedList.cs" />
     <Compile Include="Markup\ColorSpan.cs" />
     <Compile Include="Markup\ContainerNode.cs" />
+    <Compile Include="Markup\DecorationSpan.cs" />
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
