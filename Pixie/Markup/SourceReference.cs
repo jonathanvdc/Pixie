@@ -37,7 +37,7 @@ namespace Pixie.Markup
             GridPosition end)
         {
             return new Text(
-                documentIdentifier + ":" + (start.LineIndex + 1) + ":" + (end.Offset + 1));
+                documentIdentifier + ":" + (start.LineIndex + 1) + ":" + (start.Offset + 1));
         }
 
         /// <inheritdoc/>
@@ -75,7 +75,7 @@ namespace Pixie.Markup
             GridPosition end)
         {
             return new Text(
-                documentIdentifier + "(" + (start.LineIndex + 1) + "," + (end.Offset + 1) + ")");
+                documentIdentifier + "(" + (start.LineIndex + 1) + "," + (start.Offset + 1) + ")");
         }
     }
 
@@ -100,7 +100,7 @@ namespace Pixie.Markup
             GridPosition end)
         {
             return new Text(
-                documentIdentifier + " +" + (start.LineIndex + 1) + ":" + (end.Offset + 1));
+                documentIdentifier + " +" + (start.LineIndex + 1) + ":" + (start.Offset + 1));
         }
     }
 }

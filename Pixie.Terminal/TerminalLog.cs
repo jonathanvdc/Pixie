@@ -22,6 +22,7 @@ namespace Pixie.Terminal
                     ColorSpanRenderer.Instance,
                     DecorationSpanRenderer.Instance,
                     DegradableTextRenderer.Instance,
+                    new HighlightedSourceRenderer(Colors.Green, 1),
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
                     PrefixBoxRenderer.Instance,

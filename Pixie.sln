@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie.Terminal", "Pixie.Ter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormattedList", "Examples\FormattedList\FormattedList.csproj", "{4AE2009A-41E5-4282-9394-2870FFC8BBD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaretDiagnostics", "Examples\CaretDiagnostics\CaretDiagnostics.csproj", "{353D417A-557E-4F2E-8202-64DA1EBC1C15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4AE2009A-41E5-4282-9394-2870FFC8BBD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4AE2009A-41E5-4282-9394-2870FFC8BBD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AE2009A-41E5-4282-9394-2870FFC8BBD1}.Release|Any CPU.ActiveCfg = Release|Any CPU

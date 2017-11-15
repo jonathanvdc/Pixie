@@ -81,6 +81,17 @@ namespace Pixie.Code
             return new GridPosition(lineIndex, offset - lineStartOffset);
         }
 
+        /// <inheritdoc/>
+        public override int GetLineOffset(int lineIndex)
+        {
+            if (lineIndex < 0)
+                return 0;
+            else if (lineIndex >= lineOffsets.Count)
+                return Length;
+            else
+                return lineOffsets[lineIndex];
+        }
+
         /// <summary>
         /// Computes the offsets at which new lines start in a particular string.
         /// </summary>

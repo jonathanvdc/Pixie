@@ -39,6 +39,16 @@ namespace Pixie.Code
         public abstract GridPosition GetGridPosition(int offset);
 
         /// <summary>
+        /// Gets the offset of the first character on a particular line.
+        /// </summary>
+        /// <param name="lineIndex">The zero-based index of the line to address.</param>
+        /// <returns>
+        /// The offset of the first character on the line, if it exists.
+        /// Otherwise, the resulting offset is truncated.
+        /// </returns>
+        public abstract int GetLineOffset(int lineIndex);
+
+        /// <summary>
         /// Gets a span of text in the document.
         /// </summary>
         /// <param name="offset">
