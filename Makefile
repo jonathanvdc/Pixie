@@ -25,4 +25,7 @@ clean: clean-ecsc
 	make -C Pixie.Terminal clean
 	make -C Examples clean
 
+test: exe
+	mono ./Examples/FormattedList/bin/clr/FormattedList.exe
+
 include flame-make-scripts/use-ecsc.mk
