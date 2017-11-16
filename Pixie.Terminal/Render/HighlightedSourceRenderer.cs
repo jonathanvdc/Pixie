@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using Pixie.Code;
 using Pixie.Markup;
@@ -7,9 +10,63 @@ using Pixie.Terminal.Devices;
 namespace Pixie.Terminal.Render
 {
     /// <summary>
+    /// An enumeration of possible highlighted source span types.
+    /// </summary>
+    public enum HighlightedSourceSpanKind
+    {
+        /// <summary>
+        /// Non-highlighted source code.
+        /// </summary>
+        Source,
+
+        /// <summary>
+        /// Highlighted source code with focus.
+        /// </summary>
+        Focus,
+
+        /// <summary>
+        /// Highlighted source code without focus.
+        /// </summary>
+        Highlight
+    }
+
+    /// <summary>
+    /// Describes a highlighted span of source code.
+    /// </summary>
+    public struct HighlightedSourceSpan
+    {
+        /// <summary>
+        /// Creates a highlighted source span from a kind and a
+        /// string of text.
+        /// </summary>
+        /// <param name="kind">The source span's kind.</param>
+        /// <param name="text">The source span's text.</param>
+        public HighlightedSourceSpan(
+            HighlightedSourceSpanKind kind,
+            string text)
+        {
+            this = default(HighlightedSourceSpan);
+            this.Kind = kind;
+            this.Text = text;
+        }
+
+        /// <summary>
+        /// Gets this source span's kind.
+        /// </summary>
+        /// <returns></returns>
+        public HighlightedSourceSpanKind Kind { get; private set; }
+
+        /// <summary>
+        /// Gets this span of source code as text.
+        /// </summary>
+        /// <returns>The source span's text.</returns>
+        public string Text { get; private set; }
+    }
+
+    /// <summary>
     /// A renderer for highlighted source code.
     /// </summary>
-    public sealed class HighlightedSourceRenderer : NodeRenderer
+    public class HighlightedSourceRenderer : NodeRenderer
     {
         /// <summary>
         /// Create a highlighted source renderer that highlights source
@@ -60,119 +117,348 @@ namespace Pixie.Terminal.Render
             // plus a number of lines of context.
             int focusLine = document.GetGridPosition(focusRegion.StartOffset).LineIndex;
 
+            int firstLineNumber = -1;
+            var lines = new List<IReadOnlyList<HighlightedSourceSpan>>();
             for (int i = -ContextLineCount; i <= ContextLineCount; i++)
             {
-                RenderLine(focusLine + i, highlightRegion, focusRegion, state);
+                var lineSpans = LineToSpans(focusLine + i, highlightRegion, focusRegion);
+                if (lineSpans != null)
+                {
+                    if (firstLineNumber < 0)
+                    {
+                        firstLineNumber = focusLine + i;
+                    }
+                    lines.Add(lineSpans);
+                }
+            }
+
+            var compressedLines = CompressLeadingWhitespace(lines);
+            for (int i = 0; i < compressedLines.Count; i++)
+            {
+                RenderLine(
+                    WrapSpans(
+                        compressedLines[i],
+                        state.Terminal.Width),
+                    firstLineNumber + i,
+                    state);
             }
         }
 
-        private void RenderLine(
-            int line,
-            SourceRegion highlightRegion,
-            SourceRegion focusRegion,
+        /// <summary>
+        /// Renders a single line of code that has been line-wrapped.
+        /// </summary>
+        /// <param name="wrappedSpans">
+        /// A line-wrapped list of highlighted spans.
+        /// </param>
+        /// <param name="lineIndex">The line's zero-based index.</param>
+        /// <param name="state">The render state.</param>
+        protected virtual void RenderLine(
+            IReadOnlyList<IReadOnlyList<HighlightedSourceSpan>> wrappedSpans,
+            int lineIndex,
             RenderState state)
+        {
+            var wrappedSpanCount = wrappedSpans.Count;
+            for (int i = 0; i < wrappedSpanCount; i++)
+            {
+                foreach (var span in wrappedSpans[i])
+                {
+                    RenderSpanText(span, state);
+                }
+                state.Terminal.WriteLine();
+
+                if (IsHighlighted(wrappedSpans[i]))
+                {
+                    foreach (var span in wrappedSpans[i])
+                    {
+                        RenderSpanSquiggle(span, state);
+                    }
+                    state.Terminal.WriteLine();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Renders a span's text.
+        /// </summary>
+        /// <param name="span">A span whose text is to be rendered.</param>
+        /// <param name="state">A render state.</param>
+        protected virtual void RenderSpanText(
+            HighlightedSourceSpan span,
+            RenderState state)
+        {
+            if (span.Kind == HighlightedSourceSpanKind.Focus)
+            {
+                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                state.Terminal.Style.PushDecoration(
+                    TextDecoration.Bold, DecorationSpan.UnifyDecorations);
+                try
+                {
+                    state.Terminal.Write(span.Text);
+                }
+                finally
+                {
+                    state.Terminal.Style.PopStyle();
+                    state.Terminal.Style.PopStyle();
+                }
+            }
+            else
+            {
+                state.Terminal.Write(span.Text);
+            }
+        }
+
+        /// <summary>
+        /// Renders the squiggle under a span.
+        /// </summary>
+        /// <param name="span">A span for which a squiggle is to be rendered.</param>
+        /// <param name="state">A render state.</param>
+        protected virtual void RenderSpanSquiggle(
+            HighlightedSourceSpan span,
+            RenderState state)
+        {
+            var spanLength = new StringInfo(span.Text).LengthInTextElements;
+            char caret = '^';
+            char squiggle = '~';
+            if (span.Kind == HighlightedSourceSpanKind.Highlight)
+            {
+                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                try
+                {
+                    for (int i = 0; i < spanLength; i++)
+                    {
+                        state.Terminal.Write(squiggle);
+                    }
+                }
+                finally
+                {
+                    state.Terminal.Style.PopStyle();
+                }
+            }
+            else if (span.Kind == HighlightedSourceSpanKind.Focus)
+            {
+                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                state.Terminal.Style.PushDecoration(
+                    TextDecoration.Bold, DecorationSpan.UnifyDecorations);
+                try
+                {
+                    for (int i = 0; i < spanLength; i++)
+                    {
+                        state.Terminal.Write(i == 0 ? caret : squiggle);
+                    }
+                }
+                finally
+                {
+                    state.Terminal.Style.PopStyle();
+                    state.Terminal.Style.PopStyle();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < spanLength; i++)
+                {
+                    state.Terminal.Write(' ');
+                }
+            }
+        }
+
+        /// <summary>
+        /// Identifies and compresses leading whitespace in a list
+        /// of lines, where each line is encoded as a highlighted span.
+        /// </summary>
+        /// <param name="lines">A list of lines.</param>
+        /// <returns>A new list of lines.</returns>
+        protected virtual IReadOnlyList<IReadOnlyList<HighlightedSourceSpan>> CompressLeadingWhitespace(
+            IReadOnlyList<IReadOnlyList<HighlightedSourceSpan>> lines)
+        {
+            // TODO: implement this
+            return lines;
+        }
+
+        /// <summary>
+        /// Line-wraps a list of highlighted source spans.
+        /// </summary>
+        /// <param name="spans">The spans to line-wrap.</param>
+        /// <param name="lineLength">The maximum length of a line.</param>
+        /// <returns>A list of lines, where each line is encoded as a list of spans.</returns>
+        protected virtual IReadOnlyList<IReadOnlyList<HighlightedSourceSpan>> WrapSpans(
+            IReadOnlyList<HighlightedSourceSpan> spans,
+            int lineLength)
+        {
+            var allLines = new List<IReadOnlyList<HighlightedSourceSpan>>();
+            var currentLine = new List<HighlightedSourceSpan>();
+
+            var spanCount = spans.Count;
+            int length = 0;
+            for (int i = 0; i < spanCount; i++)
+            {
+                AppendSpanToLine(spans[i], ref currentLine, ref length, allLines, lineLength);
+            }
+
+            if (currentLine.Count != 0)
+            {
+                allLines.Add(currentLine);
+            }
+
+            return allLines;
+        }
+
+        private static void AppendSpanToLine(
+            HighlightedSourceSpan span,
+            ref List<HighlightedSourceSpan> line,
+            ref int lineLength,
+            List<IReadOnlyList<HighlightedSourceSpan>> allLines,
+            int maxLineLength)
+        {
+            var spanInfo = new StringInfo(span.Text);
+            if (spanInfo.LengthInTextElements == 0)
+            {
+                // Do nothing.
+            }
+            else if (lineLength + spanInfo.LengthInTextElements <= maxLineLength)
+            {
+                // Easy case: append entire span to line.
+                line.Add(span);
+                lineLength += spanInfo.LengthInTextElements;
+            }
+            else
+            {
+                // Slightly more complicated case: split the span.
+                var remainingElements = maxLineLength - lineLength;
+                var first = spanInfo.SubstringByTextElements(0, remainingElements);
+                var second = spanInfo.SubstringByTextElements(remainingElements);
+
+                // Append the first part.
+                line.Add(new HighlightedSourceSpan(span.Kind, first));
+
+                // Start a new line.
+                allLines.Add(line);
+                line = new List<HighlightedSourceSpan>();
+                lineLength = 0;
+
+                // Append the second part.
+                AppendSpanToLine(
+                    new HighlightedSourceSpan(span.Kind, second),
+                    ref line,
+                    ref lineLength,
+                    allLines,
+                    maxLineLength);
+            }
+        }
+
+        private static HighlightedSourceSpanKind GetCharacterKind(
+            int offset,
+            SourceRegion highlightRegion,
+            SourceRegion focusRegion)
+        {
+            if (focusRegion.Contains(offset))
+                return HighlightedSourceSpanKind.Focus;
+            else if (highlightRegion.Contains(offset))
+                return HighlightedSourceSpanKind.Highlight;
+            else
+                return HighlightedSourceSpanKind.Source;
+        }
+
+        /// <summary>
+        /// Chunks a line into a list of highlighted spans.
+        /// </summary>
+        /// <param name="lineText">The line's text.</param>
+        /// <param name="lineStartOffset">
+        /// The offset of the first character in the line.
+        /// </param>
+        /// <param name="highlightRegion">
+        /// The highlighted region.
+        /// </param>
+        /// <param name="focusRegion">
+        /// The focus region.
+        /// </param>
+        /// <returns>A list of highlighted spans.</returns>
+        private static IReadOnlyList<HighlightedSourceSpan> LineToSpans(
+            string lineText,
+            int lineStartOffset,
+            SourceRegion highlightRegion,
+            SourceRegion focusRegion)
+        {
+            var spans = new List<HighlightedSourceSpan>();
+
+            var kind = HighlightedSourceSpanKind.Source;
+            int spanStart = 0;
+            for (int i = 0; i < lineText.Length; i++)
+            {
+                var charKind = GetCharacterKind(
+                    lineStartOffset + i, highlightRegion, focusRegion);
+                
+                if (charKind != kind)
+                {
+                    if (spanStart != i)
+                    {
+                        spans.Add(
+                            new HighlightedSourceSpan(
+                                kind,
+                                lineText
+                                    .Substring(spanStart, i - spanStart)
+                                    .Replace("\t", "    ")));
+                    }
+                    kind = charKind;
+                    spanStart = i;
+                }
+            }
+
+            if (spanStart != lineText.Length)
+            {
+                spans.Add(
+                    new HighlightedSourceSpan(
+                        kind,
+                        lineText
+                            .Substring(spanStart)
+                            .TrimEnd()
+                            .Replace("\t", "    ")));
+            }
+            
+            return spans;
+        }
+
+        /// <summary>
+        /// Chunks a line into a list of highlighted spans.
+        /// </summary>
+        /// <param name="lineIndex">The line's zero-based index.</param>
+        /// <param name="highlightRegion">
+        /// The highlighted region.
+        /// </param>
+        /// <param name="focusRegion">
+        /// The focus region.
+        /// </param>
+        /// <returns>A list of highlighted spans.</returns>
+        private static IReadOnlyList<HighlightedSourceSpan> LineToSpans(
+            int lineIndex,
+            SourceRegion highlightRegion,
+            SourceRegion focusRegion)
         {
             var document = focusRegion.Document;
 
-            int lineStart = document.GetLineOffset(line);
-            int lineEnd = document.GetLineOffset(line + 1);
+            int lineStart = document.GetLineOffset(lineIndex);
+            int lineEnd = document.GetLineOffset(lineIndex + 1);
 
             if (lineStart == lineEnd)
             {
                 // Nothing to do here.
-                return;
+                return null;
             }
 
             var lineText = document.GetText(lineStart, lineEnd - lineStart).TrimEnd();
 
-            RenderLine(lineText, lineStart, highlightRegion, focusRegion, state);
+            return LineToSpans(lineText, lineStart, highlightRegion, focusRegion);
         }
 
-        private void RenderLine(
-            string lineText,
-            int lineStartOffset,
-            SourceRegion highlightRegion,
-            SourceRegion focusRegion,
-            RenderState state)
+        private static bool IsHighlighted(
+            IReadOnlyList<HighlightedSourceSpan> spans)
         {
-            var caret = '^';
-            var squiggle = '~';
+            return spans.Any<HighlightedSourceSpan>(IsHighlighted);
+        }
 
-            int offset = 0;
-            while (offset < lineText.Length)
-            {
-                var substr = lineText
-                    .Substring(
-                        offset,
-                        Math.Min(lineText.Length - offset, state.Terminal.Width))
-                    .ToCharArray();
-
-                var caretSquiggleLine = new StringBuilder();
-                for (int i = 0; i < substr.Length; i++)
-                {
-                    if (focusRegion.Contains(lineStartOffset + offset))
-                    {
-                        state.Terminal.Style.PushForegroundColor(HighlightColor);
-                        state.Terminal.Style.PushDecoration(
-                            TextDecoration.Bold, DecorationSpan.UnifyDecorations);
-                        try
-                        {
-                            state.Terminal.Write(substr[i]);
-                        }
-                        finally
-                        {
-                            state.Terminal.Style.PopStyle();
-                            state.Terminal.Style.PopStyle();
-                        }
-                        caretSquiggleLine.Append(caret);
-                    }
-                    else if (highlightRegion.Contains(lineStartOffset + offset))
-                    {
-                        state.Terminal.Write(substr[i]);
-                        caretSquiggleLine.Append(squiggle);
-                    }
-                    else
-                    {
-                        state.Terminal.Write(substr[i]);
-                        caretSquiggleLine.Append(" ");
-                    }
-                    offset++;
-                }
-                state.Terminal.WriteLine();
-
-                if (!string.IsNullOrWhiteSpace(caretSquiggleLine.ToString()))
-                {
-                    state.Terminal.Style.PushForegroundColor(HighlightColor);
-                    try
-                    {
-                        for (int i = 0; i < caretSquiggleLine.Length; i++)
-                        {
-                            if (caretSquiggleLine[i] == caret)
-                            {
-                                state.Terminal.Style.PushDecoration(
-                                    TextDecoration.Bold, DecorationSpan.UnifyDecorations);
-                                try
-                                {
-                                    state.Terminal.Write(caret);
-                                }
-                                finally
-                                {
-                                    state.Terminal.Style.PopStyle();
-                                }
-                            }
-                            else
-                            {
-                                state.Terminal.Write(caretSquiggleLine[i]);
-                            }
-                        }
-                        state.Terminal.WriteLine();
-                    }
-                    finally
-                    {
-                        state.Terminal.Style.PopStyle();
-                    }
-                }
-            }
+        private static bool IsHighlighted(
+            HighlightedSourceSpan span)
+        {
+            return span.Kind != HighlightedSourceSpanKind.Source;
         }
     }
 }
