@@ -6,7 +6,7 @@ Reasons to use Pixie:
 
   * **Pixie aligns your text and inserts line breaks when the screen is full.** It also supports word-wrapping.
 
-    If you use word-wrapping, then you can rest assured that things like this unfortunate line break won't happen.
+    If you use word-wrapping, then you can rest assured that things like *this unfortunate line break won't happen.*
 
     ```
     error CS5001: Program `Color.exe' does not contain a static `Main' method suitab
