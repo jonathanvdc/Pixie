@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixie.Code
 {
@@ -116,6 +117,74 @@ namespace Pixie.Code
             region.minIndex = Math.Min(span.Offset, minIndex);
             region.maxIndex = Math.Max(span.Offset + span.Length, maxIndex);
             return region;
+        }
+
+        /// <summary>
+        /// Creates a new region that includes the intersection of the
+        /// current region's characters and the characters for which a
+        /// predicate returns <c>true</c>.
+        /// </summary>
+        /// <param name="include">
+        /// A predicate that decides whether a character is kept or discarded.
+        /// </param>
+        /// <returns>A new source region.</returns>
+        public SourceRegion FilterCharacters(Predicate<char> include)
+        {
+            var newSet = new HashSet<int>();
+
+            int newMin = int.MaxValue;
+            int newMax = int.MinValue;
+            foreach (var offset in regionIndices)
+            {
+                if (include(Document.GetText(offset, 1).Single<char>()))
+                {
+                    if (offset < newMin)
+                    {
+                        newMin = offset;
+                    }
+                    if (offset > newMax)
+                    {
+                        newMax = offset;
+                    }
+                    newSet.Add(offset);
+                }
+            }
+
+            var result = new SourceRegion();
+            result.regionIndices = newSet;
+            result.minIndex = newMin;
+            result.maxIndex = newMax;
+            result.Document = Document;
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new region that includes the intersection of the
+        /// current region's characters and the characters for which a
+        /// predicate returns <c>false</c>.
+        /// </summary>
+        /// <param name="exclude">
+        /// A predicate that decides whether a character is discarded or kept.
+        /// </param>
+        /// <returns>A new source region.</returns>
+        public SourceRegion ExcludeCharacters(Predicate<char> exclude)
+        {
+            return FilterCharacters(new NotPredicate<char>(exclude).Invoke);
+        }
+    }
+
+    internal sealed class NotPredicate<T>
+    {
+        public NotPredicate(Predicate<T> predicate)
+        {
+            this.Predicate = predicate;
+        }
+
+        public Predicate<T> Predicate { get; private set; }
+
+        public bool Invoke(T value)
+        {
+            return !Predicate(value);
         }
     }
 }

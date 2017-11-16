@@ -17,7 +17,14 @@ namespace CaretDiagnostics
 
             var doc = new StringDocument("code.cs", SourceCode);
             var ctorStartOffset = SourceCode.IndexOf("public Program()");
-            var ctorRegion = new SourceRegion(new SourceSpan(doc, ctorStartOffset, "public Program()".Length));
+            var ctorNameOffset = SourceCode.IndexOf("Program()");
+
+            var highlightRegion = new SourceRegion(
+                new SourceSpan(doc, ctorStartOffset, "public Program()".Length))
+                .ExcludeCharacters(char.IsWhiteSpace);
+
+            var focusRegion = new SourceRegion(
+                new SourceSpan(doc, ctorNameOffset, "Program".Length));
 
             // Write an entry to the log that contains the things
             // we would like to print.
@@ -27,7 +34,7 @@ namespace CaretDiagnostics
                     new MarkupNode[]
                     {
                         new Title(new ColorSpan(new Text("Hello world"), Colors.Green)),
-                        new HighlightedSource(ctorRegion)
+                        new HighlightedSource(highlightRegion, focusRegion)
                     }));
         }
 
