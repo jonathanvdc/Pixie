@@ -195,17 +195,18 @@ namespace Pixie.Terminal.Render
             var wrappedSpanCount = wrappedSpans.Count;
             for (int i = 0; i < wrappedSpanCount; i++)
             {
-                for (int j = 0; j < wrappedSpans[i].Count; i++)
+                var wrappedSpanLine = wrappedSpans[i];
+                for (int j = 0; j < wrappedSpanLine.Count; j++)
                 {
-                    RenderSpanText(wrappedSpans[i][j], newState);
+                    RenderSpanText(wrappedSpanLine[j], newState);
                 }
                 newTerm.WriteLine();
 
-                if (IsHighlighted(wrappedSpans[i]))
+                if (IsHighlighted(wrappedSpanLine))
                 {
-                    for (int j = 0; j < wrappedSpans[i].Count; i++)
+                    for (int j = 0; j < wrappedSpanLine.Count; j++)
                     {
-                        RenderSpanSquiggle(wrappedSpans[i][j], newState);
+                        RenderSpanSquiggle(wrappedSpanLine[j], newState);
                     }
                     newTerm.WriteLine();
                 }
