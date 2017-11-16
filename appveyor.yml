@@ -19,4 +19,5 @@ build_script:
 
 test_script:
   # Run example programs
+  - Examples\CaretDiagnostics\bin\Release\CaretDiagnostics.exe
   - Examples\FormattedList\bin\Release\FormattedList.exe
