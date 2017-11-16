@@ -134,9 +134,12 @@ namespace Pixie.Code
 
             int newMin = int.MaxValue;
             int newMax = int.MinValue;
+            
             foreach (var offset in regionIndices)
             {
-                if (include(Document.GetText(offset, 1).Single<char>()))
+                char charValue = Enumerable.Single<char>(
+                    Document.GetText(offset, 1));
+                if (include(charValue))
                 {
                     if (offset < newMin)
                     {
