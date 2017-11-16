@@ -407,6 +407,40 @@ namespace Pixie.Terminal.Devices
                     Math.Max(1, terminal.Width - leftMargin - rightMargin));
             }
         }
+
+        /// <summary>
+        /// Creates a layout terminal that inserts additional left padding.
+        /// </summary>
+        /// <param name="terminal">
+        /// A terminal to print aligned contents to.
+        /// </param>
+        /// <param name="extraLeftPadding">
+        /// Additional left padding to print at the start of each line.
+        /// </param>
+        /// <returns>A padding-inserting terminal.</returns>
+        public static LayoutTerminal AddLeftPadding(
+            TerminalBase terminal, string extraLeftPadding)
+        {
+            if (terminal is LayoutTerminal)
+            {
+                var alignedTerm = (LayoutTerminal)terminal;
+                return new LayoutTerminal(
+                    alignedTerm.UnalignedTerminal,
+                    alignedTerm.Alignment,
+                    alignedTerm.Wrapping,
+                    alignedTerm.LeftPadding + extraLeftPadding,
+                    Math.Max(1, alignedTerm.width - extraLeftPadding.Length));
+            }
+            else
+            {
+                return new LayoutTerminal(
+                    terminal,
+                    Alignment.Left,
+                    WrappingStrategy.Character,
+                    extraLeftPadding,
+                    Math.Max(1, terminal.Width - extraLeftPadding.Length));
+            }
+        }
     }
 
     internal sealed class BufferingStyleManager : StyleManager

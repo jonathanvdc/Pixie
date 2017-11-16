@@ -133,15 +133,29 @@ namespace Pixie.Terminal.Render
             }
 
             var compressedLines = CompressLeadingWhitespace(lines);
+            var maxLineWidth = GetLineWidth(
+                firstLineNumber + compressedLines.Count, state);
             for (int i = 0; i < compressedLines.Count; i++)
             {
                 RenderLine(
-                    WrapSpans(
-                        compressedLines[i],
-                        state.Terminal.Width),
+                    WrapSpans(compressedLines[i], maxLineWidth),
                     firstLineNumber + i,
+                    firstLineNumber + compressedLines.Count,
                     state);
             }
+        }
+
+        /// <summary>
+        /// Gets the number of characters a source line can be wide.
+        /// </summary>
+        /// <param name="greatestLineIndex">The greatest line index to render.</param>
+        /// <param name="state">A render state.</param>
+        /// <returns>The line width.</returns>
+        protected virtual int GetLineWidth(int greatestLineIndex, RenderState state)
+        {
+            return state.Terminal.Width
+                - GetLineContinuatorPrefix(greatestLineIndex, greatestLineIndex, state).Length // Left padding
+                - 4; // Right padding
         }
 
         /// <summary>
@@ -151,30 +165,121 @@ namespace Pixie.Terminal.Render
         /// A line-wrapped list of highlighted spans.
         /// </param>
         /// <param name="lineIndex">The line's zero-based index.</param>
+        /// <param name="greatestLineIndex">
+        /// The greatest zero-based line index that will be rendered.
+        /// </param>
         /// <param name="state">The render state.</param>
         protected virtual void RenderLine(
             IReadOnlyList<IReadOnlyList<HighlightedSourceSpan>> wrappedSpans,
             int lineIndex,
+            int greatestLineIndex,
             RenderState state)
         {
+            state.Terminal.Write(
+                GetLineNumberPrefix(lineIndex, greatestLineIndex, state));
+
+            var continuatorPrefix = GetLineContinuatorPrefix(
+                lineIndex, greatestLineIndex, state);
+
+            var newTerm = new LayoutTerminal(
+                state.Terminal,
+                Alignment.Left,
+                WrappingStrategy.Character,
+                continuatorPrefix,
+                state.Terminal.Width);
+
+            newTerm.SuppressPadding();
+
+            var newState = state.WithTerminal(newTerm);
+
             var wrappedSpanCount = wrappedSpans.Count;
             for (int i = 0; i < wrappedSpanCount; i++)
             {
                 foreach (var span in wrappedSpans[i])
                 {
-                    RenderSpanText(span, state);
+                    RenderSpanText(span, newState);
                 }
-                state.Terminal.WriteLine();
+                newTerm.WriteLine();
 
                 if (IsHighlighted(wrappedSpans[i]))
                 {
                     foreach (var span in wrappedSpans[i])
                     {
-                        RenderSpanSquiggle(span, state);
+                        RenderSpanSquiggle(span, newState);
                     }
-                    state.Terminal.WriteLine();
+                    newTerm.WriteLine();
                 }
             }
+
+            newTerm.Flush();
+        }
+
+        private const string leftWhitespace = "  ";
+
+        /// <summary>
+        /// Gets the line number prefix that. is prepended to
+        /// each new line.
+        /// </summary>
+        /// <param name="lineIndex">The index of the line.</param>
+        /// <param name="greatestLineIndex">
+        /// The greatest line index that will be rendered.
+        /// </param>
+        /// <param name="state">
+        /// A render state.
+        /// </param>
+        /// <returns>A line number prefix.</returns>
+        protected virtual string GetLineNumberPrefix(
+            int lineIndex,
+            int greatestLineIndex,
+            RenderState state)
+        {
+            var numString = (lineIndex + 1).ToString();
+            var maxString = (greatestLineIndex + 1).ToString();
+            var sb = new StringBuilder();
+            sb.Append(leftWhitespace);
+            sb.Append(' ', maxString.Length - numString.Length);
+            sb.Append(numString);
+            sb.Append(GetSeparatorBar(state));
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Gets the line continuator prefix that. is prepended to
+        /// the start of each wrapped line.
+        /// </summary>
+        /// <param name="lineIndex">The index of the line.</param>
+        /// <param name="greatestLineIndex">
+        /// The greatest line index that will be rendered.
+        /// </param>
+        /// <param name="state">
+        /// A render state.
+        /// </param>
+        /// <returns>A line continuator prefix.</returns>
+        protected virtual string GetLineContinuatorPrefix(
+            int lineIndex, int greatestLineIndex, RenderState state)
+        {
+            var maxString = (greatestLineIndex + 1).ToString();
+            var sb = new StringBuilder();
+            sb.Append(leftWhitespace);
+            sb.Append(' ', maxString.Length);
+            sb.Append(GetSeparatorBar(state));
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Gets a string that contains a bar with whitespace on both sides,
+        /// useful for delimiting line numbers and code.
+        /// </summary>
+        /// <param name="state">A render state.</param>
+        /// <returns>A string of characters.</returns>
+        protected string GetSeparatorBar(RenderState state)
+        {
+            var sb = new StringBuilder();
+            sb.Append(' ');
+            string unicodeBar = "\u2502";
+            sb.Append(state.Terminal.CanRender(unicodeBar) ? unicodeBar : "|");
+            sb.Append(' ');
+            return sb.ToString();
         }
 
         /// <summary>
