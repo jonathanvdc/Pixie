@@ -26,6 +26,7 @@ clean: clean-ecsc
 	make -C Examples clean
 
 test: exe
+	mono ./Examples/CaretDiagnostics/bin/clr/CaretDiagnostics.exe
 	mono ./Examples/FormattedList/bin/clr/FormattedList.exe
 
 include flame-make-scripts/use-ecsc.mk
