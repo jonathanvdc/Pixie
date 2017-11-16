@@ -62,6 +62,16 @@ namespace Pixie.Terminal
         }
 
         /// <summary>
+        /// Creates a new terminal log that has an additional set of renderers.
+        /// </summary>
+        /// <param name="extraRenderers">A sequence of additional node renderers.</param>
+        /// <returns>A new terminal log.</returns>
+        public TerminalLog WithRenderers(params NodeRenderer[] extraRenderers)
+        {
+            return new TerminalLog(BaseRenderState.WithRenderers(extraRenderers));
+        }
+
+        /// <summary>
         /// Acquires a terminal log for the current environment.
         /// </summary>
         /// <returns>A terminal log.</returns>
