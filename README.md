@@ -4,7 +4,7 @@ Pixie is a C# library that prints beautifully formatted output to the console. Y
 
 Reasons to use Pixie:
 
-  * **Pixie aligns your text and inserts line breaks when the screen is full.** It can be instructed to use word-wrapping.
+  * **Pixie aligns your text and inserts line breaks when the screen is full.** It also supports word-wrapping.
 
     If you use word-wrapping, then you can rest assured that things like this unfortunate line break won't happen.
 
@@ -29,7 +29,7 @@ Reasons to use Pixie:
 
   * **Pixie has built-in support for caret diagnostics.** Want to point out an error in source code? Pixie's really good at that. It highlights the error and colors both the highlighted text and the squiggle beneath it. Pixie also prints line numbers and even throws in a couple of lines of context.
 
-    Caret diagnostics look better when viewed in the console, but the example below should give you an idea of what Pixie's diagnostics look like.
+    Caret diagnostics look better when viewed in the terminal, but the example below should give you an idea of what Pixie's caret diagnostics look like.
 
     ```
     1 │ public static class Program
