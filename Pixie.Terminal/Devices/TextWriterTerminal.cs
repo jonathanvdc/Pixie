@@ -128,7 +128,8 @@ namespace Pixie.Terminal.Devices
                 return new TextWriterTerminal(
                     writer,
                     DefaultTerminalWidth,
-                    NoStyleManager.Instance);
+                    NoStyleManager.Instance,
+                    GetSafeEncoding(writer));
             }
             else if (IsAnsiTerminalIdentifier(
                 EnvironmentTerminalIdentifier.ToLowerInvariant()))
@@ -143,10 +144,13 @@ namespace Pixie.Terminal.Devices
             else
             {
                 // As a fallback, use 'System.Console' for styles.
+                // Also, don't trust the writer's encoding on Windows;
+                // restrict ourselves to ASCII.
                 return new TextWriterTerminal(
                     writer,
                     GetTerminalWidth(),
-                    new ConsoleStyleManager());
+                    new ConsoleStyleManager(),
+                    GetSafeEncoding(writer));
             }
         }
 
@@ -216,6 +220,27 @@ namespace Pixie.Terminal.Devices
             return identifier.StartsWith("vt")
                 || identifier.StartsWith("xterm")
                 || identifier == "linux";
+        }
+
+        private static Encoding GetSafeEncoding(TextWriter writer)
+        {
+            return WindowsIsOS() ? Encoding.ASCII : writer.Encoding;
+        }
+
+        private static bool WindowsIsOS()
+        {
+            var platformId = Environment.OSVersion.Platform;
+            switch (platformId)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Xbox:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private const int DefaultTerminalWidth = 80;
