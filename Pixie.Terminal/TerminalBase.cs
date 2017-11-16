@@ -54,5 +54,28 @@ namespace Pixie.Terminal
         {
             Write(character.ToString());
         }
+
+        /// <summary>
+        /// Gets the first renderable string in a sequence of strings.
+        /// If the sequence is empty or no string is renderable, <c>null</c>
+        /// is returned.
+        /// </summary>
+        /// <param name="options">A sequence of strings.</param>
+        /// <returns>
+        /// The first renderable string in a sequence of strings.
+        /// If the sequence is empty or no string is renderable, <c>null</c>
+        /// is returned.
+        /// </returns>
+        public string GetFirstRenderableString(params string[] options)
+        {
+            foreach (var opt in options)
+            {
+                if (CanRender(opt))
+                {
+                    return opt;
+                }
+            }
+            return null;
+        }
     }
 }

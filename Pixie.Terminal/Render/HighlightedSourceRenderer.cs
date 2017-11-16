@@ -277,8 +277,7 @@ namespace Pixie.Terminal.Render
         {
             var sb = new StringBuilder();
             sb.Append(' ');
-            string unicodeBar = "\u2502";
-            sb.Append(state.Terminal.CanRender(unicodeBar) ? unicodeBar : "|");
+            sb.Append(state.Terminal.GetFirstRenderableString("\u2502", "|", "-") ?? "");
             sb.Append(' ');
             return sb.ToString();
         }
