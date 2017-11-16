@@ -124,19 +124,32 @@ namespace Pixie.Terminal.Devices
         {
             if (isRedirected)
             {
+                // Don't style redirected text.
                 return new TextWriterTerminal(
                     writer,
                     DefaultTerminalWidth,
                     NoStyleManager.Instance);
             }
-            else
+            else if (IsAnsiTerminalIdentifier(
+                EnvironmentTerminalIdentifier.ToLowerInvariant()))
             {
+                // Only use ANSI control sequences if the terminal
+                // appears receptive.
                 return new TextWriterTerminal(
                     writer,
                     GetTerminalWidth(),
-                    IsAnsiTerminalIdentifier(EnvironmentTerminalIdentifier.ToLowerInvariant())
-                        ? (StyleManager)new AnsiStyleManager(writer)
-                        : (StyleManager)new ConsoleStyleManager());
+                    new AnsiStyleManager(writer));
+            }
+            else
+            {
+                // As a fallback, use 'System.Console' for styles.
+                // Also, don't trust the writer's encoding on Windows;
+                // restrict ourselves to ASCII.
+                return new TextWriterTerminal(
+                    writer,
+                    GetTerminalWidth(),
+                    new ConsoleStyleManager(),
+                    WindowsIsOS() ? Encoding.ASCII : writer.Encoding);
             }
         }
 
@@ -206,6 +219,22 @@ namespace Pixie.Terminal.Devices
             return identifier.StartsWith("vt")
                 || identifier.StartsWith("xterm")
                 || identifier == "linux";
+        }
+
+        private static bool WindowsIsOS()
+        {
+            var platformId = Environment.OSVersion.Platform;
+            switch (platformId)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Xbox:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private const int DefaultTerminalWidth = 80;
