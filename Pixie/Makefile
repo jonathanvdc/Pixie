@@ -1,7 +1,8 @@
 files = \
 	*.cs \
 	Code/*.cs \
-	Markup/*.cs
+	Markup/*.cs \
+	Transforms/*.cs
 
 ifeq ($(ASM_VERSION),)
 	ASM_VERSION:=0.0.1.0
