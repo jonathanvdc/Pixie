@@ -67,16 +67,22 @@ namespace Pixie.Markup
         /// <returns>The focus region.</returns>
         public SourceRegion FocusRegion { get; private set; }
 
+        /// <summary>
+        /// Gets a source span that encompasses all characters
+        /// highlighted by this node.
+        /// </summary>
+        public SourceSpan HighlightedSpan =>
+            new SourceSpan(
+                HighlightRegion.Document,
+                HighlightRegion.StartOffset,
+                HighlightRegion.Length);
+
         /// <inheritdoc/>
         public override MarkupNode Fallback => 
             new Paragraph(
                 new Sequence(
                     new Text("At "),
-                    new SourceReference(
-                        new SourceSpan(
-                            HighlightRegion.Document,
-                            HighlightRegion.StartOffset,
-                            HighlightRegion.Length)),
+                    new SourceReference(HighlightedSpan),
                     new Text(".")));
 
         /// <inheritdoc/>

@@ -7,8 +7,8 @@ namespace Pixie.Transforms
     {
         /// <summary>
         /// Tells if a node is of interest to this visitor.
-        /// Visitors can specify unique behavior for interesting
-        /// nodes, whereas uninteresting nodes are always treated
+        /// Visitors always specify custom behavior for interesting
+        /// nodes, whereas uninteresting nodes are usually treated
         /// the same: the visitor simply visits their children.
         /// </summary>
         /// <param name="node">A markup node.</param>
@@ -29,7 +29,7 @@ namespace Pixie.Transforms
         /// </summary>
         /// <param name="node">A node to visit.</param>
         /// <returns>A visited node.</returns>
-        protected MarkupNode VisitUninteresting(MarkupNode node)
+        protected virtual MarkupNode VisitUninteresting(MarkupNode node)
         {
             return node.Map(Visit);
         }

@@ -1,4 +1,5 @@
 using System;
+using Pixie.Markup;
 
 namespace Pixie.Transforms
 {
@@ -14,20 +15,25 @@ namespace Pixie.Transforms
         /// The default origin to use, for when a log entry
         /// does not specify an origin.
         /// </param>
-        /// <param name="diagnosticKind">
+        /// <param name="defaultKind">
         /// The kind of diagnostic to provide.
         /// </param>
-        /// <param name="diagnosticThemeColor">
-        /// 
+        /// <param name="defaultThemeColor">
+        /// The diagnostic theme color.
+        /// </param>
+        /// <param name="defaultTitle">
+        /// The diagnostic title.
         /// </param>
         public DiagnosticExtractor(
             MarkupNode defaultOrigin,
-            string diagnosticKind,
-            Color diagnosticThemeColor)
+            string defaultKind,
+            Color defaultThemeColor,
+            MarkupNode defaultTitle)
         {
             this.DefaultOrigin = defaultOrigin;
-            this.DiagnosticKind = diagnosticKind;
-            this.DiagnosticThemeColor = diagnosticThemeColor;
+            this.DefaultKind = defaultKind;
+            this.DefaultThemeColor = defaultThemeColor;
+            this.DefaultTitle = defaultTitle;
         }
 
         /// <summary>
@@ -38,16 +44,33 @@ namespace Pixie.Transforms
         public MarkupNode DefaultOrigin { get; private set; }
 
         /// <summary>
-        /// Gets the kind of diagnostic to provide.
+        /// Gets the default kind of diagnostic to produce.
         /// </summary>
-        /// <returns>The kind of diagnostic.</returns>
-        public string DiagnosticKind { get; private set; }
+        /// <returns>The default kind of diagnostic.</returns>
+        public string DefaultKind { get; private set; }
 
         /// <summary>
-        /// Gets the theme color for diagnostics.
+        /// Gets the default theme color for diagnostics.
         /// </summary>
-        /// <returns>The theme color for diagnostics.</returns>
-        public Color DiagnosticThemeColor { get; private set; }
+        /// <returns>The default theme color for diagnostics.</returns>
+        public Color DefaultThemeColor { get; private set; }
+
+        /// <summary>
+        /// Gets the default title for diagnostics.
+        /// </summary>
+        /// <returns>The default title for diagnostics.</returns>
+        public MarkupNode DefaultTitle { get; private set; }
+
+        /// <summary>
+        /// Transforms a markup tree to include a diagnostic.
+        /// </summary>
+        /// <param name="tree">The tree to transform.</param>
+        /// <returns>A transformed tree.</returns>
+        public MarkupNode Transform(MarkupNode tree)
+        {
+            var visitor = new DiagnosticExtractingVisitor(this);
+            return visitor.Transform(tree);
+        }
     }
 
     /// <summary>
@@ -55,14 +78,91 @@ namespace Pixie.Transforms
     /// </summary>
     internal sealed class DiagnosticExtractingVisitor : MarkupVisitor
     {
-        protected override bool IsOfInterest(MarkupNode node)
+        public DiagnosticExtractingVisitor(DiagnosticExtractor extractor)
         {
-            throw new NotImplementedException();
+            this.extractor = extractor;
         }
 
+        public DiagnosticExtractor extractor;
+
+        private MarkupNode title;
+
+        private MarkupNode origin;
+
+        private bool foundText;
+
+        private bool foundExistingDiagnostic;
+
+        private bool FoundEverything =>
+            foundExistingDiagnostic
+            || (title != null
+                && origin != null);
+
+        /// <inheritdoc/>
+        protected override bool IsOfInterest(MarkupNode node)
+        {
+            return !FoundEverything
+                && (node is Title
+                    || node is Text
+                    || node is HighlightedSource
+                    || node is Diagnostic);
+        }
+
+        /// <inheritdoc/>
         protected override MarkupNode VisitInteresting(MarkupNode node)
         {
-            throw new NotImplementedException();
+            if (!foundText)
+            {
+                if (node is Title)
+                {
+                    title = ((Title)node).Contents;
+                    foundText = true;
+                    return new Text("");
+                }
+                else if (node is Text)
+                {
+                    foundText = true;
+                    return node;
+                }
+                else if (node is Diagnostic)
+                {
+                    // A top-level diagnostic is just what we're looking for.
+                    foundExistingDiagnostic = true;
+                    return node;
+                }
+            }
+
+            if (origin == null && node is HighlightedSource)
+            {
+                var src = (HighlightedSource)node;
+                origin = new SourceReference(src.HighlightedSpan);
+                return node;
+            }
+
+            return VisitUninteresting(node);
+        }
+
+        /// <summary>
+        /// Transforms a node to include a diagnostic.
+        /// </summary>
+        /// <param name="node">The node to transform.</param>
+        /// <returns>A transformed node.</returns>
+        public MarkupNode Transform(MarkupNode node)
+        {
+            var visited = Visit(node);
+            if (foundExistingDiagnostic)
+            {
+                return visited;
+            }
+            else
+            {
+                return new Diagnostic(
+                    origin ?? extractor.DefaultOrigin,
+                    extractor.DefaultKind,
+                    extractor.DefaultThemeColor,
+                    title ?? extractor.DefaultTitle,
+                    visited);
+            }
         }
     }
 }
