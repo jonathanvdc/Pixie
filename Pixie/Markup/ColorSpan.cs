@@ -48,5 +48,11 @@ namespace Pixie.Markup
 
         /// <inheritdoc/>
         public override MarkupNode Fallback => Contents;
+
+        /// <inheritdoc/>
+        public override ContainerNode WithContents(MarkupNode newContents)
+        {
+            return new ColorSpan(newContents, ForegroundColor, BackgroundColor);
+        }
     }
 }

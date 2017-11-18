@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -33,5 +35,22 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         public override MarkupNode Fallback =>
             new Sequence(Prefix, Contents);
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            var newPrefix = mapping(Prefix);
+            var newContents = mapping(Contents);
+
+            if (newPrefix == Prefix
+                && newContents == Contents)
+            {
+                return this;
+            }
+            else
+            {
+                return new PrefixBox(newPrefix, newContents);
+            }
+        }
     }
 }

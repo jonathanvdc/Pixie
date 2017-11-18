@@ -78,5 +78,11 @@ namespace Pixie.Markup
                             HighlightRegion.StartOffset,
                             HighlightRegion.Length)),
                     new Text(".")));
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            return this;
+        }
     }
 }

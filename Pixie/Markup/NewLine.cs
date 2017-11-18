@@ -16,5 +16,11 @@ namespace Pixie.Markup
 
         /// <inheritdoc/>
         public override MarkupNode Fallback => new Text(Environment.NewLine);
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            return this;
+        }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -42,5 +44,15 @@ namespace Pixie.Markup
 
         /// <inheritdoc/>
         public override MarkupNode Fallback => fallbackNode;
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            var newFallback = mapping(fallbackNode);
+            if (newFallback == fallbackNode)
+                return this;
+            else
+                return new DegradableText(Contents, fallbackNode);
+        }
     }
 }

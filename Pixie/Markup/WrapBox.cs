@@ -129,5 +129,11 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         public override MarkupNode Fallback =>
             new Sequence(NewLine.Instance, Contents, NewLine.Instance);
+
+        /// <inheritdoc/>
+        public override ContainerNode WithContents(MarkupNode newContents)
+        {
+            return new WrapBox(newContents, Wrapping, LeftMargin, RightMargin);
+        }
     }
 }

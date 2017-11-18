@@ -85,6 +85,15 @@ namespace Pixie.Markup
         /// <returns>A binary operator.</returns>
         public Func<TextDecoration, TextDecoration, TextDecoration> UpdateDecoration { get; private set; }
 
+        /// <inheritdoc/>
+        public override ContainerNode WithContents(MarkupNode newContents)
+        {
+            return new DecorationSpan(newContents, Decoration, UpdateDecoration);
+        }
+
+        /// <inheritdoc/>
+        public override MarkupNode Fallback => Contents;
+
         /// <summary>
         /// Returns the second text decoration.
         /// </summary>
@@ -136,8 +145,5 @@ namespace Pixie.Markup
         {
             return first ^ second;
         }
-
-        /// <inheritdoc/>
-        public override MarkupNode Fallback => Contents;
     }
 }

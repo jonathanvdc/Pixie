@@ -41,6 +41,12 @@ namespace Pixie.Markup
         }
 
         /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            return this;
+        }
+
+        /// <inheritdoc/>
         public sealed override MarkupNode Fallback
         {
             get

@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -22,5 +24,11 @@ namespace Pixie.Markup
 
         /// <inheritdoc/>
         public override MarkupNode Fallback => null;
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            return this;
+        }
     }
 }

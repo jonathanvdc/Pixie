@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -20,5 +22,23 @@ namespace Pixie.Markup
         /// </summary>
         /// <returns>The container's body.</returns>
         public MarkupNode Contents { get; private set; }
+
+        /// <summary>
+        /// Creates a copy of this container node that has a particular
+        /// contents node.
+        /// </summary>
+        /// <param name="newContents">The contents of the container.</param>
+        /// <returns>A container node with the given contents.</returns>
+        public abstract ContainerNode WithContents(MarkupNode newContents);
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            var newContents = mapping(Contents);
+            if (Contents == newContents)
+                return this;
+            else
+                return WithContents(newContents);
+        }
     }
 }

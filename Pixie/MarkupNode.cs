@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie
 {
     /// <summary>
@@ -13,5 +15,14 @@ namespace Pixie
         /// </summary>
         /// <returns>The node's fallback version, or <c>null</c>.</returns>
         public abstract MarkupNode Fallback { get; }
+
+        /// <summary>
+        /// Applies a mapping to this markup node's children and returns
+        /// a new instance of this node's type that contains the modified
+        /// children.
+        /// </summary>
+        /// <param name="mapping">A mapping function.</param>
+        /// <returns>A new markup node.</returns>
+        public abstract MarkupNode Map(Func<MarkupNode, MarkupNode> mapping);
     }
 }

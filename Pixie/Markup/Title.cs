@@ -32,5 +32,11 @@ namespace Pixie.Markup
                         TextDecoration.Bold,
                         DecorationSpan.UnifyDecorations),
                     Alignment.Center));
+
+        /// <inheritdoc/>
+        public override ContainerNode WithContents(MarkupNode newContents)
+        {
+            return new Title(newContents);
+        }
     }
 }

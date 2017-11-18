@@ -43,6 +43,7 @@ namespace Pixie.Markup
         /// <returns>The number of quotation signs.</returns>
         public int NumberOfQuotes { get; private set; }
 
+        /// <inheritdoc/>
         public override MarkupNode Fallback
         {
             get
@@ -56,6 +57,12 @@ namespace Pixie.Markup
                         BuildQuotationSign(NumberOfQuotes, '’', '”', false),
                         BuildQuotationSign(NumberOfQuotes, '\'', '"', false)));
             }
+        }
+
+        /// <inheritdoc/>
+        public override ContainerNode WithContents(MarkupNode newContents)
+        {
+            return new Quotation(newContents, NumberOfQuotes);
         }
 
         private static string BuildQuotationSign(

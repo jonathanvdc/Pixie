@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pixie.Markup
@@ -88,6 +89,20 @@ namespace Pixie.Markup
                 }
 
                 return new Sequence(bulletedItems);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            var newItems = Sequence.Map(Items, mapping);
+            if (newItems == Items)
+            {
+                return this;
+            }
+            else
+            {
+                return new BulletedList(newItems, SeparateItems);
             }
         }
     }

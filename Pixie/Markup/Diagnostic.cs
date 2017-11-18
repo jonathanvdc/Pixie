@@ -1,3 +1,5 @@
+using System;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -90,6 +92,30 @@ namespace Pixie.Markup
                 return new Sequence(
                     new DecorationSpan(header, TextDecoration.Bold),
                     Message);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            var newOrigin = mapping(Origin);
+            var newTitle = mapping(Title);
+            var newMessage= mapping(Message);
+
+            if (newOrigin == Origin
+                && newTitle == Title
+                && newMessage == Message)
+            {
+                return this;
+            }
+            else
+            {
+                return new Diagnostic(
+                    newOrigin,
+                    Kind,
+                    ThemeColor,
+                    newTitle,
+                    newMessage);
             }
         }
     }
