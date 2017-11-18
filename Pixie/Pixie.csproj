@@ -49,6 +49,7 @@
     <Compile Include="Markup\ContainerNode.cs" />
     <Compile Include="Markup\DecorationSpan.cs" />
     <Compile Include="Markup\DegradableText.cs" />
+    <Compile Include="Markup\Diagnostic.cs" />
     <Compile Include="Markup\HighlightedSource.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
