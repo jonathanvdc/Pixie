@@ -91,7 +91,7 @@ namespace Pixie.Terminal.Render
         {
             var props = new Dictionary<string, object>(themeProps);
             props[property] = value;
-            return new RenderState(parentState, props);
+            return new RenderState(this, props);
         }
 
         /// <summary>
