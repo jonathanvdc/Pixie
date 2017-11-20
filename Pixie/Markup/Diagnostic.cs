@@ -79,6 +79,10 @@ namespace Pixie.Markup
         {
             get
             {
+                var titlePart = Text.IsEmpty(Title)
+                    ? Title
+                    : new Sequence(Title, new Text(": "));
+
                 var header =
                     new Sequence(
                         Origin,
@@ -86,8 +90,7 @@ namespace Pixie.Markup
                         new ColorSpan(
                             new Text(Kind + ": "),
                             ThemeColor),
-                        Title,
-                        new Text(": "));
+                        titlePart);
 
                 return new Sequence(
                     new DecorationSpan(header, TextDecoration.Bold),
