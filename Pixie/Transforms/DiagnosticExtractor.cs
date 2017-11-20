@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pixie.Markup;
 
 namespace Pixie.Transforms
@@ -70,6 +71,43 @@ namespace Pixie.Transforms
         {
             var visitor = new DiagnosticExtractingVisitor(this);
             return visitor.Transform(tree);
+        }
+
+        private static Dictionary<Severity, string> defaultKinds =
+            new Dictionary<Severity, string>()
+        {
+            { Severity.Info, "info" },
+            { Severity.Message, "message" },
+            { Severity.Warning, "warning" },
+            { Severity.Error, "error" }
+        };
+
+        private static Dictionary<Severity, Color> defaultColors = 
+            new Dictionary<Severity, Color>()
+        {
+            { Severity.Info, Colors.Green },
+            { Severity.Message, Colors.Green },
+            { Severity.Warning, Colors.Yellow },
+            { Severity.Error, Colors.Red }
+        };
+
+        /// <summary>
+        /// Transforms a log entry to include a diagnostic.
+        /// </summary>
+        /// <param name="entry">The log entry to transform.</param>
+        /// <param name="defaultOrigin">
+        /// The default origin of a diagnostic. This is typically the
+        /// name of the application.</param>
+        /// <returns>A transformed log entry.</returns>
+        public static LogEntry Transform(LogEntry entry, MarkupNode defaultOrigin)
+        {
+            var extractor = new DiagnosticExtractor(
+                defaultOrigin,
+                defaultKinds[entry.Severity],
+                defaultColors[entry.Severity],
+                new Text(""));
+
+            return new LogEntry(entry.Severity, extractor.Transform(entry.Contents));
         }
     }
 
