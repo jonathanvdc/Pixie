@@ -16,6 +16,21 @@ namespace Pixie.Terminal.Render
             this.Terminal = terminal;
             this.parentState = null;
             this.renderers = null;
+            this.themeProps = new Dictionary<string, object>();
+        }
+
+        /// <summary>
+        /// Creates a render state from a parent state and a dictionary
+        /// of theme properties.
+        /// </summary>
+        /// <param name="parent">A parent state.</param>
+        /// <param name="themeProps">A dictionary of theme properties.</param>
+        private RenderState(RenderState parent, Dictionary<string, object> themeProps)
+        {
+            this.Terminal = parent.Terminal;
+            this.parentState = parent;
+            this.renderers = null;
+            this.themeProps = themeProps;
         }
 
         /// <summary>
@@ -28,7 +43,14 @@ namespace Pixie.Terminal.Render
 
         private NodeRenderer[] renderers;
 
+        private Dictionary<string, object> themeProps;
+
         private bool HasParent => parentState != null;
+
+        /// <summary>
+        /// Gets a mapping of theme resource strings to values.
+        /// </summary>
+        public IReadOnlyDictionary<string, object> ThemeProperties => themeProps;
 
         /// <summary>
         /// Creates a new render state that includes a sequence of additional
@@ -38,7 +60,10 @@ namespace Pixie.Terminal.Render
         /// <returns>A new render state.</returns>
         public RenderState WithRenderers(params NodeRenderer[] extraRenderers)
         {
-            return new RenderState(Terminal) { parentState = this, renderers = extraRenderers };
+            return new RenderState(this, themeProps)
+            {
+                renderers = extraRenderers
+            };
         }
 
         /// <summary>
@@ -49,7 +74,24 @@ namespace Pixie.Terminal.Render
         /// <returns>A new render state.</returns>
         public RenderState WithTerminal(TerminalBase newTerminal)
         {
-            return new RenderState(newTerminal) { parentState = this };
+            return new RenderState(this, themeProps)
+            {
+                Terminal = newTerminal
+            };
+        }
+
+        /// <summary>
+        /// Creates a new render state that inherits all information from this
+        /// state, except for a theme property, which it sets.
+        /// </summary>
+        /// <param name="property">The name of the property to set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <returns>A new render state.</returns>
+        public RenderState WithThemeProperty(string property, object value)
+        {
+            var props = new Dictionary<string, object>(themeProps);
+            props[property] = value;
+            return new RenderState(parentState, props);
         }
 
         /// <summary>
