@@ -135,6 +135,9 @@ namespace Pixie.Terminal.Render
             var compressedLines = CompressLeadingWhitespace(lines);
             var maxLineWidth = GetLineWidth(
                 firstLineNumber + compressedLines.Count, state);
+
+            state.Terminal.WriteSeparator(2);
+
             for (int i = 0; i < compressedLines.Count; i++)
             {
                 RenderLine(
@@ -143,6 +146,8 @@ namespace Pixie.Terminal.Render
                     firstLineNumber + compressedLines.Count,
                     state);
             }
+
+            state.Terminal.WriteSeparator(2);
         }
 
         /// <summary>
