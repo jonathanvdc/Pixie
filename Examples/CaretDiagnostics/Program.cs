@@ -18,8 +18,7 @@ namespace CaretDiagnostics
             //
             // In this case, we'll also overwrite the default
             // caret diagnostics renderer with a variation that
-            // colors its output red by default and tries to print
-            // five lines of context.
+            // tries to print five lines of context.
             //
             // After that, we'll add a transformation to the log
             // that turns all log entries into diagnostics.
@@ -27,7 +26,7 @@ namespace CaretDiagnostics
                 .Acquire()
                 .WithRenderers(new NodeRenderer[]
                 {
-                    new HighlightedSourceRenderer(Colors.Red, 5)
+                    new HighlightedSourceRenderer(5)
                 });
 
             log = new TransformLog(
