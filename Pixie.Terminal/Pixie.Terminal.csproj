@@ -45,6 +45,7 @@
     <Compile Include="Render\ColorSpanRenderer.cs" />
     <Compile Include="Render\DecorationSpanRenderer.cs" />
     <Compile Include="Render\DegradableTextRenderer.cs" />
+    <Compile Include="Render\DiagnosticRenderer.cs" />
     <Compile Include="Render\HighlightedSourceRenderer.cs" />
     <Compile Include="Render\NewLineRenderer.cs" />
     <Compile Include="Render\NodeRenderer.cs" />

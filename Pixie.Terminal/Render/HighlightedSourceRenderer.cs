@@ -69,27 +69,39 @@ namespace Pixie.Terminal.Render
     public class HighlightedSourceRenderer : NodeRenderer
     {
         /// <summary>
-        /// Create a highlighted source renderer that highlights source
-        /// using a particular color.
+        /// Create a highlighted source renderer.
         /// </summary>
-        /// <param name="highlightColor">The highlight color.</param>
         /// <param name="contextLineCount">
         /// The number of lines that are printed for context
         /// below and above the focus line.
         /// </param>
+        public HighlightedSourceRenderer(int contextLineCount)
+            : this(contextLineCount, Colors.Green)
+        { }
+
+        /// <summary>
+        /// Create a highlighted source renderer that highlights source
+        /// using a particular color.
+        /// </summary>
+        /// <param name="contextLineCount">
+        /// The number of lines that are printed for context
+        /// below and above the focus line.
+        /// </param>
+        /// <param name="defaultHighlightColor">The default highlight color.</param>
         public HighlightedSourceRenderer(
-            Color highlightColor,
-            int contextLineCount)
+            int contextLineCount,
+            Color defaultHighlightColor)
         {
-            this.HighlightColor = highlightColor;
             this.ContextLineCount = contextLineCount;
+            this.DefaultHighlightColor = defaultHighlightColor;
+            
         }
 
         /// <summary>
-        /// Gets the color with which source code is highlighted.
+        /// Gets the default color with which source code is highlighted.
         /// </summary>
-        /// <returns>The highlight color.</returns>
-        public Color HighlightColor { get; private set; }
+        /// <returns>The default highlight color.</returns>
+        public Color DefaultHighlightColor { get; private set; }
 
         /// <summary>
         /// Gets the number of lines that are printed for context
@@ -102,6 +114,31 @@ namespace Pixie.Terminal.Render
         public override bool CanRender(MarkupNode node)
         {
             return node is HighlightedSource;
+        }
+
+        /// <summary>
+        /// The color to highlight source code in.
+        /// </summary>
+        public const string HighlightColorProperty = "highlight-source-color";
+
+        /// <summary>
+        /// Gets the color to highlight source code in.
+        /// </summary>
+        /// <param name="state">The state of the renderer.</param>
+        /// <returns>The source highlighting color.</returns>
+        protected Color GetHighlightColor(RenderState state)
+        {
+            object colorVal;
+            if (state.ThemeProperties.TryGetValue(
+                HighlightColorProperty,
+                out colorVal))
+            {
+                return (Color)colorVal;
+            }
+            else
+            {
+                return DefaultHighlightColor;
+            }
         }
 
         /// <inheritdoc/>
@@ -135,6 +172,9 @@ namespace Pixie.Terminal.Render
             var compressedLines = CompressLeadingWhitespace(lines);
             var maxLineWidth = GetLineWidth(
                 firstLineNumber + compressedLines.Count, state);
+
+            state.Terminal.WriteSeparator(2);
+
             for (int i = 0; i < compressedLines.Count; i++)
             {
                 RenderLine(
@@ -143,6 +183,8 @@ namespace Pixie.Terminal.Render
                     firstLineNumber + compressedLines.Count,
                     state);
             }
+
+            state.Terminal.WriteSeparator(2);
         }
 
         /// <summary>
@@ -293,7 +335,7 @@ namespace Pixie.Terminal.Render
         {
             if (span.Kind == HighlightedSourceSpanKind.Focus)
             {
-                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                state.Terminal.Style.PushForegroundColor(GetHighlightColor(state));
                 state.Terminal.Style.PushDecoration(
                     TextDecoration.Bold, DecorationSpan.UnifyDecorations);
                 try
@@ -326,7 +368,7 @@ namespace Pixie.Terminal.Render
             char squiggle = '~';
             if (span.Kind == HighlightedSourceSpanKind.Highlight)
             {
-                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                state.Terminal.Style.PushForegroundColor(GetHighlightColor(state));
                 try
                 {
                     for (int i = 0; i < spanLength; i++)
@@ -341,7 +383,7 @@ namespace Pixie.Terminal.Render
             }
             else if (span.Kind == HighlightedSourceSpanKind.Focus)
             {
-                state.Terminal.Style.PushForegroundColor(HighlightColor);
+                state.Terminal.Style.PushForegroundColor(GetHighlightColor(state));
                 state.Terminal.Style.PushDecoration(
                     TextDecoration.Bold, DecorationSpan.UnifyDecorations);
                 try
