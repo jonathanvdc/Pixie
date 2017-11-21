@@ -91,4 +91,22 @@ namespace Pixie.Options
             return result;
         }
     }
+
+    /// <summary>
+    /// Defines a common interface for option set parsers.
+    /// </summary>
+    public abstract class OptionSetParser
+    {
+        /// <summary>
+        /// Parses an option set from a list of command-line arguments.
+        /// </summary>
+        /// <param name="arguments">A list of command-line arguments.</param>
+        /// <param name="log">
+        /// A log to which messages can be sent as arguments are parsed.
+        /// </param>
+        /// <returns>A parsed option set.</returns>
+        public abstract ParsedOptionSet Parse(
+            IReadOnlyList<string> arguments,
+            ILog log);
+    }
 }

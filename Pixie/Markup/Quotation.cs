@@ -83,5 +83,25 @@ namespace Pixie.Markup
             }
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Creates a bold quotation node.
+        /// </summary>
+        /// <param name="contents">The contents to quote.</param>
+        /// <returns>A bold quotation node.</returns>
+        public static MarkupNode CreateBoldQuotation(MarkupNode contents)
+        {
+            return new Quotation(new DecorationSpan(contents, TextDecoration.Bold));
+        }
+
+        /// <summary>
+        /// Creates a bold quotation node.
+        /// </summary>
+        /// <param name="contents">The contents to quote.</param>
+        /// <returns>A bold quotation node.</returns>
+        public static MarkupNode CreateBoldQuotation(string contents)
+        {
+            return CreateBoldQuotation(new Text(contents));
+        }
     }
 }
