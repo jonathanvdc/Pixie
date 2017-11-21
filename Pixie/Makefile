@@ -2,6 +2,7 @@ files = \
 	*.cs \
 	Code/*.cs \
 	Markup/*.cs \
+	Options/*.cs \
 	Transforms/*.cs
 
 ifeq ($(ASM_VERSION),)

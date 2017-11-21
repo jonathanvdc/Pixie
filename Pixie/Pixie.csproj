@@ -60,6 +60,10 @@
     <Compile Include="Markup\Text.cs" />
     <Compile Include="Markup\Title.cs" />
     <Compile Include="Markup\WrapBox.cs" />
+    <Compile Include="Options\Option.cs" />
+    <Compile Include="Options\OptionForm.cs" />
+    <Compile Include="Options\ParsedOption.cs" />
+    <Compile Include="Options\ParsedOptionSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transforms\DiagnosticExtractor.cs" />
     <Compile Include="Transforms\MarkupVisitor.cs" />
