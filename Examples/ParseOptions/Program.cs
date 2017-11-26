@@ -4,6 +4,7 @@ using Pixie;
 using Pixie.Markup;
 using Pixie.Options;
 using Pixie.Terminal;
+using Pixie.Transforms;
 
 namespace ParseOptions
 {
@@ -20,7 +21,14 @@ namespace ParseOptions
         {
             // First, acquire a terminal log. You should acquire
             // a log once and then re-use it in your application.
-            var log = TerminalLog.Acquire();
+            ILog log = TerminalLog.Acquire();
+
+            log = new TransformLog(
+                log,
+                new Func<LogEntry, LogEntry>[]
+                {
+                    MakeDiagnostic
+                });
 
             var allOptions = new Option[]
             {
@@ -51,6 +59,11 @@ namespace ParseOptions
                 new DecorationSpan(new Text(opt.Forms[0].ToString()), TextDecoration.Bold),
                 new Text(": "),
                 new Text(parsedOptions.GetValue<object>(opt).ToString()));
+        }
+
+        private static LogEntry MakeDiagnostic(LogEntry entry)
+        {
+            return DiagnosticExtractor.Transform(entry, new Text("program"));
         }
     }
 }
