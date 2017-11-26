@@ -60,6 +60,7 @@
     <Compile Include="Markup\Text.cs" />
     <Compile Include="Markup\Title.cs" />
     <Compile Include="Markup\WrapBox.cs" />
+    <Compile Include="Options\FlagOption.cs" />
     <Compile Include="Options\GnuOptionSetParser.cs" />
     <Compile Include="Options\Option.cs" />
     <Compile Include="Options\OptionForm.cs" />

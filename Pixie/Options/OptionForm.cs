@@ -94,5 +94,25 @@ namespace Pixie.Options
         {
             return obj is OptionForm && Equals((OptionForm)obj);
         }
+
+        /// <summary>
+        /// Creates a short option form with a particular name.
+        /// </summary>
+        /// <param name="name">The option form's name.</param>
+        /// <returns>A short option form.</returns>
+        public static OptionForm Short(string name)
+        {
+            return new OptionForm(name, true);
+        }
+
+        /// <summary>
+        /// Creates a long option form with a particular name.
+        /// </summary>
+        /// <param name="name">The option form's name.</param>
+        /// <returns>A long option form.</returns>
+        public static OptionForm Long(string name)
+        {
+            return new OptionForm(name, false);
+        }
     }
 }

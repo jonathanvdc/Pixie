@@ -247,12 +247,12 @@ namespace Pixie.Options
                         break;
                     }
 
+                    i++;
                     if (node.Value != null)
                     {
                         opt = node.Value;
                         longestMatch = i;
                     }
-                    i++;
                 }
 
                 if (opt == null)
