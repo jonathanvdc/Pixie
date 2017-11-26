@@ -5,16 +5,16 @@ namespace Pixie.Options
     /// <summary>
     /// Represents a set of parsed options.
     /// </summary>
-    public struct ParsedOptionSet
+    public struct OptionSet
     {
         /// <summary>
         /// Creates a parsed option set from a mapping of
         /// options to parsed options.
         /// </summary>
         /// <param name="contents">A mapping of options to parsed options.</param>
-        public ParsedOptionSet(IReadOnlyDictionary<Option, ParsedOption> contents)
+        public OptionSet(IReadOnlyDictionary<Option, ParsedOption> contents)
         {
-            this = default(ParsedOptionSet);
+            this = default(OptionSet);
             this.contents = contents;
         }
 
@@ -105,7 +105,7 @@ namespace Pixie.Options
         /// A log to which messages can be sent as arguments are parsed.
         /// </param>
         /// <returns>A parsed option set.</returns>
-        public abstract ParsedOptionSet Parse(
+        public abstract OptionSet Parse(
             IReadOnlyList<string> arguments,
             ILog log);
     }

@@ -66,7 +66,7 @@ namespace Pixie.Options
         internal Dictionary<string, Option> longForms;
 
         /// <inheritdoc/>
-        public override ParsedOptionSet Parse(
+        public override OptionSet Parse(
             IReadOnlyList<string> arguments,
             ILog log)
         {
@@ -94,7 +94,7 @@ namespace Pixie.Options
             // Finish parsing all options.
             state.FinishParsingAll();
 
-            return new ParsedOptionSet(state.ParsedOptions);
+            return new OptionSet(state.ParsedOptions);
         }
 
         private void PopulateDataStructures()
