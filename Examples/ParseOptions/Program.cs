@@ -56,9 +56,12 @@ namespace ParseOptions
         private static MarkupNode TypesetParsedOption(Option opt)
         {
             return new Sequence(
-                new DecorationSpan(new Text(opt.Forms[0].ToString()), TextDecoration.Bold),
-                new Text(": "),
-                new Text(parsedOptions.GetValue<object>(opt).ToString()));
+                new MarkupNode[]
+                {
+                    new DecorationSpan(new Text(opt.Forms[0].ToString()), TextDecoration.Bold),
+                    new Text(": "),
+                    new Text(parsedOptions.GetValue<object>(opt).ToString())
+                });
         }
 
         private static LogEntry MakeDiagnostic(LogEntry entry)
