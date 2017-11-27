@@ -107,7 +107,7 @@ namespace Pixie.Options
                 int formCount = optForms.Count;
                 for (int j = 0; j < formCount; j++)
                 {
-                    var form = optForms[i];
+                    var form = optForms[j];
                     if (form.IsShort)
                     {
                         shortForms.AddPath(form.Name, opt);
