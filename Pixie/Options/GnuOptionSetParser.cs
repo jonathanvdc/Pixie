@@ -160,7 +160,7 @@ namespace Pixie.Options
         /// <summary>
         /// Tells if this state is done parsing.
         /// </summary>
-        public bool IsDone => parseStack.Count > 0;
+        public bool IsDone => parseStack.Count == 0;
 
         /// <summary>
         /// Parses a string argument.
