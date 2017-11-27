@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Pixie;
 using Pixie.Markup;
 using Pixie.Options;
@@ -14,6 +16,9 @@ namespace ParseOptions
             OptionForm.Short("fsyntax-only"),
             OptionForm.Short("fno-syntax-only"),
             false);
+
+        private static readonly SequenceOption<string> filesOption = SequenceOption.CreateStringOption(
+            OptionForm.Long("files"));
 
         private static OptionSet parsedOptions;
 
@@ -32,25 +37,23 @@ namespace ParseOptions
 
             var allOptions = new Option[]
             {
+                filesOption,
                 syntaxOnlyFlag
             };
 
             var parser = new GnuOptionSetParser(
-                allOptions, syntaxOnlyFlag, syntaxOnlyFlag.PositiveForms[0]);
+                allOptions, filesOption, filesOption.Forms[0]);
 
             parsedOptions = parser.Parse(args, log);
 
-            foreach (var item in allOptions)
-            {
-                log.Log(
-                    new LogEntry(
-                        Severity.Info,
-                        new BulletedList(
-                            allOptions
-                                .Select<Option, MarkupNode>(TypesetParsedOption)
-                                .ToArray<MarkupNode>(),
-                            true)));
-            }
+            log.Log(
+                new LogEntry(
+                    Severity.Info,
+                    new BulletedList(
+                        allOptions
+                            .Select<Option, MarkupNode>(TypesetParsedOption)
+                            .ToArray<MarkupNode>(),
+                        true)));
         }
 
         private static MarkupNode TypesetParsedOption(Option opt)
@@ -60,8 +63,32 @@ namespace ParseOptions
                 {
                     new DecorationSpan(new Text(opt.Forms[0].ToString()), TextDecoration.Bold),
                     new Text(": "),
-                    new Text(parsedOptions.GetValue<object>(opt).ToString())
+                    new Text(ValueToString(parsedOptions.GetValue<object>(opt)))
                 });
+        }
+
+        private static string ValueToString(object value)
+        {
+            if (value is IReadOnlyList<object>)
+            {
+                var sb = new StringBuilder();
+                sb.Append("{ ");
+                var arr = (IReadOnlyList<object>)value;
+                for (int i = 0; i < arr.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append(ValueToString(arr[i]));
+                }
+                sb.Append(" }");
+                return sb.ToString();
+            }
+            else
+            {
+                return value.ToString();
+            }
         }
 
         private static LogEntry MakeDiagnostic(LogEntry entry)
