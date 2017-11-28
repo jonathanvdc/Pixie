@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Options
 {
@@ -22,7 +23,7 @@ namespace Pixie.Options
         /// </param>
         public SequenceOption(
             OptionForm form,
-            Func<string, ILog, T> parseArgument)
+            Func<OptionForm, string, ILog, T> parseArgument)
             : this(new OptionForm[] { form }, parseArgument)
         { }
 
@@ -38,14 +39,14 @@ namespace Pixie.Options
         /// </param>
         public SequenceOption(
             IReadOnlyList<OptionForm> forms,
-            Func<string, ILog, T> parseArgument)
+            Func<OptionForm, string, ILog, T> parseArgument)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
         }
 
         private IReadOnlyList<OptionForm> forms;
-        private Func<string, ILog, T> parseArgument;
+        private Func<OptionForm, string, ILog, T> parseArgument;
 
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => forms;
@@ -56,13 +57,13 @@ namespace Pixie.Options
         /// <inheritdoc/>
         public override OptionParser CreateParser(OptionForm form)
         {
-            return new SequenceOptionParser<T>(parseArgument);
+            return new SequenceOptionParser<T>(form, parseArgument);
         }
 
         /// <inheritdoc/>
         public override ParsedOption MergeValues(ParsedOption first, ParsedOption second)
         {
-            // Listen to the last flag provided by the user.
+            // Merge the sequences.
             var result = new List<T>((IReadOnlyList<T>)first.Value);
             result.AddRange((IReadOnlyList<T>)second.Value);
             return new ParsedOption(first.Form, result);
@@ -104,21 +105,74 @@ namespace Pixie.Options
             return new SequenceOption<string>(forms, parseStringArgument);
         }
 
-        private static string parseStringArgument(string argument, ILog log)
+        /// <summary>
+        /// Creates a 32-bit integer--sequence option that takes a single form.
+        /// </summary>
+        /// <param name="form">The 32-bit integer--sequence option's form.</param>
+        /// <returns>A 32-bit integer--sequence option.</returns>
+        public static SequenceOption<int> CreateInt32Option(OptionForm form)
+        {
+            return new SequenceOption<int>(form, parseInt32Argument);
+        }
+
+        /// <summary>
+        /// Creates a 32-bit integer--sequence option that takes a list of forms.
+        /// </summary>
+        /// <param name="forms">The 32-bit integer--sequence option's forms.</param>
+        /// <returns>A 32-bit integer--sequence option.</returns>
+        public static SequenceOption<int> CreateInt32Option(IReadOnlyList<OptionForm> forms)
+        {
+            return new SequenceOption<int>(forms, parseInt32Argument);
+        }
+
+        /// <summary>
+        /// Creates a 32-bit integer--sequence option that takes a list of forms.
+        /// </summary>
+        /// <param name="forms">The 32-bit integer--sequence option's forms.</param>
+        /// <returns>A 32-bit integer--sequence option.</returns>
+        public static SequenceOption<int> CreateInt32Option(params OptionForm[] forms)
+        {
+            return new SequenceOption<int>(forms, parseInt32Argument);
+        }
+
+        internal static string parseStringArgument(OptionForm form, string argument, ILog log)
         {
             return argument;
+        }
+
+        internal static int parseInt32Argument(OptionForm form, string argument, ILog log)
+        {
+            int result;
+            if (!int.TryParse(argument, out result))
+            {
+                log.Log(
+                    new LogEntry(
+                        Severity.Error,
+                        "option error",
+                        new Sequence(
+                            new Text("argument to "),
+                            Quotation.CreateBoldQuotation(form.ToString()),
+                            new Text(" should be an integer; got "),
+                            Quotation.CreateBoldQuotation(argument),
+                            new Text("."))));
+            }
+            return result;
         }
     }
 
     internal sealed class SequenceOptionParser<T> : OptionParser
     {
-        public SequenceOptionParser(Func<string, ILog, T> parseArgument)
+        public SequenceOptionParser(
+            OptionForm form,
+            Func<OptionForm, string, ILog, T> parseArgument)
         {
+            this.form = form;
             this.parseArgument = parseArgument;
             this.arguments = new List<string>();
         }
 
-        private Func<string, ILog, T> parseArgument;
+        private OptionForm form;
+        private Func<OptionForm, string, ILog, T> parseArgument;
         private List<string> arguments;
 
         public override object GetValue(ILog log)
@@ -126,7 +180,7 @@ namespace Pixie.Options
             var results = new T[arguments.Count];
             for (int i = 0; i < arguments.Count; i++)
             {
-                results[i] = parseArgument(arguments[i], log);
+                results[i] = parseArgument(form, arguments[i], log);
             }
             return results;
         }

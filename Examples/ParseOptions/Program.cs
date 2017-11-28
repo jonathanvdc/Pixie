@@ -20,6 +20,13 @@ namespace ParseOptions
         private static readonly SequenceOption<string> filesOption = SequenceOption.CreateStringOption(
             OptionForm.Long("files"));
 
+        private static readonly ValueOption<int> optimizeOption = ValueOption.CreateInt32Option(
+            OptionForm.Short("O"),
+            0);
+
+        private static readonly FlagOption optimizeFastFlag = new FlagOption(
+            OptionForm.Short("Ofast"));
+
         private static OptionSet parsedOptions;
 
         public static void Main(string[] args)
@@ -38,7 +45,9 @@ namespace ParseOptions
             var allOptions = new Option[]
             {
                 filesOption,
-                syntaxOnlyFlag
+                syntaxOnlyFlag,
+                optimizeOption,
+                optimizeFastFlag
             };
 
             var parser = new GnuOptionSetParser(

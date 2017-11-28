@@ -67,6 +67,7 @@
     <Compile Include="Options\OptionSet.cs" />
     <Compile Include="Options\ParsedOption.cs" />
     <Compile Include="Options\SequenceOption.cs" />
+    <Compile Include="Options\ValueOption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transforms\DiagnosticExtractor.cs" />
     <Compile Include="Transforms\MarkupVisitor.cs" />

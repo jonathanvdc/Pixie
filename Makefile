@@ -28,6 +28,6 @@ clean: clean-ecsc
 test: exe
 	mono ./Examples/CaretDiagnostics/bin/clr/CaretDiagnostics.exe
 	mono ./Examples/FormattedList/bin/clr/FormattedList.exe
-	mono ./Examples/ParseOptions/bin/clr/ParseOptions.exe
+	mono ./Examples/ParseOptions/bin/clr/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt
 
 include flame-make-scripts/use-ecsc.mk
