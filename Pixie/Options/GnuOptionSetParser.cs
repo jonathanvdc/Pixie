@@ -188,8 +188,16 @@ namespace Pixie.Options
             {
                 // Key-value options like '--help=warnings'
                 // get special treatment.
-                var opt = Parser.longForms[key];
-                ParseKeyValueOption(opt, new OptionForm(key, false), value);
+                Option opt;
+                if (Parser.longForms.TryGetValue(key, out opt))
+                {
+                    ParseKeyValueOption(opt, new OptionForm(key, false), value);
+                }
+                else
+                {
+                    // Log that the option is unrecognized and early-out.
+                    LogUnrecognized("--" + key);
+                }
                 return true;
             }
             else
@@ -417,7 +425,7 @@ namespace Pixie.Options
             }
             else
             {
-                key = option.Substring(0, index - 1);
+                key = option.Substring(0, index);
                 value = option.Substring(index + 1);
                 return true;
             }
