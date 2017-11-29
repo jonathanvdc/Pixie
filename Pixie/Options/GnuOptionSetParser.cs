@@ -30,10 +30,35 @@ namespace Pixie.Options
             IReadOnlyList<Option> options,
             Option defaultOption,
             OptionForm defaultForm)
+            : this(
+                options,
+                new KeyValuePair<Option, OptionForm>[]
+                {
+                    new KeyValuePair<Option, OptionForm>(defaultOption, defaultForm)
+                })
+        { }
+
+        /// <summary>
+        /// Creates a GNU-style option parser from a list of
+        /// options and a list of positional argument options.
+        /// </summary>
+        /// <param name="options">
+        /// A list of all options known to this parser.
+        /// </param>
+        /// <param name="positionalOptions">
+        /// The default option: the option that
+        /// is implicitly parsed when no other option
+        /// can accept arguments.
+        /// </param>
+        /// <param name="defaultForm">
+        /// The preferred form for the default option.
+        /// </param>
+        public GnuOptionSetParser(
+            IReadOnlyList<Option> options,
+            IReadOnlyList<KeyValuePair<Option, OptionForm>> positionalOptions)
         {
             this.Options = options;
-            this.DefaultOption = defaultOption;
-            this.DefaultForm = defaultForm;
+            this.PositionalOptions = positionalOptions;
             this.shortForms = new TrieNode<char, Option>();
             this.longForms = new Dictionary<string, Option>();
             PopulateDataStructures();
@@ -46,18 +71,11 @@ namespace Pixie.Options
         public IReadOnlyList<Option> Options { get; private set; }
 
         /// <summary>
-        /// Gets the default option: the option that
-        /// is implicitly parsed when no other option
-        /// can accept arguments.
+        /// Gets a list of (Option, OptionForm) pairs that parse
+        /// positional arguments.
         /// </summary>
-        /// <returns>The default option.</returns>
-        public Option DefaultOption { get; private set; }
-
-        /// <summary>
-        /// Gets the preferred form for the default option.
-        /// </summary>
-        /// <returns>The default option's default form.</returns>
-        public OptionForm DefaultForm { get; private set; }
+        /// <returns>The positional options.</returns>
+        public IReadOnlyList<KeyValuePair<Option, OptionForm>> PositionalOptions { get; private set; }
 
         // A trie of short option forms.
         internal TrieNode<char, Option> shortForms;
@@ -71,7 +89,10 @@ namespace Pixie.Options
             ILog log)
         {
             var state = new GnuOptionSetParserState(this, log);
-            state.StartParsing(DefaultOption, DefaultForm);
+            for (int i = PositionalOptions.Count - 1; i >= 0; i--)
+            {
+                state.StartParsing(PositionalOptions[i].Key, PositionalOptions[i].Value);
+            }
 
             // Drip-feed the arguments to the state.
             int argCount = arguments.Count;
