@@ -19,6 +19,7 @@ namespace Pixie.Terminal
             : this(
                 new RenderState(terminal).WithRenderers(
                     AlignBoxRenderer.Instance,
+                    BoxRenderer.Instance,
                     ColorSpanRenderer.Instance,
                     DecorationSpanRenderer.Instance,
                     DegradableTextRenderer.Instance,
@@ -58,7 +59,7 @@ namespace Pixie.Terminal
         {
             lock (renderLock)
             {
-                BaseRenderState.Render(new Paragraph(entry.Contents));
+                BaseRenderState.Render(new Box(entry.Contents));
             }
         }
 
