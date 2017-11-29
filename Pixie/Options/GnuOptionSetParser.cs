@@ -151,6 +151,7 @@ namespace Pixie.Options
             this.Log = log;
             this.parsedOpts = new Dictionary<Option, ParsedOption>();
             this.parseStack = new Stack<GnuOptionParseState>();
+            this.endOfOptionsReached = false;
         }
 
         /// <summary>
@@ -183,6 +184,8 @@ namespace Pixie.Options
         /// </summary>
         public bool IsDone => parseStack.Count == 0;
 
+        private bool endOfOptionsReached;
+
         /// <summary>
         /// Parses a string argument.
         /// </summary>
@@ -190,6 +193,11 @@ namespace Pixie.Options
         /// <returns><c>true</c> if the argument could be parsed; otherwise, <c>false</c>.</returns>
         public bool Parse(string argument)
         {
+            if (endOfOptionsReached)
+            {
+                return ParseArgument(argument);
+            }
+
             string trimmedArg;
             switch (Classify(argument, out trimmedArg))
             {
@@ -197,6 +205,9 @@ namespace Pixie.Options
                     return ParseLongOption(trimmedArg);
                 case GnuArgumentType.ShortOption:
                     return ParseShortOption(trimmedArg);
+                case GnuArgumentType.EndOfOptions:
+                    endOfOptionsReached = true;
+                    return true;
                 default:
                     return ParseArgument(trimmedArg);
             }
@@ -405,10 +416,18 @@ namespace Pixie.Options
             string argument,
             out string trimmedArg)
         {
-            if (argument.StartsWith("--") && argument.Length > 2)
+            if (argument.StartsWith("--"))
             {
-                trimmedArg = argument.Substring(2);
-                return GnuArgumentType.LongOption;
+                if (argument.Length == 2)
+                {
+                    trimmedArg = argument;
+                    return GnuArgumentType.EndOfOptions;
+                }
+                else
+                {
+                    trimmedArg = argument.Substring(2);
+                    return GnuArgumentType.LongOption;
+                }
             }
             else if (argument.StartsWith("-") && argument.Length > 1)
             {
@@ -577,7 +596,9 @@ namespace Pixie.Options
 
         ShortOption,
 
-        LongOption
+        LongOption,
+
+        EndOfOptions
     }
 
     /// <summary>
