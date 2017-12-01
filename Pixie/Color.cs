@@ -90,6 +90,7 @@ namespace Pixie
             sb.Append(Value);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -101,30 +102,6 @@ namespace Pixie
             sb.Append(";");
             AppendChannel(sb, "b", Blue);
             return sb.ToString();
-        }
-
-        public static Color Parse(string Value)
-        {
-            string[] split = Value.Split(new char[] { ';' });
-            double a = 1.0, r = 0.0, g = 0.0, b = 0.0;
-            foreach (var item in split)
-            {
-                string[] splitElem = item.Split(new char[] { ':' });
-                string key = splitElem[0].Trim(new char[] { });
-                double val = double.Parse(splitElem[1].Trim(new char[] { }));
-
-                if (key == "a" || key == "alpha") a = val;
-                else if (key == "r" || key == "red") r = val;
-                else if (key == "g" || key == "green") g = val;
-                else if (key == "b" || key == "blue") b = val;
-                else if (key == "gray" || key == "grey" || key == "grayscale" || key == "greyscale")
-                {
-                    r = val;
-                    g = val;
-                    b = val;
-                }
-            }
-            return new Color(r, g, b, a);
         }
     }
 
