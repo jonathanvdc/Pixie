@@ -27,5 +27,5 @@ include ../flame-make-scripts/use-ecsc.mk
 bin/flo/Pixie.Terminal.flo: $(files) $(libraries) | ecsc
 	$(ECSC) $(files) -platform ir -runtime clr -libs $(libraries) -o $@ $(common_options)
 
-bin/clr/Pixie.Terminal.dll: $(files) $(libraries) | ecsc
-	$(ECSC) $(files) -platform clr -libs $(libraries) -o $@ $(common_options)
+bin/clr/Pixie.Terminal.dll bin/clr/Pixie.xml: $(files) $(libraries) | ecsc
+	$(ECSC) $(files) -platform clr --docs -libs $(libraries) -o $@ $(common_options)
