@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- NuGet package specification.
+     Run `nuget pack Pixie.nuspec` to build Pixie.x.y.z.nupkg -->
+<package >
+  <metadata>
+    <id>Pixie</id>
+    <version>$version$</version>
+    <authors>Jonathan Van der Cruysse</authors>
+    <owners>Jonathan Van der Cruysse</owners>
+    <projectUrl>https://github.com/jonathanvdc/pixie</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>A library for pretty console output formatting.</summary>
+    <description>Pixie is a C# library that prints beautifully formatted output to the console.
+    
+    You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>terminal console output formatting</tags>
+  </metadata>
+  <files>
+    <file src="README.md" target="readme.txt" />
+    <file src="Pixie\bin\clr\Pixie.dll" target="lib\net45\" />
+    <file src="Pixie\bin\clr\Pixie.xml" target="lib\net45\" />
+    <file src="Pixie.Terminal\bin\clr\Pixie.Terminal.dll" target="lib\net45\" />
+    <file src="Pixie.Terminal\bin\clr\Pixie.Terminal.xml" target="lib\net45\" />
+  </files>
+</package>
