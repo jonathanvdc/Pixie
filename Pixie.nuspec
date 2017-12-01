@@ -20,9 +20,9 @@
   </metadata>
   <files>
     <file src="README.md" target="readme.txt" />
-    <file src="Pixie\bin\clr\Pixie.dll" target="lib\net45\" />
-    <file src="Pixie\bin\clr\Pixie.xml" target="lib\net45\" />
-    <file src="Pixie.Terminal\bin\clr\Pixie.Terminal.dll" target="lib\net45\" />
-    <file src="Pixie.Terminal\bin\clr\Pixie.Terminal.xml" target="lib\net45\" />
+    <file src="Pixie\bin\Release\Pixie.dll" target="lib\net45\" />
+    <file src="Pixie\bin\Release\Pixie.xml" target="lib\net45\" />
+    <file src="Pixie.Terminal\bin\Release\Pixie.Terminal.dll" target="lib\net45\" />
+    <file src="Pixie.Terminal\bin\Release\Pixie.Terminal.xml" target="lib\net45\" />
   </files>
 </package>
