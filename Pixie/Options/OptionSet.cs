@@ -55,6 +55,9 @@ namespace Pixie.Options
         /// value for that option is produced.
         /// </summary>
         /// <param name="opt">An option to find a parsed value for.</param>
+        /// <param name="result">
+        /// The variable in which the resulting value is stored.
+        /// </param>
         /// <returns>
         /// <c>true</c> if a form of the option has been parsed;
         /// otherwise, <c>false</c>.

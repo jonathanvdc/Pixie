@@ -17,6 +17,7 @@ namespace Pixie.Terminal.Render
         /// <summary>
         /// Renders a node for a particular render state.
         /// </summary>
+        /// <param name="node">The node to render.</param>
         /// <param name="state">The render state.</param>
         /// <returns>
         /// A new render state, to be used by the node's next neighbor, if there is one.

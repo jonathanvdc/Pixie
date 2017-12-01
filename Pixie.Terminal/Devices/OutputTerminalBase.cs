@@ -10,6 +10,9 @@ namespace Pixie.Terminal
     {
         private int sepLineCounter;
 
+        /// <summary>
+        /// Writes a raw newline to the output.
+        /// </summary>
         protected abstract void WriteLineImpl();
 
         /// <inheritdoc/>
@@ -29,6 +32,9 @@ namespace Pixie.Terminal
             }
         }
 
+        /// <summary>
+        /// Hints that the end of a separator has been reached.
+        /// </summary>
         protected void EndSeparator()
         {
             sepLineCounter = 0;

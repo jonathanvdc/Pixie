@@ -12,6 +12,27 @@ namespace Pixie.Terminal.Devices
     /// </summary>
     public sealed class LayoutTerminal : TerminalBase
     {
+        /// <summary>
+        /// Creates a layout terminal from an unaligned terminal,
+        /// an alignment, a wrapping strategy, a left padding string
+        /// and a terminal width.
+        /// </summary>
+        /// <param name="unalignedTerminal">
+        /// A terminal to write formatted output to.
+        /// </param>
+        /// <param name="alignment">
+        /// The alignment for each line.
+        /// </param>
+        /// <param name="wrapping">
+        /// The wrapping strategy to use.
+        /// </param>
+        /// <param name="leftPadding">
+        /// A string that is appended to the left of each line.
+        /// It serves as padding.
+        /// </param>
+        /// <param name="width">
+        /// The width of the terminal: the number of characters that fit on a line.
+        /// </param>
         public LayoutTerminal(
             TerminalBase unalignedTerminal,
             Alignment alignment,

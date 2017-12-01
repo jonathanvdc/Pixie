@@ -46,6 +46,9 @@ namespace Pixie.Markup
         public bool SeparateItems { get; private set; }
     }
 
+    /// <summary>
+    /// A markup node type that defines a list of bulleted items.
+    /// </summary>
     public sealed class BulletedList : ListNode
     {
         /// <summary>

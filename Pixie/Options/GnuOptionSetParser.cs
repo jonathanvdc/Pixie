@@ -50,9 +50,6 @@ namespace Pixie.Options
         /// is implicitly parsed when no other option
         /// can accept arguments.
         /// </param>
-        /// <param name="defaultForm">
-        /// The preferred form for the default option.
-        /// </param>
         public GnuOptionSetParser(
             IReadOnlyList<Option> options,
             IReadOnlyList<KeyValuePair<Option, OptionForm>> positionalOptions)

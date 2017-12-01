@@ -61,6 +61,7 @@ namespace Pixie.Terminal.Devices
                     color.Over(curStyle.BackgroundColor)));
         }
 
+        /// <inheritdoc/>
         public override void PushDecoration(
             TextDecoration decoration,
             Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
