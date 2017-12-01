@@ -24,7 +24,7 @@ build_script:
 
 after_build:
   # Create the NuGet package
-  - nuget pack -Version %PKG_VERSION% libwasm.nuspec
+  - nuget pack -Version %PKG_VERSION% Pixie.nuspec
 
 test_script:
   # Run example programs
