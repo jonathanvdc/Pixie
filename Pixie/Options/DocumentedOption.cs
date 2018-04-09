@@ -3,17 +3,18 @@ using System.Collections.Generic;
 namespace Pixie.Options
 {
     /// <summary>
-    /// A type for objects that document an option.
+    /// A data structure that contains an option as well as its
+    /// documentation.
     /// </summary>
-    public sealed class OptionDocumentation
+    public sealed class DocumentedOption
     {
         /// <summary>
-        /// Creates documentation for an option.
+        /// Creates a documented option.
         /// </summary>
         /// <param name="option">The option that is documented.</param>
         /// <param name="parameterNames">The names of the option's parameters.</param>
         /// <param name="description">The option's description.</param>
-        public OptionDocumentation(
+        public DocumentedOption(
             Option option,
             IReadOnlyList<MarkupNode> parameterNames,
             MarkupNode description)
@@ -24,11 +25,11 @@ namespace Pixie.Options
         }
 
         /// <summary>
-        /// Creates option documentation for an option that takes no arguments.
+        /// Creates a documented option that takes no arguments.
         /// </summary>
         /// <param name="option">The option that is documented.</param>
         /// <param name="description">The option's description.</param>
-        public OptionDocumentation(
+        public DocumentedOption(
             Option option,
             MarkupNode description)
             : this(option, new MarkupNode[0], description)
