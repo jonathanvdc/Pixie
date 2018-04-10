@@ -91,7 +91,7 @@ namespace Pixie.Markup
         /// <returns>A bold quotation node.</returns>
         public static MarkupNode CreateBoldQuotation(MarkupNode contents)
         {
-            return new Quotation(new DecorationSpan(contents, TextDecoration.Bold));
+            return new Quotation(DecorationSpan.MakeBold(contents));
         }
 
         /// <summary>

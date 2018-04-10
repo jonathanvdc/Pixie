@@ -95,6 +95,46 @@ namespace Pixie.Markup
         public override MarkupNode Fallback => Contents;
 
         /// <summary>
+        /// Renders a node in bold.
+        /// </summary>
+        /// <param name="node">The node to render in bold.</param>
+        /// <returns>A decoration span that renders the node in bold.</returns>
+        public static DecorationSpan MakeBold(MarkupNode node)
+        {
+            return new DecorationSpan(node, TextDecoration.Bold);
+        }
+
+        /// <summary>
+        /// Renders a node in italics.
+        /// </summary>
+        /// <param name="node">The node to render in italics.</param>
+        /// <returns>A decoration span that renders the node in italics.</returns>
+        public static DecorationSpan MakeItalicized(MarkupNode node)
+        {
+            return new DecorationSpan(node, TextDecoration.Italic);
+        }
+
+        /// <summary>
+        /// Renders a node in strikethrough mode.
+        /// </summary>
+        /// <param name="node">The node to render in strikethrough mode.</param>
+        /// <returns>A decoration span that renders the node in strikethrough mode.</returns>
+        public static DecorationSpan MakeStruckthrough(MarkupNode node)
+        {
+            return new DecorationSpan(node, TextDecoration.Strikethrough);
+        }
+
+        /// <summary>
+        /// Renders a node in underline mode.
+        /// </summary>
+        /// <param name="node">The node to render in underline mode.</param>
+        /// <returns>A decoration span that renders the node in underline mode.</returns>
+        public static DecorationSpan MakeUnderlined(MarkupNode node)
+        {
+            return new DecorationSpan(node, TextDecoration.Underline);
+        }
+
+        /// <summary>
         /// Returns the second text decoration.
         /// </summary>
         /// <param name="first">The first text decoration.</param>
