@@ -63,11 +63,13 @@
     <Compile Include="Markup\Title.cs" />
     <Compile Include="Markup\WrapBox.cs" />
     <Compile Include="Options\FlagOption.cs" />
+    <Compile Include="Options\GnuOptionPrinter.cs" />
     <Compile Include="Options\GnuOptionSetParser.cs" />
     <Compile Include="Options\Option.cs" />
     <Compile Include="Options\OptionDocs.cs" />
     <Compile Include="Options\OptionForm.cs" />
     <Compile Include="Options\OptionParameter.cs" />
+    <Compile Include="Options\OptionPrinter.cs" />
     <Compile Include="Options\OptionSet.cs" />
     <Compile Include="Options\ParsedOption.cs" />
     <Compile Include="Options\SequenceOption.cs" />
