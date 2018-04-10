@@ -16,17 +16,12 @@ namespace Pixie.Options
         /// <param name="positiveForm">
         /// A positive form for the flag option.
         /// </param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         public FlagOption(
-            OptionForm positiveForm,
-            MarkupNode description)
+            OptionForm positiveForm)
             : this(
                 new OptionForm[] { positiveForm },
                 new OptionForm[] { },
-                false,
-                description)
+                false)
         { }
 
         /// <summary>
@@ -42,19 +37,14 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the flag option.
         /// </param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         public FlagOption(
             OptionForm positiveForm,
             OptionForm negativeForm,
-            bool defaultValue,
-            MarkupNode description)
+            bool defaultValue)
             : this(
                 new OptionForm[] { positiveForm },
                 new OptionForm[] { negativeForm },
-                defaultValue,
-                description)
+                defaultValue)
         { }
 
         /// <summary>
@@ -70,15 +60,22 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the flag option.
         /// </param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         public FlagOption(
+            IReadOnlyList<OptionForm> positiveForms,
+            IReadOnlyList<OptionForm> negativeForms,
+            bool defaultValue)
+            : this(
+                positiveForms,
+                negativeForms,
+                defaultValue,
+                "")
+        { }
+
+        private FlagOption(
             IReadOnlyList<OptionForm> positiveForms,
             IReadOnlyList<OptionForm> negativeForms,
             bool defaultValue,
             MarkupNode description)
-            : base(description)
         {
             this.PositiveForms = positiveForms;
             this.NegativeForms = negativeForms;
@@ -86,6 +83,17 @@ namespace Pixie.Options
             this.defaultVal = defaultValue;
             this.allForms = new List<OptionForm>(positiveForms);
             this.allForms.AddRange(negativeForms);
+            this.description = description;
+        }
+
+        private FlagOption(FlagOption other)
+        {
+            this.PositiveForms = other.PositiveForms;
+            this.NegativeForms = other.NegativeForms;
+            this.positiveFormSet = other.positiveFormSet;
+            this.defaultVal = other.defaultVal;
+            this.allForms = other.allForms;
+            this.description = other.description;
         }
 
         /// <summary>
@@ -100,6 +108,7 @@ namespace Pixie.Options
         /// <returns>A list of negative forms for this flag option.</returns>
         public IReadOnlyList<OptionForm> NegativeForms { get; private set; }
 
+        private MarkupNode description;
         private HashSet<OptionForm> positiveFormSet;
         private List<OptionForm> allForms;
         private bool defaultVal;
@@ -109,6 +118,24 @@ namespace Pixie.Options
 
         /// <inheritdoc/>
         public override object DefaultValue => defaultVal;
+
+        /// <inheritdoc/>
+        public override OptionDocs Documentation =>
+            new OptionDocs(
+                description,
+                new Dictionary<OptionForm, IReadOnlyList<OptionParameter>>());
+
+        /// <summary>
+        /// Creates a copy of this option that has a particular description.
+        /// </summary>
+        /// <param name="description">The new option's description.</param>
+        /// <returns>An option.</returns>
+        public FlagOption WithDescription(MarkupNode description)
+        {
+            var result = new FlagOption(this);
+            result.description = description;
+            return result;
+        }
 
         /// <inheritdoc/>
         public override OptionParser CreateParser(OptionForm form)

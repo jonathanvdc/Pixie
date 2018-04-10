@@ -8,21 +8,10 @@ namespace Pixie.Options
     public abstract class Option
     {
         /// <summary>
-        /// Creates an option from a description.
+        /// Gets the option's documentation.
         /// </summary>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
-        public Option(MarkupNode description)
-        {
-            this.Description = description;
-        }
-
-        /// <summary>
-        /// Gets a description of what the option does.
-        /// </summary>
-        /// <returns>A description.</returns>
-        public MarkupNode Description { get; private set; }
+        /// <returns>The documentation for the option.</returns>
+        public abstract OptionDocs Documentation { get; }
 
         /// <summary>
         /// Gets a list of all forms this option accepts.

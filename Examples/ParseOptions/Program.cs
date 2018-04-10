@@ -12,24 +12,33 @@ namespace ParseOptions
 {
     public static class Program
     {
-        private static readonly FlagOption syntaxOnlyFlag = new FlagOption(
-            OptionForm.Short("fsyntax-only"),
-            OptionForm.Short("fno-syntax-only"),
-            false,
-            "Check the code for syntax errors only.");
+        private static readonly FlagOption syntaxOnlyFlag =
+            new FlagOption(
+                OptionForm.Short("fsyntax-only"),
+                OptionForm.Short("fno-syntax-only"),
+                false)
+            .WithDescription("Check the code for syntax errors only.");
 
-        private static readonly SequenceOption<string> filesOption = SequenceOption.CreateStringOption(
-            OptionForm.Long("files"),
-            "Chooses input files.");
+        private static readonly SequenceOption<string> filesOption =
+            SequenceOption.CreateStringOption(
+                OptionForm.Long("files"))
+            .WithDescription("Consume files as input.")
+            .WithParameters(
+                new OptionParameter[]
+                {
+                    new SymbolicOptionParameter("file", true)
+                });
 
-        private static readonly ValueOption<int> optimizeOption = ValueOption.CreateInt32Option(
-            OptionForm.Short("O"),
-            0,
-            "Pick an optimization level.");
+        private static readonly ValueOption<int> optimizeOption =
+            ValueOption.CreateInt32Option(
+                OptionForm.Short("O"),
+                0)
+            .WithDescription("Pick an optimization level.")
+            .WithParameter(new SymbolicOptionParameter("n"));
 
-        private static readonly FlagOption optimizeFastFlag = new FlagOption(
-            OptionForm.Short("Ofast"),
-            "Enable aggressive optimizations.");
+        private static readonly FlagOption optimizeFastFlag =
+            new FlagOption(OptionForm.Short("Ofast"))
+            .WithDescription("Enable aggressive optimizations.");
 
         private static OptionSet parsedOptions;
 

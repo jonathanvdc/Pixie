@@ -21,17 +21,12 @@ namespace Pixie.Options
         /// <param name="parseArgument">
         /// A function that parses a single string argument.
         /// </param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         public SequenceOption(
             OptionForm form,
-            Func<OptionForm, string, ILog, T> parseArgument,
-            MarkupNode description)
+            Func<OptionForm, string, ILog, T> parseArgument)
             : this(
                 new OptionForm[] { form },
-                parseArgument,
-                description)
+                parseArgument)
         { }
 
         /// <summary>
@@ -44,27 +39,91 @@ namespace Pixie.Options
         /// <param name="parseArgument">
         /// A function that parses a single string argument.
         /// </param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         public SequenceOption(
             IReadOnlyList<OptionForm> forms,
+            Func<OptionForm, string, ILog, T> parseArgument)
+            : this(
+                forms,
+                parseArgument,
+                "",
+                new OptionParameter[]
+                {
+                    new SymbolicOptionParameter("arg", true)
+                })
+        { }
+
+        private SequenceOption(
+            IReadOnlyList<OptionForm> forms,
             Func<OptionForm, string, ILog, T> parseArgument,
-            MarkupNode description)
-            : base(description)
+            MarkupNode description,
+            IReadOnlyList<OptionParameter> parameters)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
+            this.description = description;
+            this.parameters = parameters;
         }
+
+        private SequenceOption(SequenceOption<T> other)
+            : this(
+                other.forms,
+                other.parseArgument,
+                other.description,
+                other.parameters)
+        { }
 
         private IReadOnlyList<OptionForm> forms;
         private Func<OptionForm, string, ILog, T> parseArgument;
+
+        private MarkupNode description;
+        private IReadOnlyList<OptionParameter> parameters;
+
+        /// <summary>
+        /// Creates a copy of this option that has a particular description.
+        /// </summary>
+        /// <param name="description">The new option's description.</param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithDescription(MarkupNode description)
+        {
+            var result = new SequenceOption<T>(this);
+            result.description = description;
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a copy of this option that has a particular parameter list.
+        /// </summary>
+        /// <param name="parameter">The new option's parameter list.</param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithParameters(IReadOnlyList<OptionParameter> parameter)
+        {
+            var result = new SequenceOption<T>(this);
+            result.parameters = parameters;
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a copy of this option that has a particular parameter list.
+        /// </summary>
+        /// <param name="parameter">The new option's parameter list.</param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithParameters(params OptionParameter[] parameter)
+        {
+            return WithParameters((IReadOnlyList<OptionParameter>)parameter);
+        }
 
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => forms;
 
         /// <inheritdoc/>
         public override object DefaultValue => new T[] { };
+
+        /// <inheritdoc/>
+        public override OptionDocs Documentation =>
+            new OptionDocs(
+                description,
+                forms,
+                parameters);
 
         /// <inheritdoc/>
         public override OptionParser CreateParser(OptionForm form)
@@ -92,64 +151,48 @@ namespace Pixie.Options
         /// Creates a string-sequence option that takes a single form.
         /// </summary>
         /// <param name="form">The string-sequence option's form.</param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         /// <returns>A string-sequence option.</returns>
         public static SequenceOption<string> CreateStringOption(
-            OptionForm form,
-            MarkupNode description)
+            OptionForm form)
         {
             return new SequenceOption<string>(
-                form, parseStringArgument, description);
+                form, parseStringArgument);
         }
 
         /// <summary>
         /// Creates a string-sequence option that takes a list of forms.
         /// </summary>
         /// <param name="forms">The string-sequence option's forms.</param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         /// <returns>A string-sequence option.</returns>
         public static SequenceOption<string> CreateStringOption(
-            IReadOnlyList<OptionForm> forms,
-            MarkupNode description)
+            IReadOnlyList<OptionForm> forms)
         {
             return new SequenceOption<string>(
-                forms, parseStringArgument, description);
+                forms, parseStringArgument);
         }
 
         /// <summary>
         /// Creates a 32-bit integer--sequence option that takes a single form.
         /// </summary>
         /// <param name="form">The 32-bit integer--sequence option's form.</param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         /// <returns>A 32-bit integer--sequence option.</returns>
         public static SequenceOption<int> CreateInt32Option(
-            OptionForm form,
-            MarkupNode description)
+            OptionForm form)
         {
             return new SequenceOption<int>(
-                form, parseInt32Argument, description);
+                form, parseInt32Argument);
         }
 
         /// <summary>
         /// Creates a 32-bit integer--sequence option that takes a list of forms.
         /// </summary>
         /// <param name="forms">The 32-bit integer--sequence option's forms.</param>
-        /// <param name="description">
-        /// A description of the option's functionality.
-        /// </param>
         /// <returns>A 32-bit integer--sequence option.</returns>
         public static SequenceOption<int> CreateInt32Option(
-            IReadOnlyList<OptionForm> forms,
-            MarkupNode description)
+            IReadOnlyList<OptionForm> forms)
         {
             return new SequenceOption<int>(
-                forms, parseInt32Argument, description);
+                forms, parseInt32Argument);
         }
 
         internal static string parseStringArgument(
