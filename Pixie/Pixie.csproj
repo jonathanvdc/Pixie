@@ -54,6 +54,7 @@
     <Compile Include="Markup\HighlightedSource.cs" />
     <Compile Include="Markup\MathSymbol.cs" />
     <Compile Include="Markup\NewLine.cs" />
+    <Compile Include="Markup\OptionSummary.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\PrefixBox.cs" />
     <Compile Include="Markup\Quotation.cs" />
