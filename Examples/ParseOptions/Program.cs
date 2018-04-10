@@ -15,17 +15,21 @@ namespace ParseOptions
         private static readonly FlagOption syntaxOnlyFlag = new FlagOption(
             OptionForm.Short("fsyntax-only"),
             OptionForm.Short("fno-syntax-only"),
-            false);
+            false,
+            "Check the code for syntax errors only.");
 
         private static readonly SequenceOption<string> filesOption = SequenceOption.CreateStringOption(
-            OptionForm.Long("files"));
+            OptionForm.Long("files"),
+            "Chooses input files.");
 
         private static readonly ValueOption<int> optimizeOption = ValueOption.CreateInt32Option(
             OptionForm.Short("O"),
-            0);
+            0,
+            "Pick an optimization level.");
 
         private static readonly FlagOption optimizeFastFlag = new FlagOption(
-            OptionForm.Short("Ofast"));
+            OptionForm.Short("Ofast"),
+            "Enable aggressive optimizations.");
 
         private static OptionSet parsedOptions;
 

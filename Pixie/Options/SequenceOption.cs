@@ -21,10 +21,17 @@ namespace Pixie.Options
         /// <param name="parseArgument">
         /// A function that parses a single string argument.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public SequenceOption(
             OptionForm form,
-            Func<OptionForm, string, ILog, T> parseArgument)
-            : this(new OptionForm[] { form }, parseArgument)
+            Func<OptionForm, string, ILog, T> parseArgument,
+            MarkupNode description)
+            : this(
+                new OptionForm[] { form },
+                parseArgument,
+                description)
         { }
 
         /// <summary>
@@ -37,9 +44,14 @@ namespace Pixie.Options
         /// <param name="parseArgument">
         /// A function that parses a single string argument.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public SequenceOption(
             IReadOnlyList<OptionForm> forms,
-            Func<OptionForm, string, ILog, T> parseArgument)
+            Func<OptionForm, string, ILog, T> parseArgument,
+            MarkupNode description)
+            : base(description)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
@@ -61,7 +73,8 @@ namespace Pixie.Options
         }
 
         /// <inheritdoc/>
-        public override ParsedOption MergeValues(ParsedOption first, ParsedOption second)
+        public override ParsedOption MergeValues(
+            ParsedOption first, ParsedOption second)
         {
             // Merge the sequences.
             var result = new List<T>((IReadOnlyList<T>)first.Value);
@@ -79,68 +92,74 @@ namespace Pixie.Options
         /// Creates a string-sequence option that takes a single form.
         /// </summary>
         /// <param name="form">The string-sequence option's form.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A string-sequence option.</returns>
-        public static SequenceOption<string> CreateStringOption(OptionForm form)
+        public static SequenceOption<string> CreateStringOption(
+            OptionForm form,
+            MarkupNode description)
         {
-            return new SequenceOption<string>(form, parseStringArgument);
+            return new SequenceOption<string>(
+                form, parseStringArgument, description);
         }
 
         /// <summary>
         /// Creates a string-sequence option that takes a list of forms.
         /// </summary>
         /// <param name="forms">The string-sequence option's forms.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A string-sequence option.</returns>
-        public static SequenceOption<string> CreateStringOption(IReadOnlyList<OptionForm> forms)
+        public static SequenceOption<string> CreateStringOption(
+            IReadOnlyList<OptionForm> forms,
+            MarkupNode description)
         {
-            return new SequenceOption<string>(forms, parseStringArgument);
-        }
-
-        /// <summary>
-        /// Creates a string-sequence option that takes a list of forms.
-        /// </summary>
-        /// <param name="forms">The string-sequence option's forms.</param>
-        /// <returns>A string-sequence option.</returns>
-        public static SequenceOption<string> CreateStringOption(params OptionForm[] forms)
-        {
-            return new SequenceOption<string>(forms, parseStringArgument);
+            return new SequenceOption<string>(
+                forms, parseStringArgument, description);
         }
 
         /// <summary>
         /// Creates a 32-bit integer--sequence option that takes a single form.
         /// </summary>
         /// <param name="form">The 32-bit integer--sequence option's form.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A 32-bit integer--sequence option.</returns>
-        public static SequenceOption<int> CreateInt32Option(OptionForm form)
+        public static SequenceOption<int> CreateInt32Option(
+            OptionForm form,
+            MarkupNode description)
         {
-            return new SequenceOption<int>(form, parseInt32Argument);
+            return new SequenceOption<int>(
+                form, parseInt32Argument, description);
         }
 
         /// <summary>
         /// Creates a 32-bit integer--sequence option that takes a list of forms.
         /// </summary>
         /// <param name="forms">The 32-bit integer--sequence option's forms.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A 32-bit integer--sequence option.</returns>
-        public static SequenceOption<int> CreateInt32Option(IReadOnlyList<OptionForm> forms)
+        public static SequenceOption<int> CreateInt32Option(
+            IReadOnlyList<OptionForm> forms,
+            MarkupNode description)
         {
-            return new SequenceOption<int>(forms, parseInt32Argument);
+            return new SequenceOption<int>(
+                forms, parseInt32Argument, description);
         }
 
-        /// <summary>
-        /// Creates a 32-bit integer--sequence option that takes a list of forms.
-        /// </summary>
-        /// <param name="forms">The 32-bit integer--sequence option's forms.</param>
-        /// <returns>A 32-bit integer--sequence option.</returns>
-        public static SequenceOption<int> CreateInt32Option(params OptionForm[] forms)
-        {
-            return new SequenceOption<int>(forms, parseInt32Argument);
-        }
-
-        internal static string parseStringArgument(OptionForm form, string argument, ILog log)
+        internal static string parseStringArgument(
+            OptionForm form, string argument, ILog log)
         {
             return argument;
         }
 
-        internal static int parseInt32Argument(OptionForm form, string argument, ILog log)
+        internal static int parseInt32Argument(
+            OptionForm form, string argument, ILog log)
         {
             int result;
             if (!int.TryParse(argument, out result))

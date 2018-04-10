@@ -22,14 +22,19 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the value option.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public ValueOption(
             OptionForm form,
             Func<OptionForm, string, ILog, T> parseArgument,
-            T defaultValue)
+            T defaultValue,
+            MarkupNode description)
             : this(
                 new OptionForm[] { form },
                 parseArgument,
-                defaultValue)
+                defaultValue,
+                description)
         { }
 
         /// <summary>
@@ -46,10 +51,15 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the value option.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public ValueOption(
             IReadOnlyList<OptionForm> forms,
             Func<OptionForm, string, ILog, T> parseArgument,
-            T defaultValue)
+            T defaultValue,
+            MarkupNode description)
+            : base(description)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
@@ -89,14 +99,20 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="form">The string option's form.</param>
         /// <param name="defaultValue">The default value for the option.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A string option.</returns>
         public static ValueOption<string> CreateStringOption(
-            OptionForm form, string defaultValue)
+            OptionForm form,
+            string defaultValue,
+            MarkupNode description)
         {
             return new ValueOption<string>(
                 form,
                 SequenceOption.parseStringArgument,
-                defaultValue);
+                defaultValue,
+                description);
         }
 
         /// <summary>
@@ -104,14 +120,20 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="forms">The string option's forms.</param>
         /// <param name="defaultValue">The default value for the option.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A string option.</returns>
         public static ValueOption<string> CreateStringOption(
-            IReadOnlyList<OptionForm> forms, string defaultValue)
+            IReadOnlyList<OptionForm> forms,
+            string defaultValue,
+            MarkupNode description)
         {
             return new ValueOption<string>(
                 forms,
                 SequenceOption.parseStringArgument,
-                defaultValue);
+                defaultValue,
+                description);
         }
 
         /// <summary>
@@ -119,14 +141,20 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="form">The 32-bit signed integer option's form.</param>
         /// <param name="defaultValue">The default value for the option.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A 32-bit signed integer option.</returns>
         public static ValueOption<int> CreateInt32Option(
-            OptionForm form, int defaultValue)
+            OptionForm form,
+            int defaultValue,
+            MarkupNode description)
         {
             return new ValueOption<int>(
                 form,
                 SequenceOption.parseInt32Argument,
-                defaultValue);
+                defaultValue,
+                description);
         }
 
         /// <summary>
@@ -134,14 +162,20 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="forms">The 32-bit signed integer option's forms.</param>
         /// <param name="defaultValue">The default value for the option.</param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         /// <returns>A 32-bit signed integer option.</returns>
         public static ValueOption<int> CreateInt32Option(
-            IReadOnlyList<OptionForm> forms, int defaultValue)
+            IReadOnlyList<OptionForm> forms,
+            int defaultValue,
+            MarkupNode description)
         {
             return new ValueOption<int>(
                 forms,
                 SequenceOption.parseInt32Argument,
-                defaultValue);
+                defaultValue,
+                description);
         }
     }
 

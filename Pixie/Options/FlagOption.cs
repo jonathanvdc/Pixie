@@ -16,12 +16,17 @@ namespace Pixie.Options
         /// <param name="positiveForm">
         /// A positive form for the flag option.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public FlagOption(
-            OptionForm positiveForm)
+            OptionForm positiveForm,
+            MarkupNode description)
             : this(
                 new OptionForm[] { positiveForm },
                 new OptionForm[] { },
-                false)
+                false,
+                description)
         { }
 
         /// <summary>
@@ -37,14 +42,19 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the flag option.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public FlagOption(
             OptionForm positiveForm,
             OptionForm negativeForm,
-            bool defaultValue)
+            bool defaultValue,
+            MarkupNode description)
             : this(
                 new OptionForm[] { positiveForm },
                 new OptionForm[] { negativeForm },
-                defaultValue)
+                defaultValue,
+                description)
         { }
 
         /// <summary>
@@ -60,10 +70,15 @@ namespace Pixie.Options
         /// <param name="defaultValue">
         /// A default value for the flag option.
         /// </param>
+        /// <param name="description">
+        /// A description of the option's functionality.
+        /// </param>
         public FlagOption(
             IReadOnlyList<OptionForm> positiveForms,
             IReadOnlyList<OptionForm> negativeForms,
-            bool defaultValue)
+            bool defaultValue,
+            MarkupNode description)
+            : base(description)
         {
             this.PositiveForms = positiveForms;
             this.NegativeForms = negativeForms;
