@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Pixie.Options
@@ -172,6 +173,32 @@ namespace Pixie.Options
         {
             // Listen to the last flag provided by the user.
             return second;
+        }
+
+        /// <summary>
+        /// Creates a simple flag option that is turned off
+        /// by default and is turned on when one or more of
+        /// its forms is encountered.
+        /// </summary>
+        /// <param name="forms">The option forms to accept.</param>
+        /// <returns>A flag option.</returns>
+        public static FlagOption CreateFlagOption(
+            IReadOnlyList<OptionForm> forms)
+        {
+            return new FlagOption(forms, new OptionForm[] { }, false);
+        }
+
+        /// <summary>
+        /// Creates a simple flag option that is turned off
+        /// by default and is turned on when one or more of
+        /// its forms is encountered.
+        /// </summary>
+        /// <param name="forms">The option forms to accept.</param>
+        /// <returns>A flag option.</returns>
+        public static FlagOption CreateFlagOption(
+            params OptionForm[] forms)
+        {
+            return CreateFlagOption((IReadOnlyList<OptionForm>)forms);
         }
     }
 
