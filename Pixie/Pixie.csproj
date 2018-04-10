@@ -52,6 +52,7 @@
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\Diagnostic.cs" />
     <Compile Include="Markup\HighlightedSource.cs" />
+    <Compile Include="Markup\MathSymbol.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\PrefixBox.cs" />
