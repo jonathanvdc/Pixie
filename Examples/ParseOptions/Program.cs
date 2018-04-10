@@ -12,6 +12,29 @@ namespace ParseOptions
 {
     public static class Program
     {
+        // A number of option definitions.
+
+        // This option is a simple flag. It takes no arguments.
+        private static readonly FlagOption optimizeFastFlag =
+            new FlagOption(OptionForm.Short("Ofast"))
+            .WithCategory("Optimization options")
+            .WithDescription("Enable aggressive optimizations.");
+
+        // This option is also a simple flag, but it has two
+        // different forms:
+        //     -h and --help.
+        private static readonly FlagOption helpFlag =
+            FlagOption.CreateFlagOption(
+                new OptionForm[]
+                {
+                    OptionForm.Short("h"),
+                    OptionForm.Long("help")
+                })
+            .WithDescription(
+                "Print a description of the options understood.");
+
+        // This option has both a positive and a negative form:
+        //     -fsyntax-only and -fno-syntax-only.
         private static readonly FlagOption syntaxOnlyFlag =
             new FlagOption(
                 OptionForm.Short("fsyntax-only"),
@@ -19,6 +42,7 @@ namespace ParseOptions
                 false)
             .WithDescription("Check the code for syntax errors only.");
 
+        // This option takes zero or more strings as arguments.
         private static readonly SequenceOption<string> filesOption =
             SequenceOption.CreateStringOption(
                 OptionForm.Long("files"))
@@ -29,16 +53,14 @@ namespace ParseOptions
                     new SymbolicOptionParameter("file", true)
                 });
 
+        // This option takes a 32-bit signed integer as argument.
         private static readonly ValueOption<int> optimizeOption =
             ValueOption.CreateInt32Option(
                 OptionForm.Short("O"),
                 0)
+            .WithCategory("Optimization options")
             .WithDescription("Pick an optimization level.")
             .WithParameter(new SymbolicOptionParameter("n"));
-
-        private static readonly FlagOption optimizeFastFlag =
-            new FlagOption(OptionForm.Short("Ofast"))
-            .WithDescription("Enable aggressive optimizations.");
 
         private static OptionSet parsedOptions;
 
@@ -60,7 +82,8 @@ namespace ParseOptions
                 filesOption,
                 syntaxOnlyFlag,
                 optimizeOption,
-                optimizeFastFlag
+                optimizeFastFlag,
+                helpFlag
             };
 
             var parser = new GnuOptionSetParser(
