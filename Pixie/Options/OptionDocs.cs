@@ -10,6 +10,9 @@ namespace Pixie.Options
         /// <summary>
         /// Creates documentation for an option.
         /// </summary>
+        /// <param name="category">
+        /// The option's category.
+        /// </param>
         /// <param name="description">
         /// A description of what the option does.
         /// </param>
@@ -17,9 +20,11 @@ namespace Pixie.Options
         /// A list of parameters for each option form.
         /// </param>
         public OptionDocs(
+            string category,
             MarkupNode description,
             IReadOnlyDictionary<OptionForm, IReadOnlyList<OptionParameter>> parameters)
         {
+            this.Category = category;
             this.Description = description;
             this.Parameters = parameters;
         }
@@ -27,6 +32,9 @@ namespace Pixie.Options
         /// <summary>
         /// Creates documentation for an option.
         /// </summary>
+        /// <param name="category">
+        /// The option's category.
+        /// </param>
         /// <param name="description">
         /// A description of what the option does.
         /// </param>
@@ -37,10 +45,12 @@ namespace Pixie.Options
         /// A common list of parameters for all option forms.
         /// </param>
         public OptionDocs(
+            string category,
             MarkupNode description,
             IReadOnlyList<OptionForm> forms,
             IReadOnlyList<OptionParameter> parameters)
         {
+            this.Category = category;
             this.Description = description;
             var paramDocs = new Dictionary<OptionForm, IReadOnlyList<OptionParameter>>();
             for (int i = 0; i < forms.Count; i++)
@@ -49,6 +59,17 @@ namespace Pixie.Options
             }
             this.Parameters = paramDocs;
         }
+
+        /// <summary>
+        /// Gets the default option category.
+        /// </summary>
+        public const string DefaultCategory = "Overall options";
+
+        /// <summary>
+        /// Gets the category of options this option belongs to.
+        /// </summary>
+        /// <returns>A category.</returns>
+        public string Category { get; private set; }
 
         /// <summary>
         /// Gets a description of what the option does.

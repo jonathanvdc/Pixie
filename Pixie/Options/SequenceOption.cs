@@ -45,6 +45,7 @@ namespace Pixie.Options
             : this(
                 forms,
                 parseArgument,
+                OptionDocs.DefaultCategory,
                 "",
                 new OptionParameter[]
                 {
@@ -55,11 +56,13 @@ namespace Pixie.Options
         private SequenceOption(
             IReadOnlyList<OptionForm> forms,
             Func<OptionForm, string, ILog, T> parseArgument,
+            string category,
             MarkupNode description,
             IReadOnlyList<OptionParameter> parameters)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
+            this.category = category;
             this.description = description;
             this.parameters = parameters;
         }
@@ -68,6 +71,7 @@ namespace Pixie.Options
             : this(
                 other.forms,
                 other.parseArgument,
+                other.category,
                 other.description,
                 other.parameters)
         { }
@@ -75,8 +79,22 @@ namespace Pixie.Options
         private IReadOnlyList<OptionForm> forms;
         private Func<OptionForm, string, ILog, T> parseArgument;
 
+        private string category;
         private MarkupNode description;
         private IReadOnlyList<OptionParameter> parameters;
+
+        /// <summary>
+        /// Creates a copy of this option that is classified under a
+        /// particular category.
+        /// </summary>
+        /// <param name="category">The new option's category.</param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithCategory(string category)
+        {
+            var result = new SequenceOption<T>(this);
+            result.category = category;
+            return result;
+        }
 
         /// <summary>
         /// Creates a copy of this option that has a particular description.
@@ -121,6 +139,7 @@ namespace Pixie.Options
         /// <inheritdoc/>
         public override OptionDocs Documentation =>
             new OptionDocs(
+                category,
                 description,
                 forms,
                 parameters);

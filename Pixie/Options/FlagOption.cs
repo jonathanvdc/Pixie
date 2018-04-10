@@ -83,6 +83,7 @@ namespace Pixie.Options
             this.defaultVal = defaultValue;
             this.allForms = new List<OptionForm>(positiveForms);
             this.allForms.AddRange(negativeForms);
+            this.category = OptionDocs.DefaultCategory;
             this.description = description;
         }
 
@@ -108,10 +109,12 @@ namespace Pixie.Options
         /// <returns>A list of negative forms for this flag option.</returns>
         public IReadOnlyList<OptionForm> NegativeForms { get; private set; }
 
-        private MarkupNode description;
         private HashSet<OptionForm> positiveFormSet;
         private List<OptionForm> allForms;
         private bool defaultVal;
+
+        private string category;
+        private MarkupNode description;
 
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => allForms;
@@ -122,8 +125,22 @@ namespace Pixie.Options
         /// <inheritdoc/>
         public override OptionDocs Documentation =>
             new OptionDocs(
+                category,
                 description,
                 new Dictionary<OptionForm, IReadOnlyList<OptionParameter>>());
+
+        /// <summary>
+        /// Creates a copy of this option that is classified under a
+        /// particular category.
+        /// </summary>
+        /// <param name="category">The new option's category.</param>
+        /// <returns>An option.</returns>
+        public FlagOption WithCategory(string category)
+        {
+            var result = new FlagOption(this);
+            result.category = category;
+            return result;
+        }
 
         /// <summary>
         /// Creates a copy of this option that has a particular description.

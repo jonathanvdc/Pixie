@@ -54,6 +54,7 @@ namespace Pixie.Options
                 forms,
                 parseArgument,
                 defaultValue,
+                OptionDocs.DefaultCategory,
                 "",
                 new SymbolicOptionParameter("arg", false))
         { }
@@ -62,12 +63,14 @@ namespace Pixie.Options
             IReadOnlyList<OptionForm> forms,
             Func<OptionForm, string, ILog, T> parseArgument,
             T defaultValue,
+            string category,
             MarkupNode description,
             OptionParameter parameter)
         {
             this.forms = forms;
             this.parseArgument = parseArgument;
             this.defaultValue = defaultValue;
+            this.category = category;
             this.description = description;
             this.parameter = parameter;
         }
@@ -77,6 +80,7 @@ namespace Pixie.Options
                 other.forms,
                 other.parseArgument,
                 other.defaultValue,
+                other.category,
                 other.description,
                 other.parameter)
         { }
@@ -85,8 +89,22 @@ namespace Pixie.Options
         private Func<OptionForm, string, ILog, T> parseArgument;
         private T defaultValue;
 
+        private string category;
         private MarkupNode description;
         private OptionParameter parameter;
+
+        /// <summary>
+        /// Creates a copy of this option that is classified under a
+        /// particular category.
+        /// </summary>
+        /// <param name="category">The new option's category.</param>
+        /// <returns>An option.</returns>
+        public ValueOption<T> WithCategory(string category)
+        {
+            var result = new ValueOption<T>(this);
+            result.category = category;
+            return result;
+        }
 
         /// <summary>
         /// Creates a copy of this option that has a particular description.
@@ -121,6 +139,7 @@ namespace Pixie.Options
         /// <inheritdoc/>
         public override OptionDocs Documentation =>
             new OptionDocs(
+                category,
                 description,
                 forms,
                 new OptionParameter[] { parameter });
