@@ -1,4 +1,5 @@
 using System;
+using Pixie.Markup;
 
 namespace Pixie
 {
@@ -24,5 +25,16 @@ namespace Pixie
         /// <param name="mapping">A mapping function.</param>
         /// <returns>A new markup node.</returns>
         public abstract MarkupNode Map(Func<MarkupNode, MarkupNode> mapping);
+
+        /// <summary>
+        /// Creates a text markup node from a string of characters.
+        /// </summary>
+        /// <param name="text">
+        /// The text to wrap in a text markup node.
+        /// </param>
+        public static implicit operator MarkupNode(string text)
+        {
+            return new Text(text);
+        }
     }
 }
