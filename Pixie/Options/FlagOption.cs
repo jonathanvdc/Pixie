@@ -95,6 +95,7 @@ namespace Pixie.Options
             this.positiveFormSet = other.positiveFormSet;
             this.defaultVal = other.defaultVal;
             this.allForms = other.allForms;
+            this.category = other.category;
             this.description = other.description;
         }
 
