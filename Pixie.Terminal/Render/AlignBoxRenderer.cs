@@ -29,10 +29,9 @@ namespace Pixie.Terminal.Render
             var newTerm = LayoutTerminal.Align(
                 state.Terminal, boxNode.Alignment);
 
-            newState = state.WithTerminal(newTerm);
-            newTerm.WriteSeparator(1);
+            newState = newTerm.StartLayoutBox(state);
             newState.Render(boxNode.Contents);
-            newTerm.WriteSeparator(1);
+            newTerm.EndLayoutBox();
         }
     }
 }

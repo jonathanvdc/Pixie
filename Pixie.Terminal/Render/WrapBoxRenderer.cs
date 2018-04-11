@@ -33,10 +33,9 @@ namespace Pixie.Terminal.Render
                     boxNode.RightMargin),
                 boxNode.Wrapping);
 
-            newState = state.WithTerminal(newTerm);
-            newTerm.WriteSeparator(1);
+            newState = newTerm.StartLayoutBox(state);
             newState.Render(boxNode.Contents);
-            newTerm.WriteSeparator(1);
+            newTerm.EndLayoutBox();
         }
     }
 }

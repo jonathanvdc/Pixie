@@ -29,8 +29,7 @@ namespace Pixie.Terminal.Render
             var newTerm = LayoutTerminal.Align(
                 state.Terminal, Alignment.Left);
 
-            newState = state.WithTerminal(newTerm);
-            newTerm.WriteSeparator(1);
+            newState = newTerm.StartLayoutBox(state);
             newState.Render(boxNode.Prefix);
             int lineLength = newTerm.BufferedLineLength;
             newTerm.Flush();
@@ -44,7 +43,7 @@ namespace Pixie.Terminal.Render
             newState = newState.WithTerminal(newTerm);
             newState.Render(boxNode.Contents);
 
-            newTerm.WriteSeparator(1);
+            newTerm.EndLayoutBox();
         }
     }
 }
