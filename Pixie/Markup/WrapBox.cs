@@ -168,5 +168,35 @@ namespace Pixie.Markup
         {
             return IndentAndWordWrap(new Sequence(nodes));
         }
+
+        /// <summary>
+        /// Creates a wrap box that word-wraps a node.
+        /// </summary>
+        /// <param name="node">The node to word-wrap.</param>
+        /// <returns>A word-wrapped node.</returns>
+        public static WrapBox WordWrap(MarkupNode node)
+        {
+            return new WrapBox(node, WrappingStrategy.Word);
+        }
+
+        /// <summary>
+        /// Creates a wrap box that word-wraps a sequence of nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes to word-wrap.</param>
+        /// <returns>A word-wrapped node.</returns>
+        public static WrapBox WordWrap(IReadOnlyList<MarkupNode> nodes)
+        {
+            return WordWrap(new Sequence(nodes));
+        }
+
+        /// <summary>
+        /// Creates a wrap box that word-wraps a sequence of nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes to word-wrap.</param>
+        /// <returns>A word-wrapped node.</returns>
+        public static WrapBox WordWrap(params MarkupNode[] nodes)
+        {
+            return WordWrap(new Sequence(nodes));
+        }
     }
 }

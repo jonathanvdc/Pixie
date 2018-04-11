@@ -47,8 +47,9 @@ namespace PrintHelp
                             new OptionSetSummary(allOptions, GnuOptionPrinter.Instance)
                         }),
 
-                    // Then print more detailed help for each option.
-                    new OptionSetHelp(allOptions, GnuOptionPrinter.Instance)
+                    // Then print more detailed help for each option. Word-wrap
+                    // these as well.
+                    WrapBox.WordWrap(new OptionSetHelp(allOptions, GnuOptionPrinter.Instance))
                 });
         }
 
