@@ -20,7 +20,7 @@ namespace Pixie.Tests
             var terminal = new TextWriterTerminal(writer, 80);
             var log = new TerminalLog(terminal);
             log.Log(node);
-            return writer.ToString().Trim();
+            return writer.ToString().Trim().Replace("\r", "");
         }
 
         /// <summary>
