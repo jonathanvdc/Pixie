@@ -56,6 +56,7 @@
     <Compile Include="Markup\MathSymbol.cs" />
     <Compile Include="Markup\NewLine.cs" />
     <Compile Include="Markup\OptionHelp.cs" />
+    <Compile Include="Markup\OptionSetHelp.cs" />
     <Compile Include="Markup\OptionSetSummary.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\PrefixBox.cs" />
