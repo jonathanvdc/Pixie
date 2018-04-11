@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaretDiagnostics", "Example
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseOptions", "Examples\ParseOptions\ParseOptions.csproj", "{C2667BED-853C-4BC4-B79D-7F8476936E4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A8B90E55-2BE7-40DB-B35B-2576D00FD848}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B90E55-2BE7-40DB-B35B-2576D00FD848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B90E55-2BE7-40DB-B35B-2576D00FD848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B90E55-2BE7-40DB-B35B-2576D00FD848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B90E55-2BE7-40DB-B35B-2576D00FD848}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
