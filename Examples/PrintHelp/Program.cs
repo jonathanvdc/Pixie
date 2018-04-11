@@ -26,31 +26,11 @@ namespace PrintHelp
                 helpFlag
             };
 
-            // Create the help message itself.
-            return new Sequence(
-                new MarkupNode[]
-                {
-                    // Let's start off with a summary of all options.
-
-                    // We'll put the title of this section in bold.
-                    DecorationSpan.MakeBold("Option summary"),
-                    // And also indent + word-wrap the contents.
-                    WrapBox.IndentAndWordWrap(
-                        new MarkupNode[]
-                        {
-                            // Short introductory paragraph.
-                            new Paragraph(
-                                "Here is a summary of all the options, grouped by type. " +
-                                "Explanations are in the following sections."),
-
-                            // Actually summarize the options.
-                            new OptionSetSummary(allOptions, GnuOptionPrinter.Instance)
-                        }),
-
-                    // Then print more detailed help for each option. Word-wrap
-                    // these as well.
-                    WrapBox.WordWrap(new OptionSetHelp(allOptions, GnuOptionPrinter.Instance))
-                });
+            return new HelpMessage(
+                "PrintHelp is an example program that showcases " +
+                "how easy it is to create pretty help messages using Pixie.",
+                "PrintHelp [files-or-options]",
+                allOptions);
         }
 
         public static void Main(string[] args)
