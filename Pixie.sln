@@ -5,13 +5,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie", "Pixie\Pixie.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie.Terminal", "Pixie.Terminal\Pixie.Terminal.csproj", "{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormattedList", "Examples\FormattedList\FormattedList.csproj", "{4AE2009A-41E5-4282-9394-2870FFC8BBD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A8B90E55-2BE7-40DB-B35B-2576D00FD848}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{024E407C-D259-4DDA-AA34-F0D05FCD49AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaretDiagnostics", "Examples\CaretDiagnostics\CaretDiagnostics.csproj", "{353D417A-557E-4F2E-8202-64DA1EBC1C15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseOptions", "Examples\ParseOptions\ParseOptions.csproj", "{C2667BED-853C-4BC4-B79D-7F8476936E4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormattedList", "Examples\FormattedList\FormattedList.csproj", "{4AE2009A-41E5-4282-9394-2870FFC8BBD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A8B90E55-2BE7-40DB-B35B-2576D00FD848}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseOptions", "Examples\ParseOptions\ParseOptions.csproj", "{C2667BED-853C-4BC4-B79D-7F8476936E4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,5 +45,10 @@ Global
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2667BED-853C-4BC4-B79D-7F8476936E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{353D417A-557E-4F2E-8202-64DA1EBC1C15} = {024E407C-D259-4DDA-AA34-F0D05FCD49AE}
+		{4AE2009A-41E5-4282-9394-2870FFC8BBD1} = {024E407C-D259-4DDA-AA34-F0D05FCD49AE}
+		{C2667BED-853C-4BC4-B79D-7F8476936E4F} = {024E407C-D259-4DDA-AA34-F0D05FCD49AE}
 	EndGlobalSection
 EndGlobal
