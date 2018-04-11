@@ -48,6 +48,7 @@
     <Compile Include="Render\DegradableTextRenderer.cs" />
     <Compile Include="Render\DiagnosticRenderer.cs" />
     <Compile Include="Render\HighlightedSourceRenderer.cs" />
+    <Compile Include="Render\IndentBoxRenderer.cs" />
     <Compile Include="Render\NewLineRenderer.cs" />
     <Compile Include="Render\NodeRenderer.cs" />
     <Compile Include="Render\ParagraphRenderer.cs" />

@@ -25,6 +25,7 @@ namespace Pixie.Terminal
                     DegradableTextRenderer.Instance,
                     DiagnosticRenderer.Instance,
                     new HighlightedSourceRenderer(1, Colors.Green),
+                    IndentBoxRenderer.Instance,
                     NewLineRenderer.Instance,
                     ParagraphRenderer.Instance,
                     PrefixBoxRenderer.Instance,
