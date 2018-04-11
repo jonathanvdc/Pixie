@@ -57,9 +57,18 @@ namespace Pixie.Terminal
         /// <param name="entry">The entry to log.</param>
         public void Log(LogEntry entry)
         {
+            Log(entry.Contents);
+        }
+
+        /// <summary>
+        /// Writes a markup node to this log directly.
+        /// </summary>
+        /// <param name="node">The markup node to write.</param>
+        public void Log(MarkupNode node)
+        {
             lock (renderLock)
             {
-                BaseRenderState.Render(new Box(entry.Contents));
+                BaseRenderState.Render(new Box(node));
             }
         }
 
