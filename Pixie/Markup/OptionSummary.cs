@@ -44,19 +44,18 @@ namespace Pixie.Markup
                 {
                     int optCount = kvPair.Value.Count;
 
-                    var groupOptionNodes = new MarkupNode[optCount];
+                    var optionFormNodes = new List<MarkupNode>();
                     for (int i = 0; i < optCount; i++)
                     {
                         var docs = kvPair.Value[i].Documentation;
                         var forms = kvPair.Value[i].Forms;
                         int formCount = forms.Count;
 
-                        var optionFormNodes = new List<MarkupNode>();
                         for (int j = 0; j < formCount; j++)
                         {
-                            if (j > 0)
+                            if (optionFormNodes.Count > 0)
                             {
-                                optionFormNodes.Add(", ");
+                                optionFormNodes.Add(" ");
                             }
                             optionFormNodes.Add(
                                 DecorationSpan.MakeBold(
@@ -64,8 +63,6 @@ namespace Pixie.Markup
                                         forms[j],
                                         docs.GetParameters(forms[j]))));
                         }
-
-                        groupOptionNodes[i] = new Box(new Sequence(optionFormNodes));
                     }
 
                     groupNodes.Add(
@@ -74,7 +71,7 @@ namespace Pixie.Markup
                                 new MarkupNode[]
                                 {
                                     DecorationSpan.MakeBold(kvPair.Key),
-                                    new WrapBox(new Sequence(groupOptionNodes), WrappingStrategy.Word, 4, 0)
+                                    new WrapBox(new Sequence(optionFormNodes), WrappingStrategy.Word, 4, 0)
                                 })));
                 }
                 return new Sequence(groupNodes);
