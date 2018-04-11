@@ -44,8 +44,11 @@ namespace PrintHelp
                                 "Explanations are in the following sections."),
 
                             // Actually summarize the options.
-                            new OptionSummary(allOptions, GnuOptionPrinter.Instance)
+                            new OptionSetSummary(allOptions, GnuOptionPrinter.Instance)
                         }),
+
+                    // Then print more detailed help for each option.
+                    new OptionSetHelp(allOptions, GnuOptionPrinter.Instance)
                 });
         }
 
