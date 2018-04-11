@@ -45,5 +45,33 @@ namespace Pixie.Tests
                     }),
                 "I did not hit her. I did naaahhht.\nOh hi Mark");
         }
+
+        [Test]
+        public void TextBeforeWrapBox()
+        {
+            AssertRendersAs(
+                new Sequence(
+                    new MarkupNode[]
+                    {
+                        "I did not hit her. I did naaahhht.",
+                        new WrapBox("Oh hi Mark", WrappingStrategy.Word)
+                    }),
+                "I did not hit her. I did naaahhht.\nOh hi Mark");
+        }
+
+        [Test]
+        public void TextBeforeNestedWrapBox()
+        {
+            AssertRendersAs(
+                new WrapBox(
+                    new Sequence(
+                        new MarkupNode[]
+                        {
+                            "I did not hit her. I did naaahhht.",
+                            new WrapBox("Oh hi Mark", WrappingStrategy.Word)
+                        }),
+                    WrappingStrategy.Word),
+                "I did not hit her. I did naaahhht.\nOh hi Mark");
+        }
     }
 }
