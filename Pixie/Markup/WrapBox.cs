@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -134,6 +137,36 @@ namespace Pixie.Markup
         public override ContainerNode WithContents(MarkupNode newContents)
         {
             return new WrapBox(newContents, Wrapping, LeftMargin, RightMargin);
+        }
+
+        /// <summary>
+        /// Creates a wrap box that indents and word-wraps a node.
+        /// </summary>
+        /// <param name="node">The node to indent and word-wrap.</param>
+        /// <returns>An indented, word-wrapped node.</returns>
+        public static WrapBox IndentAndWordWrap(MarkupNode node)
+        {
+            return new WrapBox(node, WrappingStrategy.Word, 4, 0);
+        }
+
+        /// <summary>
+        /// Creates a wrap box that indents and word-wraps a sequence of nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes to indent and word-wrap.</param>
+        /// <returns>An indented, word-wrapped node.</returns>
+        public static WrapBox IndentAndWordWrap(IReadOnlyList<MarkupNode> nodes)
+        {
+            return IndentAndWordWrap(new Sequence(nodes));
+        }
+
+        /// <summary>
+        /// Creates a wrap box that indents and word-wraps a sequence of nodes.
+        /// </summary>
+        /// <param name="nodes">The nodes to indent and word-wrap.</param>
+        /// <returns>An indented, word-wrapped node.</returns>
+        public static WrapBox IndentAndWordWrap(params MarkupNode[] nodes)
+        {
+            return IndentAndWordWrap(new Sequence(nodes));
         }
     }
 }

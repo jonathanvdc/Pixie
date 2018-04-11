@@ -71,7 +71,7 @@ namespace Pixie.Markup
                                 new MarkupNode[]
                                 {
                                     DecorationSpan.MakeBold(kvPair.Key),
-                                    new WrapBox(new Sequence(optionFormNodes), WrappingStrategy.Word, 4, 0)
+                                    WrapBox.IndentAndWordWrap(optionFormNodes)
                                 })));
                 }
                 return new Sequence(groupNodes);
