@@ -31,6 +31,8 @@ test_script:
   - Examples\CaretDiagnostics\bin\Release\CaretDiagnostics.exe
   - Examples\FormattedList\bin\Release\FormattedList.exe
   - Examples\ParseOptions\bin\Release\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt
+  # Run tests.
+  - Tests\bin\Release\Release\Tests.exe
 
 artifacts:
   - path: '*.nupkg'
