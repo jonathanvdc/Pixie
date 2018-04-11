@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pixie.Markup
 {
     /// <summary>
@@ -10,6 +12,22 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="contents">A node to insulate in whitespace.</param>
         public Paragraph(MarkupNode contents)
+            : base(contents)
+        { }
+
+        /// <summary>
+        /// Creates a paragraph from a sequence of body nodes.
+        /// </summary>
+        /// <param name="contents">A list of nodes to insulate in whitespace.</param>
+        public Paragraph(IReadOnlyList<MarkupNode> contents)
+            : base(contents)
+        { }
+
+        /// <summary>
+        /// Creates a paragraph from a sequence of body nodes.
+        /// </summary>
+        /// <param name="contents">A list of nodes to insulate in whitespace.</param>
+        public Paragraph(params MarkupNode[] contents)
             : base(contents)
         { }
 
