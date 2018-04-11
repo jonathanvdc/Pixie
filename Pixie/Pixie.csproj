@@ -51,6 +51,7 @@
     <Compile Include="Markup\DecorationSpan.cs" />
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\Diagnostic.cs" />
+    <Compile Include="Markup\HelpMessage.cs" />
     <Compile Include="Markup\HighlightedSource.cs" />
     <Compile Include="Markup\IndentBox.cs" />
     <Compile Include="Markup\MathSymbol.cs" />
