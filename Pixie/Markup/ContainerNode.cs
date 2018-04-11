@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Pixie.Markup
 {
@@ -16,6 +17,14 @@ namespace Pixie.Markup
         {
             this.Contents = contents;
         }
+
+        /// <summary>
+        /// Creates a container from a sequence of body nodes.
+        /// </summary>
+        /// <param name="contents">The contents of the container.</param>
+        public ContainerNode(IReadOnlyList<MarkupNode> contents)
+            : this(new Sequence(contents))
+        { }
 
         /// <summary>
         /// Gets the container's body.

@@ -7,14 +7,14 @@ namespace Pixie.Markup
     /// <summary>
     /// Summarizes the forms of a list of options.
     /// </summary>
-    public sealed class OptionSummary : MarkupNode
+    public sealed class OptionSetSummary : MarkupNode
     {
         /// <summary>
-        /// Creates a node summary.
+        /// Creates an option set summary node.
         /// </summary>
         /// <param name="options">The options to summarize.</param>
         /// <param name="printer">The option printer to use.</param>
-        public OptionSummary(IReadOnlyList<Option> options, OptionPrinter printer)
+        public OptionSetSummary(IReadOnlyList<Option> options, OptionPrinter printer)
         {
             this.Options = options;
             this.Printer = printer;
@@ -71,7 +71,7 @@ namespace Pixie.Markup
                                 new MarkupNode[]
                                 {
                                     DecorationSpan.MakeBold(kvPair.Key),
-                                    WrapBox.IndentAndWordWrap(optionFormNodes)
+                                    new IndentBox(optionFormNodes)
                                 })));
                 }
                 return new Sequence(groupNodes);

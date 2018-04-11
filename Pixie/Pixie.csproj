@@ -52,9 +52,11 @@
     <Compile Include="Markup\DegradableText.cs" />
     <Compile Include="Markup\Diagnostic.cs" />
     <Compile Include="Markup\HighlightedSource.cs" />
+    <Compile Include="Markup\IndentBox.cs" />
     <Compile Include="Markup\MathSymbol.cs" />
     <Compile Include="Markup\NewLine.cs" />
-    <Compile Include="Markup\OptionSummary.cs" />
+    <Compile Include="Markup\OptionHelp.cs" />
+    <Compile Include="Markup\OptionSetSummary.cs" />
     <Compile Include="Markup\Paragraph.cs" />
     <Compile Include="Markup\PrefixBox.cs" />
     <Compile Include="Markup\Quotation.cs" />
