@@ -23,7 +23,7 @@ clean:
 	rm -rf bin/
 	rm -rf obj/
 
-include ../../flame-make-scripts/use-ecsc.mk
+include ../flame-make-scripts/use-ecsc.mk
 
 bin/flo/Tests.flo: $(files) $(libraries) | ecsc
 	$(ECSC) $(files) -platform ir -runtime clr -libs $(libraries) -o $@ $(common_options)
