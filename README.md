@@ -1,5 +1,9 @@
 # Pixie
 
+[![Travis CI Build Status](https://travis-ci.org/jonathanvdc/Pixie.svg?branch=master)](https://travis-ci.org/jonathanvdc/Pixie)
+[![AppVeyor CI Build Status](https://ci.appveyor.com/api/projects/status/twwrupu0k7aaf2x6?svg=true)](https://ci.appveyor.com/project/jonathanvdc/pixie)
+[![NuGet](https://img.shields.io/nuget/v/Pixie.svg)](https://www.nuget.org/packages/Pixie)
+
 Pixie is a C# library that prints beautifully formatted output to the console. You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.
 
 Reasons to use Pixie:
