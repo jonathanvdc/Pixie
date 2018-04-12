@@ -34,6 +34,7 @@ test: exe
 	mono ./Examples/FormattedList/bin/clr/FormattedList.exe
 	mono ./Examples/ParseOptions/bin/clr/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
 	mono ./Examples/PrintHelp/bin/clr/PrintHelp.exe
+	mono ./Examples/SimpleErrorMessage/bin/clr/SimpleErrorMessage.exe
 	mono ./Tests/bin/clr/Tests.exe
 
 include flame-make-scripts/use-ecsc.mk
