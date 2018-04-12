@@ -15,7 +15,7 @@
     
     You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2017</copyright>
+    <copyright>Copyright 2018</copyright>
     <tags>terminal console output formatting</tags>
   </metadata>
   <files>

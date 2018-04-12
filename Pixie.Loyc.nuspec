@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!-- NuGet package specification.
+     Run `nuget pack Pixie.nuspec` to build Pixie.x.y.z.nupkg -->
+<package >
+  <metadata>
+    <id>Pixie.Loyc</id>
+    <version>$version$</version>
+    <authors>Jonathan Van der Cruysse</authors>
+    <owners>Jonathan Van der Cruysse</owners>
+    <projectUrl>https://github.com/jonathanvdc/pixie</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>A Loyc interop library for Pixie.</summary>
+    <description>Pixie is a C# library that prints beautifully formatted output to the console.
+    
+    You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.
+    
+    This package contains Pixie.Loyc, a library that translates Loyc diagnostics to Pixie markup nodes.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>terminal console output formatting loyc ecsharp</tags>
+    <dependencies>
+        <dependency id="Pixie" version="$version$" />
+        <dependency id="Loyc.Collections" version="26.2.0" />
+        <dependency id="Loyc.Essentials" version="26.2.0" />
+        <dependency id="Loyc.Syntax" version="26.2.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="README.md" target="readme.txt" />
+    <file src="Pixie.Loyc\bin\Release\Pixie.Loyc.dll" target="lib\net45\" />
+    <file src="Pixie.Loyc\bin\Release\Pixie.Loyc.xml" target="lib\net45\" />
+  </files>
+</package>

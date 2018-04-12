@@ -14,20 +14,21 @@ clone_script:
 build_script:
   - set VERNUM=0.1.2
   - echo %APPVEYOR_REPO_TAG%
-  # Build packages as VERNUM-ci{build}
+  # Build packages as VERNUM-ci{build}.
   - ps: if ($env:APPVEYOR_REPO_TAG -eq $True) { $env:PKG_VERSION = $env:VERNUM; } else { $env:PKG_VERSION = "$($env:VERNUM)-ci$($env:APPVEYOR_BUILD_NUMBER)"; }
 
-  # Restore NuGet packages
+  # Restore NuGet packages.
   - nuget restore Pixie.sln
-  # Build Pixie with csc
+  # Build Pixie with csc.
   - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
 
 after_build:
-  # Create the NuGet package
+  # Create the NuGet packages.
   - nuget pack -Version %PKG_VERSION% Pixie.nuspec
+  - nuget pack -Version %PKG_VERSION% Pixie.Loyc.nuspec
 
 test_script:
-  # Run example programs
+  # Run example programs.
   - Examples\CaretDiagnostics\bin\Release\CaretDiagnostics.exe
   - Examples\FormattedList\bin\Release\FormattedList.exe
   - Examples\ParseOptions\bin\Release\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt
