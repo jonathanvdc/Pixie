@@ -10,5 +10,8 @@ script:
   # Build Pixie using ecsc
   - make
 
+  # Run the examples.
+  - make run-examples
+
   # Run the tests
   - make test
