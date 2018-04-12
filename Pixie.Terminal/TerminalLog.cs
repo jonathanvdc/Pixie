@@ -85,12 +85,37 @@ namespace Pixie.Terminal
 
         /// <summary>
         /// Acquires a terminal log for the current environment.
+        /// The terminal's output is sent to standard error.
         /// </summary>
         /// <returns>A terminal log.</returns>
         public static TerminalLog Acquire()
         {
-            var writerTerm = TextWriterTerminal.FromErrorStream();
-            return new TerminalLog(LayoutTerminal.Wrap(writerTerm, WrappingStrategy.Character));
+            return AcquireStandardError();
+        }
+
+        /// <summary>
+        /// Acquires a terminal log for the current environment.
+        /// The terminal's output is sent to standard error.
+        /// </summary>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog AcquireStandardError()
+        {
+            return AcquireFrom(TextWriterTerminal.FromErrorStream());
+        }
+
+        /// <summary>
+        /// Acquires a terminal log for the current environment.
+        /// The terminal's output is sent to standard output.
+        /// </summary>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog AcquireStandardOutput()
+        {
+            return AcquireFrom(TextWriterTerminal.FromOutputStream());
+        }
+
+        private static TerminalLog AcquireFrom(TerminalBase terminal)
+        {
+            return new TerminalLog(LayoutTerminal.Wrap(terminal, WrappingStrategy.Character));
         }
     }
 }

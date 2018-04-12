@@ -15,7 +15,7 @@ namespace FormattedList
 
             // First, acquire a terminal log. You should acquire
             // a log once and then re-use it in your application.
-            var log = TerminalLog.Acquire();
+            var log = TerminalLog.AcquireStandardOutput();
 
             // Write an entry to the log that contains the things
             // we would like to print.
