@@ -6,42 +6,30 @@
 
 Pixie is a C# library that prints beautifully formatted output to the console. You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.
 
-Reasons to use Pixie:
+Key features:
 
-  * **Pixie aligns your text and inserts line breaks when the screen is full.** It also supports word-wrapping.
+  * **Caret diagnostics.** Pixie has built-in support for caret diagnostics. Want to point out an error in source code? Pixie's really good at that. It highlights the error and colors both the highlighted text and the squiggle beneath it. Pixie also prints line numbers and even throws in a couple of lines of context.
 
-    If you use word-wrapping, then you can rest assured that things like *this unfortunate line break won't happen.*
+    ![Diagnostic](docs/img/caret.svg)
 
-    ```
-    error CS5001: Program `Color.exe' does not contain a static `Main' method suitab
-    le for an entry point
-    ```
-
-  * **Pixie tries to make its output as pretty as your terminal will allow** and degrades its output gracefully on terminal implementations that don't support all of Unicode.
+  * **Graceful degradation.** Pixie tries to make its output as pretty as your terminal will allow and degrades its output gracefully on terminal implementations that don't support all of Unicode.
   
-    For example, when rendered on `xterm` (a Unix terminal), this bulleted list item uses Unicode bullets and quotes:
+    For example, when rendered on `xterm` (a Unix terminal), this bulleted list item uses Unicode characters and ANSI control sequences:
 
-    ```
-     •  “Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...”
-    ```
+    ![Fancy bullets](docs/img/degradation-fancy.svg)
 
-    The default Windows console doesn't support those features, so Pixie uses ASCII characters there:
+    The default Windows console doesn't support those features, so Pixie uses ASCII characters and the `System.Console` API there:
 
-    ```
-     *  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ..."
-    ```
+    ![Simple bullets](docs/img/degradation-simple.svg)
 
-  * **Pixie has built-in support for caret diagnostics.** Want to point out an error in source code? Pixie's really good at that. It highlights the error and colors both the highlighted text and the squiggle beneath it. Pixie also prints line numbers and even throws in a couple of lines of context.
+  * **Pretty output.** Pixie makes a real effort to produce good-looking output. It supports aligning and word-wrapping text. It also has built-in support for common types of messages, like diagnostics (errors, warnings, etc.) and help messages.
 
-    Caret diagnostics look better when viewed in the terminal, but the example below should give you an idea of what Pixie's caret diagnostics look like.
+    To see why this is something you might want, just take a look at the formatting of `mcs`'s error message below. Note in particular how the word "suitable" is split up awkwardly.
 
-    ```
-    1 │ public static class Program
-    2 │ {
-    3 │     public Program()
-      │     ~~~~~~ ^~~~~~~~~
-    4 │     { }
-    5 │ }
-    ```
+    ![Sad line break](docs/img/sad-line-break.svg)
 
-  * **Pixie is customizable:** you can easily configure the existing renderers and define your own markup elements and renderers.
+    Here's what that error message would have looked like if `mcs` used Pixie. Much better, right?
+
+    ![Happy line break](docs/img/happy-line-break.svg)
+
+  * **Customization.** Pixie is customizable: you can easily configure the existing renderers and define your own markup elements and renderers.
