@@ -94,13 +94,25 @@ namespace Pixie.Terminal
         }
 
         /// <summary>
+        /// Creates a terminal log from a terminal.
+        /// </summary>
+        /// <param name="terminal">
+        /// The terminal to send output to.
+        /// </param>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog Acquire(TerminalBase terminal)
+        {
+            return new TerminalLog(LayoutTerminal.Wrap(terminal, WrappingStrategy.Character));
+        }
+
+        /// <summary>
         /// Acquires a terminal log for the current environment.
         /// The terminal's output is sent to standard error.
         /// </summary>
         /// <returns>A terminal log.</returns>
         public static TerminalLog AcquireStandardError()
         {
-            return AcquireFrom(TextWriterTerminal.FromErrorStream());
+            return Acquire(TextWriterTerminal.FromErrorStream());
         }
 
         /// <summary>
@@ -110,12 +122,7 @@ namespace Pixie.Terminal
         /// <returns>A terminal log.</returns>
         public static TerminalLog AcquireStandardOutput()
         {
-            return AcquireFrom(TextWriterTerminal.FromOutputStream());
-        }
-
-        private static TerminalLog AcquireFrom(TerminalBase terminal)
-        {
-            return new TerminalLog(LayoutTerminal.Wrap(terminal, WrappingStrategy.Character));
+            return Acquire(TextWriterTerminal.FromOutputStream());
         }
     }
 }
