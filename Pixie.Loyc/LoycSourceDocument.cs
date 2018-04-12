@@ -17,8 +17,10 @@ namespace Pixie.Loyc
 
         private ISourceFile source;
 
+        /// <inheritdoc/>
         public override string Identifier => source.FileName;
 
+        /// <inheritdoc/>
         public override int Length => source.Text.Count;
 
         /// <inheritdoc/>
