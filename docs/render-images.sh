@@ -11,6 +11,9 @@ mkdir -p "$DIR/img"
 svg-term --command "mono $PARENT_DIR/Examples/CaretDiagnostics/bin/clr/CaretDiagnostics.exe" \
     --at 2000 --height 10 --out "$DIR/img/caret.svg"
 
+svg-term --command "mono $PARENT_DIR/Examples/PrintHelp/bin/clr/PrintHelp.exe" \
+    --at 2000 --height 20 --out "$DIR/img/help-message.svg"
+
 svg-term --command "mono $PARENT_DIR/Examples/FormattedList/bin/clr/FormattedList.exe fancy | head -n6 | tail -n5" \
     --at 2000 --height 5 --out "$DIR/img/degradation-fancy.svg"
 svg-term --command "mono $PARENT_DIR/Examples/FormattedList/bin/clr/FormattedList.exe simple | head -n6 | tail -n5" \
