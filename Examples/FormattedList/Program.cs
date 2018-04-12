@@ -24,7 +24,7 @@ namespace FormattedList
                     Severity.Info,
                     new MarkupNode[]
                     {
-                        new Title(new ColorSpan(new Text("Hello world"), Colors.Green)),
+                        new Title(DecorationSpan.MakeUnderlined(new ColorSpan("Hello world", Colors.Green))),
                         new WrapBox(
                             new BulletedList(
                                 LoremIpsum
