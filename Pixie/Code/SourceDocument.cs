@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text;
 
@@ -20,6 +21,20 @@ namespace Pixie.Code
         /// </summary>
         /// <returns>The document's length.</returns>
         public abstract int Length { get; }
+
+        /// <summary>
+        /// Gets the number of lines in the document.
+        /// </summary>
+        /// <returns>The number of lines in the document.</returns>
+        public int LineCount
+        {
+            get
+            {
+                int lastCharIndex = Length - 1;
+                var lastCharPos = GetGridPosition(lastCharIndex);
+                return lastCharPos.LineIndex + 1;
+            }
+        }
 
         /// <summary>
         /// Opens this source document at the given offset.
