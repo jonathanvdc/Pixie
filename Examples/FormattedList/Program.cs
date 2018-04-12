@@ -3,6 +3,8 @@ using System.Linq;
 using Pixie;
 using Pixie.Terminal;
 using Pixie.Markup;
+using Pixie.Terminal.Devices;
+using System.Text;
 
 namespace FormattedList
 {
@@ -17,6 +19,39 @@ namespace FormattedList
             // a log once and then re-use it in your application.
             var log = TerminalLog.AcquireStandardOutput();
 
+            // Slightly more advanced topic (you probably won't
+            // need this for a normal program):
+            //
+            // The `TerminalLog.AcquireStandard{Error,Output}()`
+            // pick some smart default values based on whether
+            // output is redirected and the terminal's
+            // capabilities. But it's entirely possible to
+            // exercise some more more control over the log
+            // acquisition process.
+            if (args.Length > 0)
+            {
+                if (args[0] == "fancy")
+                {
+                    // Use ANSI control sequences and UTF-8.
+                    log = TerminalLog.Acquire(
+                        new TextWriterTerminal(
+                            Console.Out,
+                            80,
+                            new AnsiStyleManager(Console.Out),
+                            Encoding.UTF8));
+                }
+                else if (args[0] == "simple")
+                {
+                    // Use the System.Console style methods and ASCII.
+                    log = TerminalLog.Acquire(
+                        new TextWriterTerminal(
+                            Console.Out,
+                            80,
+                            new ConsoleStyleManager(),
+                            Encoding.ASCII));
+                }
+            }
+
             // Write an entry to the log that contains the things
             // we would like to print.
             log.Log(
@@ -24,7 +59,12 @@ namespace FormattedList
                     Severity.Info,
                     new MarkupNode[]
                     {
-                        new Title(DecorationSpan.MakeUnderlined(new ColorSpan("Hello world", Colors.Green))),
+                        // Create a title, underline it and make it green because why not.
+                        new Title(
+                            DecorationSpan.MakeUnderlined(
+                                new ColorSpan("Hello world", Colors.Green))),
+
+                        // Create a word-wrapped bulleted list with a uniform margin of four.
                         new WrapBox(
                             new BulletedList(
                                 LoremIpsum
@@ -44,9 +84,7 @@ namespace FormattedList
             // On terminals that support them, Unicode quotes will be
             // used to quote text. On terminals that don't, the
             // rendering engine will use regular ASCII quotes.
-            string trimmedText = text.Trim();
-            MarkupNode textNode = new Text(trimmedText);
-            return new Quotation(textNode, 2);
+            return new Quotation(text.Trim(), 2);
         }
 
         private const string LoremIpsum = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tempor ornare luctus. Etiam a vulputate tellus. Nullam ultrices ante ac metus tempor elementum. Nam facilisis sit amet massa sit amet lacinia. Phasellus hendrerit ultrices consectetur. Praesent dignissim libero sapien, nec ullamcorper sem malesuada sit amet. Nullam rhoncus nulla eu ante congue ultricies. Duis consectetur iaculis dolor, sed egestas lectus accumsan a. Nullam orci nibh, dignissim nec nulla non, interdum luctus dui. Donec semper feugiat felis in facilisis. Cras viverra, nisi vitae pretium tincidunt, lectus leo vulputate odio, et faucibus urna lorem in urna. Nam porttitor, libero pulvinar volutpat tristique, libero tellus egestas velit, a ultrices risus eros non nisi. Ut porttitor odio vitae velit fringilla volutpat.
