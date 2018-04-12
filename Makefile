@@ -1,22 +1,26 @@
 exe:
 	make -C Pixie dll
 	make -C Pixie.Terminal dll
+	make -C Pixie.Loyc dll
 	make -C Examples exe
 	make -C Tests exe
 
 all:
 	make -C Pixie all
 	make -C Pixie.Terminal all
+	make -C Pixie.Loyc all
 	make -C Examples all
 	make -C Tests all
 
 dll:
 	make -C Pixie dll
 	make -C Pixie.Terminal dll
+	make -C Pixie.Loyc dll
 
 flo:
 	make -C Pixie all
 	make -C Pixie.Terminal all
+	make -C Pixie.Loyc all
 	make -C Examples flo
 	make -C Tests flo
 
@@ -25,7 +29,8 @@ nuget:
 
 clean: clean-ecsc
 	make -C Pixie clean
-	make -C Pixie.Terminal clean
+	make -C Pixie.Terminal cle
+	make -C Pixie.Loyc clean
 	make -C Examples clean
 	make -C Tests clean
 

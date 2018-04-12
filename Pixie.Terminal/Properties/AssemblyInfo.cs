@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Pixie.Terminal")]
-[assembly: AssemblyCopyright("Copyright © Jonathan Van der Cruysse 2017")]
+[assembly: AssemblyCopyright("Copyright © Jonathan Van der Cruysse 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintHelp", "Examples\Print
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleErrorMessage", "Examples\SimpleErrorMessage\SimpleErrorMessage.csproj", "{4156E86A-78D5-4BD0-B123-3E3169032AC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixie.Loyc", "Pixie.Loyc\Pixie.Loyc.csproj", "{207C9935-4A9D-4447-B909-9C646424F7C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4FC8AB-8928-473C-9EF1-C68089AAE644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{207C9935-4A9D-4447-B909-9C646424F7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{207C9935-4A9D-4447-B909-9C646424F7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{207C9935-4A9D-4447-B909-9C646424F7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{207C9935-4A9D-4447-B909-9C646424F7C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{353D417A-557E-4F2E-8202-64DA1EBC1C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
