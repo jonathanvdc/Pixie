@@ -103,5 +103,51 @@ namespace Pixie.Markup
         {
             return CreateBoldQuotation(new Text(contents));
         }
+
+        /// <summary>
+        /// Quotes even (second, fourth, sixth, ...) markup elements
+        /// and wraps the result in a sequence node.
+        /// </summary>
+        /// <param name="nodes">The nodes to process.</param>
+        /// <returns>A sequence container node.</returns>
+        public static Sequence QuoteEven(params MarkupNode[] nodes)
+        {
+            var results = new MarkupNode[nodes.Length];
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    results[i] = new Quotation(nodes[i]);
+                }
+                else
+                {
+                    results[i] = nodes[i];
+                }
+            }
+            return new Sequence(results);
+        }
+
+        /// <summary>
+        /// Quotes even (second, fourth, sixth, ...) markup elements in bold
+        /// and wraps the result in a sequence node.
+        /// </summary>
+        /// <param name="nodes">The nodes to process.</param>
+        /// <returns>A sequence container node.</returns>
+        public static Sequence QuoteEvenInBold(params MarkupNode[] nodes)
+        {
+            var results = new MarkupNode[nodes.Length];
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    results[i] = CreateBoldQuotation(nodes[i]);
+                }
+                else
+                {
+                    results[i] = nodes[i];
+                }
+            }
+            return new Sequence(results);
+        }
     }
 }
