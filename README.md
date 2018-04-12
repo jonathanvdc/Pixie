@@ -32,4 +32,10 @@ Key features:
 
     ![Happy line break](docs/img/happy-line-break.svg)
 
+  * **Loyc interop.** Pixie can gracefully translate and log diagnostics produced by [Loyc](https://github.com/qwertie/ecsharp) libraries (including the EC# parser and LeMP). The optional Loyc interop logic is bundled in the `Pixie.Loyc` package, which can be installed in addition to the regular `Pixie` package.
+
+    Here's what a diagnostic produced by Loyc looks like after Pixie has translated it:
+
+    ![Loyc diagnostic](docs/img/loyc-interop.svg)
+
   * **Customization.** Pixie is customizable: you can easily configure the existing renderers and define your own markup elements and renderers.

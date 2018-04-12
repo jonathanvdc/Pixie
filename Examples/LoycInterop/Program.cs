@@ -7,6 +7,7 @@ using Loyc.Syntax;
 using Loyc;
 using Loyc.Ecs;
 using Loyc.Collections;
+using Pixie.Markup;
 
 namespace LoycInterop
 {
@@ -45,7 +46,8 @@ namespace LoycInterop
 
         private static LogEntry MakeDiagnostic(LogEntry entry)
         {
-            return DiagnosticExtractor.Transform(entry, "program");
+            var newEntry = DiagnosticExtractor.Transform(entry, "program");
+            return new LogEntry(newEntry.Severity, WrapBox.WordWrap(newEntry.Contents));
         }
     }
 }

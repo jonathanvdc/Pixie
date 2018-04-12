@@ -21,3 +21,6 @@ svg-term --command "mcs $PARENT_DIR/Pixie/Color.cs" \
 
 svg-term --command "mono $PARENT_DIR/Examples/SimpleErrorMessage/bin/clr/SimpleErrorMessage.exe" \
     --at 2000 --height 3 --out "$DIR/img/happy-line-break.svg"
+
+svg-term --command "mono $PARENT_DIR/Examples/LoycInterop/bin/clr/LoycInterop.exe" \
+    --at 2000 --height 6 --out "$DIR/img/loyc-interop.svg"
