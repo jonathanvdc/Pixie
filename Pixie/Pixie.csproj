@@ -36,8 +36,10 @@
     <Compile Include="ILog.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="MarkupNode.cs" />
+    <Compile Include="NullLog.cs" />
     <Compile Include="PixieException.cs" />
     <Compile Include="Severity.cs" />
+    <Compile Include="TestLog.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
     <Compile Include="Code\GridPosition.cs" />
     <Compile Include="Code\SourceDocument.cs" />
