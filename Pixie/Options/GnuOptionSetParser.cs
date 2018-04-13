@@ -431,8 +431,9 @@ namespace Pixie.Options
                         "command line option ",
                         key,
                         " did not expect an argument, but was passed ",
-                        Quotation.CreateBoldQuotation(value),
-                        ".")));
+                        value,
+                        "."),
+                    CreateUsageParagraph(key)));
         }
 
         private void LogUnrecognized(string option)
@@ -464,8 +465,30 @@ namespace Pixie.Options
                         "; did you mean ",
                         Quotation.CreateBoldQuotation(
                             TextDiff.RenderInsertions(diff)),
-                        "?"));
+                        "?",
+                        CreateUsageParagraph(suggestion)));
             }
+        }
+
+        private Option LookupOption(string form)
+        {
+            if (form.StartsWith("--"))
+            {
+                return Parser.longForms[form.Substring(2)];
+            }
+            else
+            {
+                return Parser.shortForms.Get(form.Substring(1));
+            }
+        }
+
+        private MarkupNode CreateUsageParagraph(string option)
+        {
+            return new Paragraph(
+                DecorationSpan.MakeBold(new ColorSpan("usage: ", Colors.Gray)),
+                new OptionHelp(
+                    LookupOption(option),
+                    GnuOptionPrinter.Instance));
         }
 
         private bool ParseArgument(string argument)
