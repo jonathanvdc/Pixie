@@ -46,7 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GnuOptionSetParserTests.cs" />
     <Compile Include="LoycInteropTests.cs" />
+    <Compile Include="NameSuggestionTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
