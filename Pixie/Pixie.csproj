@@ -69,6 +69,7 @@
     <Compile Include="Markup\Sequence.cs" />
     <Compile Include="Markup\SourceReference.cs" />
     <Compile Include="Markup\Text.cs" />
+    <Compile Include="Markup\TextDiff.cs" />
     <Compile Include="Markup\Title.cs" />
     <Compile Include="Markup\WrapBox.cs" />
     <Compile Include="Options\FlagOption.cs" />
