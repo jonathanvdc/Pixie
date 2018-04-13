@@ -65,18 +65,21 @@ namespace Pixie.Code
         /// <inheritdoc/>
         public override GridPosition GetGridPosition(int offset)
         {
+            // Choose the last line index such that `offset` is greater
+            // than or equal to the offset of the line start.
+
             int lineIndex = 0;
-            int lineStartOffset = 0;
             for (int i = 0; i < lineOffsets.Count; i++)
             {
-                if (lineOffsets[i] >= offset)
+                if (lineOffsets[i] > offset)
                 {
-                    lineIndex--;
                     break;
                 }
-                lineIndex++;
-                lineStartOffset = lineOffsets[i];
+
+                lineIndex = i;
             }
+
+            int lineStartOffset = lineOffsets[lineIndex];
 
             return new GridPosition(lineIndex, offset - lineStartOffset);
         }
