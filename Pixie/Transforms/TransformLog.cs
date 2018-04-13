@@ -15,6 +15,21 @@ namespace Pixie
         /// log.
         /// </summary>
         /// <param name="outputLog">A log to which output is sent.</param>
+        /// <param name="transform">The transform to apply to each log entry.</param>
+        public TransformLog(
+            ILog outputLog,
+            Func<LogEntry, LogEntry> transform)
+            : this(
+                outputLog,
+                new Func<LogEntry, LogEntry>[] { transform })
+        { }
+
+        /// <summary>
+        /// Creates a log that applies a sequence of transformations
+        /// in order to each log entry before sending it to another
+        /// log.
+        /// </summary>
+        /// <param name="outputLog">A log to which output is sent.</param>
         /// <param name="transforms">
         /// A list of transformations which are to be applied to each log
         /// entry in order.
