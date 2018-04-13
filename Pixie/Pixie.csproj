@@ -35,6 +35,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="LogEntry.cs" />
+    <Compile Include="NameSuggestion.cs" />
     <Compile Include="MarkupNode.cs" />
     <Compile Include="NullLog.cs" />
     <Compile Include="PixieException.cs" />
