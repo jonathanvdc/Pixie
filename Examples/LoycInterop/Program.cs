@@ -30,9 +30,9 @@ namespace LoycInterop
             // Create a message sink that redirects messages to the log.
             var messageSink = new PixieMessageSink(log);
 
-            // Next, we'll create a C# source file with a syntax error
+            // Next, we'll create a C# source file with some syntax errors
             // in it.
-            var file = new SourceFile<ICharSource>(new UString("int int x = 10;"), "input.cs");
+            var file = new SourceFile<ICharSource>(new UString("int int x = 10; class A"), "input.cs");
 
             // Now, parse the document and watch the syntax error emerge
             // as a Pixie diagnostic.
