@@ -26,15 +26,7 @@ namespace Pixie.Code
         /// Gets the number of lines in the document.
         /// </summary>
         /// <returns>The number of lines in the document.</returns>
-        public int LineCount
-        {
-            get
-            {
-                int lastCharIndex = Length - 1;
-                var lastCharPos = GetGridPosition(lastCharIndex);
-                return lastCharPos.LineIndex + 1;
-            }
-        }
+        public abstract int LineCount { get; }
 
         /// <summary>
         /// Opens this source document at the given offset.

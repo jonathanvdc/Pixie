@@ -24,6 +24,10 @@ namespace Pixie.Loyc
         public override int Length => source.Text.Count;
 
         /// <inheritdoc/>
+        public override int LineCount =>
+            source.IndexToLine(Math.Max(0, source.LineToIndex(int.MaxValue) - 1)).Line;
+
+        /// <inheritdoc/>
         public override GridPosition GetGridPosition(int offset)
         {
             var linePos = source.IndexToLine(offset);

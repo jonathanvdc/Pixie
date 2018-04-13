@@ -40,6 +40,9 @@ namespace Pixie.Code
         public override int Length => Contents.Length;
 
         /// <inheritdoc/>
+        public override int LineCount => lineOffsets.Count;
+
+        /// <inheritdoc/>
         public override TextReader Open(int offset)
         {
             var reader = new StringReader(Contents);
