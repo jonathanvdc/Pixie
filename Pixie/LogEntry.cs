@@ -63,5 +63,16 @@ namespace Pixie
         /// </summary>
         /// <returns>The log entry's contents.</returns>
         public MarkupNode Contents { get; private set; }
+
+        /// <summary>
+        /// Creates a new log entry by applying a mapping to this
+        /// log entry's contents.
+        /// </summary>
+        /// <param name="mapping">The mapping to apply.</param>
+        /// <returns>A new log entry.</returns>
+        public LogEntry Map(Func<MarkupNode, MarkupNode> mapping)
+        {
+            return new LogEntry(Severity, mapping(Contents));
+        }
     }
 }
