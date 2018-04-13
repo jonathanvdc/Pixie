@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.cs" />
+    <Compile Include="Diff.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="NameSuggestion.cs" />
