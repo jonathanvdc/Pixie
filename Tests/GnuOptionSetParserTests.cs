@@ -24,6 +24,10 @@ namespace Pixie.Tests
         private static Option TypedFiles = SequenceOption.CreateStringOption(
             OptionForm.Short("x"));
 
+        private static Option OptimizationLevel = ValueOption.CreateInt32Option(
+            OptionForm.Short("O"),
+            0);
+
         [Test]
         public void ParsePositionalArguments()
         {
@@ -64,6 +68,16 @@ namespace Pixie.Tests
             Assert.AreEqual(
                 new string[] { "c++", "file3" },
                 parsedOpts.GetValue<string[]>(TypedFiles));
+        }
+
+        [Test]
+        public void ErrorOnMissingIntegerArgument()
+        {
+            var parser = new GnuOptionSetParser(new Option[] { OptimizationLevel });
+
+            var args = new string[] { "-O" };
+
+            AssertError(parser, args);
         }
 
         private void AssertError(OptionSetParser parser, IReadOnlyList<string> args)
