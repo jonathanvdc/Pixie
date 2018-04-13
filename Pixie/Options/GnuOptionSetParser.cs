@@ -12,6 +12,42 @@ namespace Pixie.Options
     {
         /// <summary>
         /// Creates a GNU-style option parser from a list of
+        /// options. The option parser will reject positional
+        /// arguments.
+        /// </summary>
+        /// <param name="options">
+        /// A list of all options known to this parser.
+        /// </param>
+        public GnuOptionSetParser(IReadOnlyList<Option> options)
+            : this(
+                options,
+                new KeyValuePair<Option, OptionForm>[] { })
+        { }
+
+        /// <summary>
+        /// Creates a GNU-style option parser from a list of
+        /// options and a default option.
+        /// </summary>
+        /// <param name="options">
+        /// A list of all options known to this parser.
+        /// </param>
+        /// <param name="defaultOption">
+        /// The default option: the option that
+        /// is implicitly parsed when no other option
+        /// can accept arguments. Its first form is
+        /// used to parse arguments.
+        /// </param>
+        public GnuOptionSetParser(
+            IReadOnlyList<Option> options,
+            Option defaultOption)
+            : this(
+                options,
+                defaultOption,
+                defaultOption.Forms[0])
+        { }
+
+        /// <summary>
+        /// Creates a GNU-style option parser from a list of
         /// options, a default option and a preferred form
         /// for that default option.
         /// </summary>
@@ -46,9 +82,8 @@ namespace Pixie.Options
         /// A list of all options known to this parser.
         /// </param>
         /// <param name="positionalOptions">
-        /// The default option: the option that
-        /// is implicitly parsed when no other option
-        /// can accept arguments.
+        /// A list of (Option, OptionForm) pairs that parse
+        /// positional arguments.
         /// </param>
         public GnuOptionSetParser(
             IReadOnlyList<Option> options,
