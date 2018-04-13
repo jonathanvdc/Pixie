@@ -13,9 +13,11 @@ namespace Pixie.Loyc
         public LoycSourceDocument(ISourceFile source)
         {
             this.source = source;
+            this.lineCountCache = new Lazy<int>(ComputeLineCount);
         }
 
         private ISourceFile source;
+        private Lazy<int> lineCountCache;
 
         /// <inheritdoc/>
         public override string Identifier => source.FileName;
@@ -24,8 +26,14 @@ namespace Pixie.Loyc
         public override int Length => source.Text.Count;
 
         /// <inheritdoc/>
-        public override int LineCount =>
-            source.IndexToLine(Math.Max(0, source.LineToIndex(int.MaxValue) - 1)).Line;
+        public override int LineCount => lineCountCache.Value;
+
+        private int ComputeLineCount()
+        {
+            return new StringDocument(
+                source.FileName,
+                source.Text.Slice(0, source.Text.Count).ToString()).LineCount;
+        }
 
         /// <inheritdoc/>
         public override GridPosition GetGridPosition(int offset)
