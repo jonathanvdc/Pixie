@@ -29,10 +29,14 @@ namespace Pixie.Loyc
         /// <returns>A source span.</returns>
         public static SourceSpan ToSourceSpan(this SourceRange range)
         {
+            var document = ToSourceDocument(range.Source);
+
+            var clampedStartOffset = Math.Max(0, Math.Min(document.Length - 1, range.StartIndex));
+            var clampedEndOffset = Math.Max(0, Math.Min(document.Length - 1, range.EndIndex));
             return new SourceSpan(
-                ToSourceDocument(range.Source),
-                range.StartIndex,
-                range.Length);
+                document,
+                clampedStartOffset,
+                clampedEndOffset - clampedStartOffset);
         }
 
         /// <summary>
