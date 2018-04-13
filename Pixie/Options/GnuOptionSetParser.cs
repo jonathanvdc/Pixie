@@ -427,11 +427,12 @@ namespace Pixie.Options
                 new LogEntry(
                     Severity.Error,
                     "unexpected argument",
-                    new Text("command line option did not expect an argument "),
-                    Quotation.CreateBoldQuotation(key),
-                    new Text(", but was given argument "),
-                    Quotation.CreateBoldQuotation(value),
-                    new Text(".")));
+                    Quotation.QuoteEvenInBold(
+                        "command line option ",
+                        key,
+                        " did not expect an argument, but was passed ",
+                        Quotation.CreateBoldQuotation(value),
+                        ".")));
         }
 
         private void LogUnrecognized(string option)
