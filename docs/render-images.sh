@@ -11,6 +11,9 @@ mkdir -p "$DIR/img"
 svg-term --command "mono $PARENT_DIR/Examples/CaretDiagnostics/bin/clr/CaretDiagnostics.exe" \
     --at 2000 --height 10 --out "$DIR/img/caret.svg"
 
+svg-term --command "mono $PARENT_DIR/Examples/ParseOptions/bin/clr/ParseOptions.exe -fmax-errars -fsyntax-only" \
+    --at 2000 --height 7 --out "$DIR/img/option-parsing-feedback.svg"
+
 svg-term --command "mono $PARENT_DIR/Examples/PrintHelp/bin/clr/PrintHelp.exe" \
     --at 2000 --height 20 --out "$DIR/img/help-message.svg"
 

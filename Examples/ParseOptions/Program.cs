@@ -62,6 +62,26 @@ namespace ParseOptions
             .WithDescription("Pick an optimization level.")
             .WithParameter(new SymbolicOptionParameter("n"));
 
+        // This option takes a 32-bit signed integer as argument.
+        // It also happens to have two forms.
+        private static readonly ValueOption<int> maxErrorsOption =
+            ValueOption.CreateInt32Option(
+                new OptionForm[]
+                {
+                    OptionForm.Short("fmax-errors"),
+                    OptionForm.Short("ferror-limit")
+                },
+                0)
+            .WithDescription(
+                new Sequence(
+                    new MarkupNode[]
+                    {
+                        "Limits the maximum number of error messages to ",
+                        new SymbolicOptionParameter("n").Representation,
+                        "."
+                    }))
+            .WithParameter(new SymbolicOptionParameter("n"));
+
         private static OptionSet parsedOptions;
 
         public static void Main(string[] args)
@@ -83,7 +103,8 @@ namespace ParseOptions
                 syntaxOnlyFlag,
                 optimizeOption,
                 optimizeFastFlag,
-                helpFlag
+                helpFlag,
+                maxErrorsOption
             };
 
             var parser = new GnuOptionSetParser(
@@ -91,14 +112,17 @@ namespace ParseOptions
 
             parsedOptions = parser.Parse(args, log);
 
-            log.Log(
-                new LogEntry(
-                    Severity.Info,
-                    new BulletedList(
-                        allOptions
-                            .Select<Option, MarkupNode>(TypesetParsedOption)
-                            .ToArray<MarkupNode>(),
-                        true)));
+            if (!parsedOptions.GetValue<bool>(syntaxOnlyFlag))
+            {
+                log.Log(
+                    new LogEntry(
+                        Severity.Info,
+                        new BulletedList(
+                            allOptions
+                                .Select<Option, MarkupNode>(TypesetParsedOption)
+                                .ToArray<MarkupNode>(),
+                            true)));
+            }
         }
 
         private static MarkupNode TypesetParsedOption(Option opt)
