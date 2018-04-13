@@ -93,6 +93,7 @@ namespace Pixie.Options
             this.PositionalOptions = positionalOptions;
             this.shortForms = new TrieNode<char, Option>();
             this.longForms = new Dictionary<string, Option>();
+            this.allForms = new Lazy<string[]>(ComputeAllForms);
             PopulateDataStructures();
         }
 
@@ -114,6 +115,11 @@ namespace Pixie.Options
 
         // A mapping of long form strings to options.
         internal Dictionary<string, Option> longForms;
+
+        // A lazily computed array of all possible option forms, as strings.
+        // This is used for guessing what the user meant when they type an
+        // option that doesn't actually exist.
+        internal Lazy<string[]> allForms;
 
         /// <inheritdoc/>
         public override OptionSet Parse(
@@ -171,6 +177,22 @@ namespace Pixie.Options
                     }
                 }
             }
+        }
+
+        private string[] ComputeAllForms()
+        {
+            var results = new List<string>();
+            var optionCount = Options.Count;
+            for (int i = 0; i < optionCount; i++)
+            {
+                var forms = Options[i].Forms;
+                int formCount = forms.Count;
+                for (int j = 0; j < formCount; j++)
+                {
+                    results.Add(forms[j].ToString());
+                }
+            }
+            return results.ToArray();
         }
     }
 
@@ -414,13 +436,35 @@ namespace Pixie.Options
 
         private void LogUnrecognized(string option)
         {
-            Log.Log(
-                new LogEntry(
-                    Severity.Error,
-                    "unknown option",
-                    new Text("unrecognized command line option "),
-                    Quotation.CreateBoldQuotation(option),
-                    new Text(".")));
+            var suggestion = NameSuggestion.SuggestName(
+                option,
+                Parser.allForms.Value);
+
+            if (suggestion == null)
+            {
+                Log.Log(
+                    new LogEntry(
+                        Severity.Error,
+                        "unknown option",
+                        "unrecognized command line option ",
+                        Quotation.CreateBoldQuotation(option),
+                        "."));
+            }
+            else
+            {
+                var diff = Diff.Create<char>(option, suggestion);
+                Log.Log(
+                    new LogEntry(
+                        Severity.Error,
+                        "unknown option",
+                        "unrecognized command line option ",
+                        Quotation.CreateBoldQuotation(
+                            TextDiff.RenderDeletions(diff)),
+                        "; did you mean ",
+                        Quotation.CreateBoldQuotation(
+                            TextDiff.RenderInsertions(diff)),
+                        "?"));
+            }
         }
 
         private bool ParseArgument(string argument)
