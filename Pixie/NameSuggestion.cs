@@ -28,6 +28,9 @@ namespace Pixie
             int closestNameDistance = int.MaxValue;
             foreach (var name in possibleNames)
             {
+                // TODO: optimize this by taking advantage of lower
+                // bound on Levenshtein distance imposed by difference
+                // in string length.
                 int dist = LevenshteinDistance(spelledName, name);
                 if (dist < closestNameDistance)
                 {
