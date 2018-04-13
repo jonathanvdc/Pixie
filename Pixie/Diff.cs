@@ -115,8 +115,8 @@ namespace Pixie
                             sub_start_new = inew - sub_length + 1;
                         }
                     }
-                    overlap = _overlap;
                 }
+                overlap = _overlap;
 
                 inew++;
             }
