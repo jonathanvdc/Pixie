@@ -29,5 +29,11 @@ namespace Pixie.Code
         /// </summary>
         /// <returns>The offset.</returns>
         public int Offset { get; private set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return "(" + LineIndex + ", " + Offset + ")";
+        }
     }
 }
