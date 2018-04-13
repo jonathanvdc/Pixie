@@ -38,7 +38,7 @@ namespace Pixie.Loyc
             else if (lineIndex >= source.IndexToLine(source.Text.Count - 1).Line)
                 return Length;
             else
-                return source.LineToIndex(lineIndex);
+                return source.LineToIndex(lineIndex + 1);
         }
 
         /// <inheritdoc/>
