@@ -230,12 +230,14 @@ namespace Pixie.Options
                     new LogEntry(
                         Severity.Error,
                         "option error",
-                        new Sequence(
-                            new Text("argument to "),
-                            Quotation.CreateBoldQuotation(form.ToString()),
-                            new Text(" should be an integer; got "),
-                            Quotation.CreateBoldQuotation(argument),
-                            new Text("."))));
+                        "argument to ",
+                        Quotation.CreateBoldQuotation(form.ToString()),
+                        " should be an integer; got ",
+                        argument == null
+                            ? (MarkupNode)"nothing."
+                            : new Sequence(
+                                Quotation.CreateBoldQuotation(argument),
+                                ".")));
             }
             return result;
         }
