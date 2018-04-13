@@ -35,8 +35,18 @@
     <Reference Include="nunitlite">
       <HintPath>..\packages\NUnitLite.3.10.1\lib\net45\nunitlite.dll</HintPath>
     </Reference>
+    <Reference Include="Loyc.Essentials">
+      <HintPath>..\packages\Loyc.Essentials.26.2.0\lib\net45\Loyc.Essentials.dll</HintPath>
+    </Reference>
+    <Reference Include="Loyc.Collections">
+      <HintPath>..\packages\Loyc.Collections.26.2.0\lib\net45\Loyc.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Loyc.Syntax">
+      <HintPath>..\packages\Loyc.Syntax.26.2.0\lib\net45\Loyc.Syntax.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoycInteropTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,6 +59,10 @@
     <ProjectReference Include="..\Pixie\Pixie.csproj">
       <Project>{0F4FC8AB-8928-473C-9EF1-C68089AAE644}</Project>
       <Name>Pixie</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pixie.Loyc\Pixie.Loyc.csproj">
+      <Project>{207C9935-4A9D-4447-B909-9C646424F7C2}</Project>
+      <Name>Pixie.Loyc</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pixie.Terminal\Pixie.Terminal.csproj">
       <Project>{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}</Project>

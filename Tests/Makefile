@@ -4,8 +4,12 @@ files = \
 libraries = \
 	../Pixie/bin/clr/Pixie.dll \
 	../Pixie.Terminal/bin/clr/Pixie.Terminal.dll \
+	../Pixie.Loyc/bin/clr/Pixie.Loyc.dll \
 	../packages/NUnit.3.10.1/lib/net45/nunit.framework.dll \
-	../packages/NUnitLite.3.10.1/lib/net45/nunitlite.dll
+	../packages/NUnitLite.3.10.1/lib/net45/nunitlite.dll \
+	../packages/Loyc.Essentials.26.2.0/lib/net45/Loyc.Essentials.dll \
+	../packages/Loyc.Collections.26.2.0/lib/net45/Loyc.Collections.dll \
+	../packages/Loyc.Syntax.26.2.0/lib/net45/Loyc.Syntax.dll
 
 ifeq ($(ASM_VERSION),)
 	ASM_VERSION:=0.0.1.0
