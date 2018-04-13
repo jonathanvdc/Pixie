@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiffTests.cs" />
     <Compile Include="GnuOptionSetParserTests.cs" />
     <Compile Include="LoycInteropTests.cs" />
     <Compile Include="NameSuggestionTests.cs" />
