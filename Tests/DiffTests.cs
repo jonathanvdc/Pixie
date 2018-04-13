@@ -92,32 +92,16 @@ namespace Pixie.Tests
         {
             // Regression test.
 
-            // "old": "The quick brown fox.",
-            // "new": "The kuick brown fix.",
-            // "diff": [("=", "The "),
-            //          ("-", "q"),
-            //          ("+", "k"),
-            //          ("=", "uick brown f"),
-            //          ("-", "o"),
-            //          ("+", "i"),
-            //          ("=", "x.")]
-
-            var oldStr = "The quick brown fox.";
-            var newStr = "The kuick brown fix.";
+            var oldStr = "-fsynax-only";
+            var newStr = "-fsyntax-only";
             var expectedDiff = new Diff<char>(
                 new DiffElement<char>[]
                 {
-                    new DiffElement<char>(DiffOperation.Unchanged, "The "),
-                    new DiffElement<char>(DiffOperation.Deletion, "q"),
-                    new DiffElement<char>(DiffOperation.Insertion, "k"),
-                    new DiffElement<char>(DiffOperation.Unchanged, "uick brown f"),
-                    new DiffElement<char>(DiffOperation.Deletion, "o"),
-                    new DiffElement<char>(DiffOperation.Insertion, "i"),
-                    new DiffElement<char>(DiffOperation.Unchanged, "x.")
+                    new DiffElement<char>(DiffOperation.Unchanged, "-fsyn"),
+                    new DiffElement<char>(DiffOperation.Insertion, "t"),
+                    new DiffElement<char>(DiffOperation.Unchanged, "ax-only")
                 });
 
-            System.Console.WriteLine(Diff.Create<char>("-fsynxax only", "-fsyntax only"));
-            System.Console.WriteLine(Diff.Create<char>(oldStr, newStr));
             Assert.AreEqual(expectedDiff, Diff.Create<char>(oldStr, newStr));
         }
     }
