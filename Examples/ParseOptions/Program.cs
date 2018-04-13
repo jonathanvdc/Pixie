@@ -138,7 +138,9 @@ namespace ParseOptions
 
         private static LogEntry MakeDiagnostic(LogEntry entry)
         {
-            return DiagnosticExtractor.Transform(entry, new Text("program"));
+            return DiagnosticExtractor
+                .Transform(entry, new Text("program"))
+                .Map(WrapBox.WordWrap);
         }
     }
 }
