@@ -53,3 +53,84 @@ Key features:
     ![Loyc diagnostic](docs/img/loyc-interop.svg)
 
   * **Customization.** Pixie is customizable: you can easily configure the existing renderers and define your own markup elements and renderers.
+
+## Getting started
+
+To use Pixie in one of your projects, simply install the [Pixie NuGet package](https://www.nuget.org/packages/Pixie) and start coding. Here are some basic first steps:
+
+  * **Acquiring a log.** Your application will probably want to send output to the terminal. Pixie's preferred abstraction for doing that is the `ILog`. All logs define a `void Log(LogEntry)` method, which sends a single, self-contained message to the log.
+
+    There are many log implementations, but you probably want a log that sends messages straight to the terminal. You can acquire one of those like so:
+
+    ```cs
+    using Pixie.Terminal;
+    // ...
+    var log = TerminalLog.Acquire();
+    ```
+
+    > **Pro tip:** acquiring a log is something you want to do only once, for concurrency and performance reasons.
+
+  * **Logging messages.** As stated before, a `LogEntry` is a self-contained message that can be sent to any log. It consists of a `Severity` (which can be either `Error`, `Warning`, `Message` or `Info`) and a `MarkupNode`. The latter is essentially a description of what you want the user to see.
+
+    A `MarkupNode` implementation can be anything ranging from a lowly text message to a full-blown caret diagnostic. In this example, we'll just log a text message. Those can be created by calling `new Text("message")` or by implicitly converting a `string` to a `MarkupNode`.
+
+    Putting it all together:
+
+    ```cs
+    using Pixie;
+    using Pixie.Markup;
+    // ...
+    log.Log(
+        new LogEntry(
+            Severity.Error,
+            new Text("Something went horribly wrong.")));
+    ```
+
+  * **Parsing command-line arguments.** Pixie's approach to parsing command-line arguments is pretty standard. You define a set of options and then use those to parse command-line arguments.
+
+    ```cs
+    using Pixie.Options;
+    // ...
+    // Define a --help/-h flag option.
+    var helpFlag = FlagOption.CreateFlagOption(
+        OptionForm.Short("h"),
+        OptionForm.Long("help"));
+
+    // Define a pseudo-option for positional arguments.
+    var filesOption = SequenceOption.CreateStringOption(
+        OptionForm.Long("files"));
+
+    // Create a parser for GNU-style command-line arguments.
+    var parser = new GnuOptionSetParser(
+        new Option[] { helpFlag }, // <-- options
+        filesOption); // <-- pseudo-option for positional arguments
+
+    // Parse command-line arguments. The parser automatically
+    // recovers from errors and sends error messages to `log`.
+    var parsedArgs = parser.Parse(new[] { "hi", "-h" }, log);
+
+    // Recover parsed arguments.
+    bool showHelp = parsedArgs.GetValue<bool>(helpFlag);
+    string[] files = parsedArgs.GetValue<string[]>(filesOption);
+    ```
+
+  * **Documenting options.** Adding documentation to your options is easy. Just call `WithCategory`, `WithDescription` and/or `WithParameters` on the options you'd like to document.
+
+    For example, here's how to document the `-x` option from `gcc` and `clang`.
+
+    ```cs
+    xOption = SequenceOption.CreateStringOption(OptionForm.Short("x"))
+        .WithCategory("Input and output")
+        .WithDescription(
+          "Specify explicitly the language for the " +
+          "following input files.")
+        .WithParameters(
+            new SymbolicOptionParameter("language"), // <-- not varargs
+            new SymbolicOptionParameter("file", true)); // <-- varargs
+    ```
+
+## Contributing
+
+Thank you so much for considering to contribute! Feel free to fork the Pixie repository and send me a pull request&mdash;I'd love to merge it in! It'd also be nice if you opened an issue beforehand so we can talk about your wonderful new feature.
+
+Alternatively, if you think you found a bug or just have a question about Pixie: open an issue.
