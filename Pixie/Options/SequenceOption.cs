@@ -111,9 +111,9 @@ namespace Pixie.Options
         /// <summary>
         /// Creates a copy of this option that has a particular parameter list.
         /// </summary>
-        /// <param name="parameter">The new option's parameter list.</param>
+        /// <param name="parameters">The new option's parameter list.</param>
         /// <returns>An option.</returns>
-        public SequenceOption<T> WithParameters(IReadOnlyList<OptionParameter> parameter)
+        public SequenceOption<T> WithParameters(IReadOnlyList<OptionParameter> parameters)
         {
             var result = new SequenceOption<T>(this);
             result.parameters = parameters;
@@ -123,11 +123,11 @@ namespace Pixie.Options
         /// <summary>
         /// Creates a copy of this option that has a particular parameter list.
         /// </summary>
-        /// <param name="parameter">The new option's parameter list.</param>
+        /// <param name="parameters">The new option's parameter list.</param>
         /// <returns>An option.</returns>
-        public SequenceOption<T> WithParameters(params OptionParameter[] parameter)
+        public SequenceOption<T> WithParameters(params OptionParameter[] parameters)
         {
-            return WithParameters((IReadOnlyList<OptionParameter>)parameter);
+            return WithParameters((IReadOnlyList<OptionParameter>)parameters);
         }
 
         /// <inheritdoc/>
