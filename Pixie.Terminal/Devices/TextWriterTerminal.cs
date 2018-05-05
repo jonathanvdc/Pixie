@@ -117,18 +117,30 @@ namespace Pixie.Terminal.Devices
         /// <param name="isRedirected">
         /// Tells if the writer's output is being redirected.
         /// </param>
+        /// <param name="styleManagerOrNull">
+        /// The style manager to use. Pass <c>null</c> to automatically
+        /// pick a style manager based on the terminal.
+        /// </param>
+        /// <param name="terminalWidthOrNull">
+        /// The size of the terminal to use. Pass <c>null</c> to automatically
+        /// pick the width based on the terminal.
+        /// </param>
         /// <returns>A text writer terminal.</returns>
         private static TextWriterTerminal FromConsoleStream(
             TextWriter writer,
-            bool isRedirected)
+            bool isRedirected,
+            StyleManager styleManagerOrNull,
+            Nullable<int> terminalWidthOrNull)
         {
             if (isRedirected)
             {
                 // Don't style redirected text.
                 return new TextWriterTerminal(
                     writer,
-                    DefaultTerminalWidth,
-                    NoStyleManager.Instance,
+                    terminalWidthOrNull.HasValue
+                        ? terminalWidthOrNull.Value
+                        : DefaultTerminalWidth,
+                    styleManagerOrNull ?? NoStyleManager.Instance,
                     GetSafeEncoding(writer));
             }
             else if (IsAnsiTerminalIdentifier(
@@ -138,8 +150,10 @@ namespace Pixie.Terminal.Devices
                 // appears receptive.
                 return new TextWriterTerminal(
                     writer,
-                    GetTerminalWidth(),
-                    new AnsiStyleManager(writer));
+                    terminalWidthOrNull.HasValue
+                        ? terminalWidthOrNull.Value
+                        : GetTerminalWidth(),
+                    styleManagerOrNull ?? new AnsiStyleManager(writer));
             }
             else
             {
@@ -148,28 +162,52 @@ namespace Pixie.Terminal.Devices
                 // restrict ourselves to ASCII.
                 return new TextWriterTerminal(
                     writer,
-                    GetTerminalWidth(),
-                    new ConsoleStyleManager(),
+                    terminalWidthOrNull.HasValue
+                        ? terminalWidthOrNull.Value
+                        : GetTerminalWidth(),
+                    styleManagerOrNull ?? new ConsoleStyleManager(),
                     GetSafeEncoding(writer));
             }
         }
 
         /// <summary>
         /// Creates a text writer terminal from the console output stream,
-        /// the width of the output buffer and a style manager.
+        /// a style manager and the width of the output buffer.
         /// </summary>
+        /// <param name="styleManager">
+        /// A style manager to style the output with.
+        /// </param>
         /// <param name="width">
         /// The width of the output buffer.
         /// </param>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromOutputStream(
+            StyleManager styleManager,
+            int width)
+        {
+            return FromConsoleStream(
+                Console.Out,
+                Console.IsOutputRedirected,
+                styleManager,
+                new Nullable<int>(width));
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console output stream
+        /// and a style manager.
+        /// </summary>
         /// <param name="styleManager">
         /// A style manager to style the output with.
         /// </param>
         /// <returns>A text writer terminal.</returns>
         public static TextWriterTerminal FromOutputStream(
-            int width,
             StyleManager styleManager)
         {
-            return new TextWriterTerminal(Console.Out, width, styleManager);
+            return FromConsoleStream(
+                Console.Out,
+                Console.IsOutputRedirected,
+                styleManager,
+                default(Nullable<int>));
         }
 
         /// <summary>
@@ -178,25 +216,51 @@ namespace Pixie.Terminal.Devices
         /// <returns>A text writer terminal.</returns>
         public static TextWriterTerminal FromOutputStream()
         {
-            return FromConsoleStream(Console.Out, Console.IsOutputRedirected);
+            return FromConsoleStream(
+                Console.Out,
+                Console.IsOutputRedirected,
+                null,
+                default(Nullable<int>));
         }
 
         /// <summary>
         /// Creates a text writer terminal from the console error stream,
-        /// the width of the output buffer and a style manager.
+        /// a style manager and the width of the output buffer.
         /// </summary>
+        /// <param name="styleManager">
+        /// A style manager to style the output with.
+        /// </param>
         /// <param name="width">
         /// The width of the output buffer.
         /// </param>
+        /// <returns>A text writer terminal.</returns>
+        public static TextWriterTerminal FromErrorStream(
+            StyleManager styleManager,
+            int width)
+        {
+            return FromConsoleStream(
+                Console.Error,
+                Console.IsErrorRedirected,
+                styleManager,
+                new Nullable<int>(width));
+        }
+
+        /// <summary>
+        /// Creates a text writer terminal from the console error stream
+        /// and a style manager.
+        /// </summary>
         /// <param name="styleManager">
         /// A style manager to style the output with.
         /// </param>
         /// <returns>A text writer terminal.</returns>
         public static TextWriterTerminal FromErrorStream(
-            int width,
             StyleManager styleManager)
         {
-            return new TextWriterTerminal(Console.Error, width, styleManager);
+            return FromConsoleStream(
+                Console.Error,
+                Console.IsErrorRedirected,
+                styleManager,
+                default(Nullable<int>));
         }
 
         /// <summary>
@@ -205,7 +269,11 @@ namespace Pixie.Terminal.Devices
         /// <returns>A text writer terminal.</returns>
         public static TextWriterTerminal FromErrorStream()
         {
-            return FromConsoleStream(Console.Error, Console.IsErrorRedirected);
+            return FromConsoleStream(
+                Console.Error,
+                Console.IsErrorRedirected,
+                null,
+                default(Nullable<int>));
         }
 
         /// <summary>
