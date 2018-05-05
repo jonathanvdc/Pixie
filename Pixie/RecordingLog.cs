@@ -44,6 +44,28 @@ namespace Pixie
         /// <returns>A list of all recorded entries.</returns>
         public IReadOnlyList<LogEntry> RecordedEntries => recorded;
 
+        /// <summary>
+        /// Tests if this log contains at least one entry of
+        /// a particular severity.
+        /// </summary>
+        /// <param name="severity">The severity to look for.</param>
+        /// <returns>
+        /// <c>true</c> if this log contains at least one entry
+        /// of <paramref name="severity"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Contains(Severity severity)
+        {
+            int entryCount = recorded.Count;
+            for (int i = 0; i < entryCount; i++)
+            {
+                if (recorded[i].Severity == severity)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <inheritdoc/>
         public void Log(LogEntry entry)
         {
