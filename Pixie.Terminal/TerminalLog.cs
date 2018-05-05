@@ -116,6 +116,21 @@ namespace Pixie.Terminal
         }
 
         /// <summary>
+        /// Acquires a terminal log for the current environment
+        /// and a particular style manager.
+        /// The terminal's output is sent to standard error.
+        /// </summary>
+        /// <param name="styleManager">
+        /// A style manager to style the terminal's output with.
+        /// </param>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog AcquireStandardError(
+            StyleManager styleManager)
+        {
+            return Acquire(TextWriterTerminal.FromErrorStream(styleManager));
+        }
+
+        /// <summary>
         /// Acquires a terminal log for the current environment.
         /// The terminal's output is sent to standard output.
         /// </summary>
@@ -123,6 +138,21 @@ namespace Pixie.Terminal
         public static TerminalLog AcquireStandardOutput()
         {
             return Acquire(TextWriterTerminal.FromOutputStream());
+        }
+
+        /// <summary>
+        /// Acquires a terminal log for the current environment
+        /// and a particular style manager.
+        /// The terminal's output is sent to standard output.
+        /// </summary>
+        /// <param name="styleManager">
+        /// A style manager to style the terminal's output with.
+        /// </param>
+        /// <returns>A terminal log.</returns>
+        public static TerminalLog AcquireStandardOutput(
+            StyleManager styleManager)
+        {
+            return Acquire(TextWriterTerminal.FromOutputStream(styleManager));
         }
     }
 }
