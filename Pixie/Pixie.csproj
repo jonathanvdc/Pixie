@@ -40,6 +40,7 @@
     <Compile Include="MarkupNode.cs" />
     <Compile Include="NullLog.cs" />
     <Compile Include="PixieException.cs" />
+    <Compile Include="RecordingLog.cs" />
     <Compile Include="Severity.cs" />
     <Compile Include="TestLog.cs" />
     <Compile Include="UnsupportedNodeException.cs" />
