@@ -144,7 +144,7 @@ namespace Pixie.Terminal.Devices
                     GetSafeEncoding(writer));
             }
             else if (IsAnsiTerminalIdentifier(
-                EnvironmentTerminalIdentifier.ToLowerInvariant()))
+                EnvironmentTerminalIdentifier?.ToLowerInvariant()))
             {
                 // Only use ANSI control sequences if the terminal
                 // appears receptive.
@@ -285,9 +285,10 @@ namespace Pixie.Terminal.Devices
 
         private static bool IsAnsiTerminalIdentifier(string identifier)
         {
-            return identifier.StartsWith("vt")
-                || identifier.StartsWith("xterm")
-                || identifier == "linux";
+            return identifier != null
+                && (identifier.StartsWith("vt")
+                    || identifier.StartsWith("xterm")
+                    || identifier == "linux");
         }
 
         private static Encoding GetSafeEncoding(TextWriter writer)
