@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Pixie.Tests</RootNamespace>
-    <AssemblyName>Pixie.Tests</AssemblyName>
+    <AssemblyName>Tests</AssemblyName>
     <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
