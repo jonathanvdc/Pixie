@@ -24,7 +24,11 @@ test_script:
   # Run example programs.
   - Examples\CaretDiagnostics\bin\Release\CaretDiagnostics.exe
   - Examples\FormattedList\bin\Release\FormattedList.exe
-  - Examples\ParseOptions\bin\Release\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt
+  - Examples\LoycInterop\bin\Release\LoycInterop.exe
+  - Examples\ParseOptions\bin\Release\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - Examples\PrintHelp\bin\Release\PrintHelp.exe
+  - Examples\SimpleErrorMessage\bin\Release\SimpleErrorMessage.exe
+
   # Run tests.
   - Tests\bin\Release\Tests.exe
 

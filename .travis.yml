@@ -1,17 +1,19 @@
 language: csharp
 install:
   # Restore nuget packages
-  - make nuget
+  - nuget restore Pixie.sln
 
 script:
-  # Build Pixie using csc
+  # Build Pixie.
   - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
 
-  # Build Pixie using ecsc
-  - make
-
   # Run the examples.
-  - make run-examples
+  - mono ./Examples/CaretDiagnostics/bin/Release/CaretDiagnostics.exe
+  - mono ./Examples/FormattedList/bin/Release/FormattedList.exe
+  - mono ./Examples/LoycInterop/bin/Release/LoycInterop.exe
+  - mono ./Examples/ParseOptions/bin/Release/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - mono ./Examples/PrintHelp/bin/Release/PrintHelp.exe
+  - mono ./Examples/SimpleErrorMessage/bin/Release/SimpleErrorMessage.exe
 
   # Run the tests
-  - make test
+  - mono ./Tests/bin/Release/Tests.exe
