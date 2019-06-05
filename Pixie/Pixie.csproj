@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Pixie</RootNamespace>
     <AssemblyName>Pixie</AssemblyName>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -17,7 +17,7 @@
     
     This package contains Pixie.Loyc, a library that translates Loyc diagnostics to Pixie markup nodes.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2018</copyright>
+    <copyright>Copyright 2019</copyright>
     <tags>terminal console output formatting loyc ecsharp</tags>
     <dependencies>
       <dependency id="Pixie" version="$version$" />
@@ -28,7 +28,9 @@
   </metadata>
   <files>
     <file src="README.md" target="readme.txt" />
-    <file src="Pixie.Loyc\bin\Release\Pixie.Loyc.dll" target="lib\net45\" />
-    <file src="Pixie.Loyc\bin\Release\Pixie.Loyc.xml" target="lib\net45\" />
+    <file src="Pixie.Loyc\bin\Release\net45\Pixie.Loyc.dll" target="lib\net45\" />
+    <file src="Pixie.Loyc\bin\Release\netstandard2.0\Pixie.Loyc.dll" target="lib\netstandard2.0\" />
+    <file src="Pixie.Loyc\bin\Release\net45\Pixie.Loyc.xml" target="lib\net45\" />
+    <file src="Pixie.Loyc\bin\Release\netstandard2.0\Pixie.Loyc.xml" target="lib\netstandard2.0\" />
   </files>
 </package>
