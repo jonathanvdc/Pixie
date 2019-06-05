@@ -20,10 +20,10 @@
     <copyright>Copyright 2018</copyright>
     <tags>terminal console output formatting loyc ecsharp</tags>
     <dependencies>
-        <dependency id="Pixie" version="$version$" />
-        <dependency id="Loyc.Collections" version="26.2.0" />
-        <dependency id="Loyc.Essentials" version="26.2.0" />
-        <dependency id="Loyc.Syntax" version="26.2.0" />
+      <dependency id="Pixie" version="$version$" />
+      <dependency id="Loyc.Collections" version="26.8.1" />
+      <dependency id="Loyc.Essentials" version="26.8.1" />
+      <dependency id="Loyc.Syntax" version="26.8.1" />
     </dependencies>
   </metadata>
   <files>

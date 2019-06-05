@@ -28,8 +28,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pixie\Pixie.csproj" />
-    <PackageReference Include="Loyc.Collections" Version="26.2.0" />
-    <PackageReference Include="Loyc.Essentials" Version="26.2.0" />
-    <PackageReference Include="Loyc.Syntax" Version="26.2.0" />
+    <PackageReference Include="Loyc.Collections" Version="26.8.1" />
+    <PackageReference Include="Loyc.Essentials" Version="26.8.1" />
+    <PackageReference Include="Loyc.Syntax" Version="26.8.1" />
   </ItemGroup>
 </Project>
