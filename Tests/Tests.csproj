@@ -1,77 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A8B90E55-2BE7-40DB-B35B-2576D00FD848}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Pixie.Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
+    <AssemblyName>Pixie.Tests</AssemblyName>
+    <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Loyc.Essentials">
-      <HintPath>..\packages\Loyc.Essentials.26.8.1\lib\net45\Loyc.Essentials.dll</HintPath>
-    </Reference>
-    <Reference Include="Loyc.Collections">
-      <HintPath>..\packages\Loyc.Collections.26.8.1\lib\net45\Loyc.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Loyc.Syntax">
-      <HintPath>..\packages\Loyc.Syntax.26.8.1\lib\net45\Loyc.Syntax.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunitlite">
-      <HintPath>..\packages\NUnitLite.3.12.0\lib\net45\nunitlite.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DiffTests.cs" />
-    <Compile Include="GnuOptionSetParserTests.cs" />
-    <Compile Include="LoycInteropTests.cs" />
-    <Compile Include="NameSuggestionTests.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="RecordingLogTests.cs" />
-    <Compile Include="RenderTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Pixie\Pixie.csproj">
-      <Project>{0F4FC8AB-8928-473C-9EF1-C68089AAE644}</Project>
-      <Name>Pixie</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pixie.Loyc\Pixie.Loyc.csproj">
-      <Project>{207C9935-4A9D-4447-B909-9C646424F7C2}</Project>
-      <Name>Pixie.Loyc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pixie.Terminal\Pixie.Terminal.csproj">
-      <Project>{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}</Project>
-      <Name>Pixie.Terminal</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Pixie\Pixie.csproj" />
+    <ProjectReference Include="..\Pixie.Terminal\Pixie.Terminal.csproj" />
+    <ProjectReference Include="..\Pixie.Loyc\Pixie.Loyc.csproj" />
+    <PackageReference Include="Loyc.Essentials" Version="26.8.1" />
+    <PackageReference Include="Loyc.Collections" Version="26.8.1" />
+    <PackageReference Include="Loyc.Syntax" Version="26.8.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
   </ItemGroup>
 </Project>
