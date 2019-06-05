@@ -19,7 +19,7 @@
     <tags>terminal console output formatting</tags>
   </metadata>
   <files>
-    <file src="README.md" target="readme.txt" />
+    <file src="README.md" />
     <file src="Pixie\bin\Release\net45\Pixie.dll" target="lib\net45\" />
     <file src="Pixie\bin\Release\netstandard2.0\Pixie.dll" target="lib\netstandard2.0\" />
     <file src="Pixie\bin\Release\net45\Pixie.xml" target="lib\net45\" />
