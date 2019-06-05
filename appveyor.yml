@@ -25,15 +25,15 @@ after_build:
 
 test_script:
   # Run example programs.
-  - Examples\CaretDiagnostics\bin\Release\CaretDiagnostics.exe
-  - Examples\FormattedList\bin\Release\FormattedList.exe
-  - Examples\LoycInterop\bin\Release\LoycInterop.exe
-  - Examples\ParseOptions\bin\Release\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
-  - Examples\PrintHelp\bin\Release\PrintHelp.exe
-  - Examples\SimpleErrorMessage\bin\Release\SimpleErrorMessage.exe
+  - Examples\CaretDiagnostics\bin\Release\net45\CaretDiagnostics.exe
+  - Examples\FormattedList\bin\Release\net45\FormattedList.exe
+  - Examples\LoycInterop\bin\Release\net45\LoycInterop.exe
+  - Examples\ParseOptions\bin\Release\net45\ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - Examples\PrintHelp\bin\Release\net45\PrintHelp.exe
+  - Examples\SimpleErrorMessage\bin\Release\net45\SimpleErrorMessage.exe
 
   # Run tests.
-  - Tests\bin\Release\Tests.exe
+  - Tests\bin\Release\net45\Tests.exe
 
 artifacts:
   - path: '*.nupkg'

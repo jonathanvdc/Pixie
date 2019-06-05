@@ -8,12 +8,12 @@ script:
   - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
 
   # Run the examples.
-  - mono ./Examples/CaretDiagnostics/bin/Release/CaretDiagnostics.exe
-  - mono ./Examples/FormattedList/bin/Release/FormattedList.exe
-  - mono ./Examples/LoycInterop/bin/Release/LoycInterop.exe
-  - mono ./Examples/ParseOptions/bin/Release/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
-  - mono ./Examples/PrintHelp/bin/Release/PrintHelp.exe
-  - mono ./Examples/SimpleErrorMessage/bin/Release/SimpleErrorMessage.exe
+  - mono ./Examples/CaretDiagnostics/bin/Release/net45/CaretDiagnostics.exe
+  - mono ./Examples/FormattedList/bin/Release/net45/FormattedList.exe
+  - mono ./Examples/LoycInterop/bin/Release/net45/LoycInterop.exe
+  - mono ./Examples/ParseOptions/bin/Release/net45/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - mono ./Examples/PrintHelp/bin/Release/net45/PrintHelp.exe
+  - mono ./Examples/SimpleErrorMessage/bin/Release/net45/SimpleErrorMessage.exe
 
   # Run the tests
-  - mono ./Tests/bin/Release/Tests.exe
+  - mono ./Tests/bin/Release/net45/Tests.exe
