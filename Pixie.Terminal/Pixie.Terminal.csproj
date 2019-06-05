@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6BFE52E0-1F80-4BE2-AFC0-EE0958F7E271}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Pixie.Terminal</RootNamespace>
     <AssemblyName>Pixie.Terminal</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,40 +27,6 @@
     <DocumentationFile>bin\Release\Pixie.Terminal.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="StyleManager.cs" />
-    <Compile Include="TerminalBase.cs" />
-    <Compile Include="TerminalLog.cs" />
-    <Compile Include="Devices\AnsiStyleManager.cs" />
-    <Compile Include="Devices\ConsoleStyleManager.cs" />
-    <Compile Include="Devices\LayoutTerminal.cs" />
-    <Compile Include="Devices\NoStyleManager.cs" />
-    <Compile Include="Devices\OutputTerminalBase.cs" />
-    <Compile Include="Devices\TextWriterTerminal.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Render\AlignBoxRenderer.cs" />
-    <Compile Include="Render\ColorSpanRenderer.cs" />
-    <Compile Include="Render\DecorationSpanRenderer.cs" />
-    <Compile Include="Render\DegradableTextRenderer.cs" />
-    <Compile Include="Render\DiagnosticRenderer.cs" />
-    <Compile Include="Render\HighlightedSourceRenderer.cs" />
-    <Compile Include="Render\IndentBoxRenderer.cs" />
-    <Compile Include="Render\NewLineRenderer.cs" />
-    <Compile Include="Render\NodeRenderer.cs" />
-    <Compile Include="Render\ParagraphRenderer.cs" />
-    <Compile Include="Render\PrefixBoxRenderer.cs" />
-    <Compile Include="Render\RenderState.cs" />
-    <Compile Include="Render\SequenceRenderer.cs" />
-    <Compile Include="Render\TextRenderer.cs" />
-    <Compile Include="Render\WrapBoxRenderer.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Pixie\Pixie.csproj">
-      <Project>{0F4FC8AB-8928-473C-9EF1-C68089AAE644}</Project>
-      <Name>Pixie</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Pixie\Pixie.csproj" />
   </ItemGroup>
 </Project>

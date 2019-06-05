@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0F4FC8AB-8928-473C-9EF1-C68089AAE644}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Pixie</RootNamespace>
     <AssemblyName>Pixie</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFramework>net45</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,67 +26,4 @@
     <ConsolePause>false</ConsolePause>
     <DocumentationFile>bin\Release\Pixie.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Color.cs" />
-    <Compile Include="Diff.cs" />
-    <Compile Include="ILog.cs" />
-    <Compile Include="LogEntry.cs" />
-    <Compile Include="NameSuggestion.cs" />
-    <Compile Include="MarkupNode.cs" />
-    <Compile Include="NullLog.cs" />
-    <Compile Include="PixieException.cs" />
-    <Compile Include="RecordingLog.cs" />
-    <Compile Include="Severity.cs" />
-    <Compile Include="TestLog.cs" />
-    <Compile Include="UnsupportedNodeException.cs" />
-    <Compile Include="Code\GridPosition.cs" />
-    <Compile Include="Code\SourceDocument.cs" />
-    <Compile Include="Code\SourceRegion.cs" />
-    <Compile Include="Code\SourceSpan.cs" />
-    <Compile Include="Code\StringDocument.cs" />
-    <Compile Include="Markup\AlignBox.cs" />
-    <Compile Include="Markup\BulletedList.cs" />
-    <Compile Include="Markup\ColorSpan.cs" />
-    <Compile Include="Markup\ContainerNode.cs" />
-    <Compile Include="Markup\DecorationSpan.cs" />
-    <Compile Include="Markup\DegradableText.cs" />
-    <Compile Include="Markup\Diagnostic.cs" />
-    <Compile Include="Markup\HelpMessage.cs" />
-    <Compile Include="Markup\HighlightedSource.cs" />
-    <Compile Include="Markup\IndentBox.cs" />
-    <Compile Include="Markup\MathSymbol.cs" />
-    <Compile Include="Markup\NewLine.cs" />
-    <Compile Include="Markup\OptionHelp.cs" />
-    <Compile Include="Markup\OptionSetHelp.cs" />
-    <Compile Include="Markup\OptionSetSummary.cs" />
-    <Compile Include="Markup\Paragraph.cs" />
-    <Compile Include="Markup\PrefixBox.cs" />
-    <Compile Include="Markup\Quotation.cs" />
-    <Compile Include="Markup\Sequence.cs" />
-    <Compile Include="Markup\SourceReference.cs" />
-    <Compile Include="Markup\Text.cs" />
-    <Compile Include="Markup\TextDiff.cs" />
-    <Compile Include="Markup\Title.cs" />
-    <Compile Include="Markup\WrapBox.cs" />
-    <Compile Include="Options\FlagOption.cs" />
-    <Compile Include="Options\GnuOptionPrinter.cs" />
-    <Compile Include="Options\GnuOptionSetParser.cs" />
-    <Compile Include="Options\Option.cs" />
-    <Compile Include="Options\OptionDocs.cs" />
-    <Compile Include="Options\OptionForm.cs" />
-    <Compile Include="Options\OptionParameter.cs" />
-    <Compile Include="Options\OptionPrinter.cs" />
-    <Compile Include="Options\OptionSet.cs" />
-    <Compile Include="Options\ParsedOption.cs" />
-    <Compile Include="Options\SequenceOption.cs" />
-    <Compile Include="Options\ValueOption.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transforms\DiagnosticExtractor.cs" />
-    <Compile Include="Transforms\MarkupVisitor.cs" />
-    <Compile Include="Transforms\TransformLog.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
