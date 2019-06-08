@@ -15,8 +15,8 @@ namespace Pixie.Terminal.Devices
         /// </summary>
         public ConsoleStyleManager()
             : this(
-                ConsoleStyle.ToPixieColor(Console.ForegroundColor),
-                ConsoleStyle.ToPixieColor(Console.BackgroundColor))
+                ConsoleStyle.ToPixieColor(Console.ForegroundColor, Colors.White),
+                ConsoleStyle.ToPixieColor(Console.BackgroundColor, Colors.Black))
         { }
 
         /// <summary>
@@ -169,9 +169,17 @@ namespace Pixie.Terminal.Devices
                 color.Alpha);
         }
 
-        public static Color ToPixieColor(ConsoleColor color)
+        public static Color ToPixieColor(ConsoleColor color, Color fallbackResult)
         {
-            return colorMap[color];
+            Color result;
+            if (colorMap.TryGetValue(color, out result))
+            {
+                return result;
+            }
+            else
+            {
+                return fallbackResult;
+            }
         }
 
         public static ConsoleColor ToConsoleColor(Color color)

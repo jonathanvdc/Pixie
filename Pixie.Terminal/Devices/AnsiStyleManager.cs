@@ -19,8 +19,8 @@ namespace Pixie.Terminal.Devices
         public AnsiStyleManager(TextWriter writer)
             : this(
                 writer,
-                ConsoleStyle.ToPixieColor(Console.ForegroundColor),
-                ConsoleStyle.ToPixieColor(Console.BackgroundColor))
+                ConsoleStyle.ToPixieColor(Console.ForegroundColor, Colors.White),
+                ConsoleStyle.ToPixieColor(Console.BackgroundColor, Colors.Black))
         { }
 
         /// <summary>
