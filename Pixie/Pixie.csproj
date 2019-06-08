@@ -6,7 +6,7 @@
     <RootNamespace>Pixie</RootNamespace>
     <AssemblyName>Pixie</AssemblyName>
     <Version>1.0</Version>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45;netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
