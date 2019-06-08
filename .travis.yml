@@ -1,19 +1,38 @@
 language: csharp
+
+matrix:
+  include:
+    - dotnet: 2.1.502
+      mono: none
+      env: DOTNETCORE=2
+      env: DOTNET=dotnet
+      env: RESTORE=dotnet restore
+      env: MSBUILD=dotnet build --framework netcoreapp2.0
+      env: EXE=dll
+      env: TARGET=netcoreapp2.0
+
+    - mono: latest
+      env: DOTNET=mono
+      env: RESTORE=nuget restore
+      env: MSBUILD=msbuild
+      env: EXE=exe
+      env: TARGET=net45
+
 install:
-  # Restore nuget packages
-  - nuget restore Pixie.sln
+  # Restore NuGet packages
+  - $(RESTORE) Pixie.sln
 
 script:
   # Build Pixie.
-  - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
+  - $(MSBUILD) /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
 
   # Run the examples.
-  - mono ./Examples/CaretDiagnostics/bin/Release/net45/CaretDiagnostics.exe
-  - mono ./Examples/FormattedList/bin/Release/net45/FormattedList.exe
-  - mono ./Examples/LoycInterop/bin/Release/net45/LoycInterop.exe
-  - mono ./Examples/ParseOptions/bin/Release/net45/ParseOptions.exe a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
-  - mono ./Examples/PrintHelp/bin/Release/net45/PrintHelp.exe
-  - mono ./Examples/SimpleErrorMessage/bin/Release/net45/SimpleErrorMessage.exe
+  - $(DOTNET) ./Examples/CaretDiagnostics/bin/Release/$(TARGET)/CaretDiagnostics.$(EXE)
+  - $(DOTNET) ./Examples/FormattedList/bin/Release/$(TARGET)/FormattedList.$(EXE)
+  - $(DOTNET) ./Examples/LoycInterop/bin/Release/$(TARGET)/LoycInterop.$(EXE)
+  - $(DOTNET) ./Examples/ParseOptions/bin/Release/$(TARGET)/ParseOptions.$(EXE) a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - $(DOTNET) ./Examples/PrintHelp/bin/Release/$(TARGET)/PrintHelp.$(EXE)
+  - $(DOTNET) ./Examples/SimpleErrorMessage/bin/Release/$(TARGET)/SimpleErrorMessage.$(EXE)
 
   # Run the tests
-  - mono ./Tests/bin/Release/net45/Tests.exe
+  - $(DOTNET) ./Tests/bin/Release/$(TARGET)/Tests.$(EXE)
