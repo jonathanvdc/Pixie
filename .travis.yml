@@ -4,19 +4,21 @@ matrix:
   include:
     - dotnet: 2.1.502
       mono: none
-      env: DOTNETCORE=2
-      env: DOTNET=dotnet
-      env: RESTORE=dotnet restore
-      env: MSBUILD=dotnet build --framework netcoreapp2.0
-      env: EXE=dll
-      env: TARGET=netcoreapp2.0
+      env:
+        - DOTNETCORE=2
+        - DOTNET=dotnet
+        - RESTORE=dotnet restore
+        - MSBUILD=dotnet build --framework netcoreapp2.0
+        - EXE=dll
+        - TARGET=netcoreapp2.0
 
     - mono: latest
-      env: DOTNET=mono
-      env: RESTORE=nuget restore
-      env: MSBUILD=msbuild
-      env: EXE=exe
-      env: TARGET=net45
+      env:
+        - DOTNET=mono
+        - RESTORE=nuget restore
+        - MSBUILD=msbuild
+        - EXE=exe
+        - TARGET=net45
 
 install:
   # Restore NuGet packages
