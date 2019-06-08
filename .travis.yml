@@ -7,34 +7,34 @@ matrix:
       env:
         - DOTNETCORE=2
         - DOTNET=dotnet
-        - RESTORE=dotnet restore
-        - MSBUILD=dotnet build --framework netcoreapp2.0
+        - RESTORE="dotnet restore"
+        - MSBUILD="dotnet build --framework netcoreapp2.0"
         - EXE=dll
         - TARGET=netcoreapp2.0
 
     - mono: latest
       env:
         - DOTNET=mono
-        - RESTORE=nuget restore
+        - RESTORE="nuget restore"
         - MSBUILD=msbuild
         - EXE=exe
         - TARGET=net45
 
 install:
   # Restore NuGet packages
-  - $(RESTORE) Pixie.sln
+  - ${RESTORE} Pixie.sln
 
 script:
   # Build Pixie.
-  - $(MSBUILD) /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
+  - ${MSBUILD} /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
 
   # Run the examples.
-  - $(DOTNET) ./Examples/CaretDiagnostics/bin/Release/$(TARGET)/CaretDiagnostics.$(EXE)
-  - $(DOTNET) ./Examples/FormattedList/bin/Release/$(TARGET)/FormattedList.$(EXE)
-  - $(DOTNET) ./Examples/LoycInterop/bin/Release/$(TARGET)/LoycInterop.$(EXE)
-  - $(DOTNET) ./Examples/ParseOptions/bin/Release/$(TARGET)/ParseOptions.$(EXE) a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
-  - $(DOTNET) ./Examples/PrintHelp/bin/Release/$(TARGET)/PrintHelp.$(EXE)
-  - $(DOTNET) ./Examples/SimpleErrorMessage/bin/Release/$(TARGET)/SimpleErrorMessage.$(EXE)
+  - ${DOTNET} ./Examples/CaretDiagnostics/bin/Release/${TARGET}/CaretDiagnostics.${EXE}
+  - ${DOTNET} ./Examples/FormattedList/bin/Release/${TARGET}/FormattedList.${EXE}
+  - ${DOTNET} ./Examples/LoycInterop/bin/Release/${TARGET}/LoycInterop.${EXE}
+  - ${DOTNET} ./Examples/ParseOptions/bin/Release/${TARGET}/ParseOptions.${EXE} a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+  - ${DOTNET} ./Examples/PrintHelp/bin/Release/${TARGET}/PrintHelp.${EXE}
+  - ${DOTNET} ./Examples/SimpleErrorMessage/bin/Release/${TARGET}/SimpleErrorMessage.${EXE}
 
   # Run the tests
-  - $(DOTNET) ./Tests/bin/Release/$(TARGET)/Tests.$(EXE)
+  - ${DOTNET} ./Tests/bin/Release/${TARGET}/Tests.${EXE}
