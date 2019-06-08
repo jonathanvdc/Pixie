@@ -3,7 +3,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Pixie.Tests</RootNamespace>
     <AssemblyName>Tests</AssemblyName>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pixie\Pixie.csproj" />
