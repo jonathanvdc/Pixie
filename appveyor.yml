@@ -13,10 +13,11 @@ dotnet_csproj:
   informational_version: '{version}'
 
 build_script:
-  - set VERNUM=0.1.8
+  # Generate a NuGet package version number.
   - echo %APPVEYOR_REPO_TAG%
-  # Build packages as VERNUM-ci{build}.
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq $True) { $env:PKG_VERSION = $env:VERNUM; } else { $env:PKG_VERSION = "$($env:VERNUM)-ci$($env:APPVEYOR_BUILD_NUMBER)"; }
+  - C:\Python34\python.exe Tools\CI\version-number.py %APPVEYOR_BUILD_VERSION% > pkg-version.txt
+  - set /p PKG_VERSION=<pkg-version.txt
+  - echo %PKG_VERSION%
 
   # Restore NuGet packages.
   - nuget restore Pixie.sln
