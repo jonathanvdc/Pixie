@@ -180,7 +180,7 @@ namespace Pixie.Terminal.Render
                 RenderLine(
                     WrapSpans(compressedLines[i], maxLineWidth),
                     firstLineNumber + i,
-                    firstLineNumber + compressedLines.Count,
+                    firstLineNumber + compressedLines.Count - 1,
                     state);
             }
 
@@ -220,6 +220,15 @@ namespace Pixie.Terminal.Render
             state.Terminal.Write(
                 GetLineNumberPrefix(lineIndex, greatestLineIndex, state));
 
+            // If we encounter an empty line, then we want to write
+            // a newline and return.
+            var wrappedSpanCount = wrappedSpans.Count;
+            if (wrappedSpanCount == 0)
+            {
+                state.Terminal.WriteLine();
+                return;
+            }
+
             var continuatorPrefix = GetLineContinuatorPrefix(
                 lineIndex, greatestLineIndex, state);
 
@@ -234,7 +243,6 @@ namespace Pixie.Terminal.Render
 
             var newState = state.WithTerminal(newTerm);
 
-            var wrappedSpanCount = wrappedSpans.Count;
             for (int i = 0; i < wrappedSpanCount; i++)
             {
                 var wrappedSpanLine = wrappedSpans[i];
