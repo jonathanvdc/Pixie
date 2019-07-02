@@ -132,5 +132,49 @@ namespace Pixie.Tests
   9 | }",
                 new HighlightedSourceRenderer(5));
         }
+
+        [Test]
+        public void SourceCodeRightAlignNumbering()
+        {
+            // This test checks that source code line numbering is right-aligned.
+
+            var source = @"using System;
+public static class Program
+{
+
+    public Program()
+    {
+
+    }
+
+}";
+
+            var doc = new StringDocument("code.cs", source);
+            var ctorStartOffset = source.IndexOf("public Program()", StringComparison.InvariantCulture);
+            var ctorNameOffset = source.IndexOf("Program()", StringComparison.InvariantCulture);
+
+            var highlightRegion = new SourceRegion(
+                    new SourceSpan(doc, ctorStartOffset, "public Program()".Length))
+                .ExcludeCharacters(char.IsWhiteSpace);
+
+            var focusRegion = new SourceRegion(
+                new SourceSpan(doc, ctorNameOffset, "Program".Length));
+
+            AssertRendersAs(
+                new HighlightedSource(highlightRegion, focusRegion),
+                @"
+   1 | using System;
+   2 | public static class Program
+   3 | {
+   4 | 
+   5 |     public Program()
+     |     ~~~~~~ ^~~~~~~~~
+   6 |     {
+   7 | 
+   8 |     }
+   9 | 
+  10 | }",
+                new HighlightedSourceRenderer(5));
+        }
     }
 }
