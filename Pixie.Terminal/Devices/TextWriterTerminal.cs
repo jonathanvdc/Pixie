@@ -38,7 +38,23 @@ namespace Pixie.Terminal.Devices
 
         /// <summary>
         /// Creates a text writer terminal from a text writer,
-        /// a terminal width and a style manager.
+        /// a terminal width and a text encoding.
+        /// </summary>
+        /// <param name="writer">A text writer to send output to.</param>
+        /// <param name="width">The width of the output document.</param>
+        /// <param name="renderableEncoding">
+        /// The encoding that is used for determining which strings are renderable and which are not.
+        /// </param>
+        public TextWriterTerminal(
+            TextWriter writer,
+            int width,
+            Encoding renderableEncoding)
+            : this(writer, width, NoStyleManager.Instance, renderableEncoding)
+        { }
+
+        /// <summary>
+        /// Creates a text writer terminal from a text writer,
+        /// a terminal width, a style manager and a text encoding.
         /// </summary>
         /// <param name="writer">A text writer to send output to.</param>
         /// <param name="width">The width of the output document.</param>
