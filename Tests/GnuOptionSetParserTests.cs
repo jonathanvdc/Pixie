@@ -35,7 +35,7 @@ namespace Pixie.Tests
 
             var fileNames = new string[] { "file1", "file2" };
 
-            var parsedOpts = parser.Parse(fileNames, Program.GlobalLog);
+            var parsedOpts = parser.Parse(fileNames, TestEnvironment.GlobalLog);
 
             Assert.AreEqual(fileNames, parsedOpts.GetValue<string[]>(Files));
         }
@@ -57,7 +57,7 @@ namespace Pixie.Tests
 
             var args = new string[] { "file1", "-h", "file2", "-xc++", "file3" };
 
-            var parsedOpts = parser.Parse(args, Program.GlobalLog);
+            var parsedOpts = parser.Parse(args, TestEnvironment.GlobalLog);
 
             Assert.AreEqual(
                 new string[] { "file1", "file2" },
