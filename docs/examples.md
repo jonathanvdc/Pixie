@@ -23,7 +23,7 @@ Use this when you want to learn:
 
 Project: [`Examples/PrintHelp`](../Examples/PrintHelp)
 
-Use this when you want to generate polished help output directly from option definitions.
+Use this when you want to generate polished help output from the same `CommandLine` definition you use for parsing.
 
 ## ParseOptions
 
@@ -32,9 +32,10 @@ Project: [`Examples/ParseOptions`](../Examples/ParseOptions)
 Use this when you want to see:
 
 - GNU-style option parsing,
-- typed option values,
+- typed option values through `OptionParseResult`,
 - default positional argument handling,
-- user-facing parse errors and suggestions.
+- user-facing parse errors and suggestions,
+- generated `--help` / `--version` flows.
 
 Try it with:
 

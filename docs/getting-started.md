@@ -2,7 +2,7 @@
 
 Pixie is easiest to adopt when you treat it as three layers:
 
-1. `ILog` and `LogEntry` for application-facing output.
+1. `ILog` and its convenience helpers for application-facing output.
 2. Markup nodes for structured terminal content.
 3. Optional helpers for diagnostics, option parsing, and help generation.
 
@@ -28,7 +28,7 @@ In both cases, acquire a log once and reuse it throughout the application.
 
 ## Log plain messages first
 
-The smallest useful Pixie program logs a `LogEntry` with a severity and some markup:
+The smallest useful Pixie program acquires a log and writes a message:
 
 ```cs
 using Pixie;
@@ -36,12 +36,10 @@ using Pixie.Terminal;
 
 var log = TerminalLog.Acquire();
 
-log.Log(new LogEntry(
-    Severity.Info,
-    "Hello from Pixie."));
+log.Info("Hello from Pixie.");
 ```
 
-Strings automatically become markup nodes, so you can start simple and add structure later.
+Strings automatically become markup nodes, so you can start simple and add structure later. If you need full control, `log.Log(new LogEntry(...))` is still available.
 
 ## Add structure with markup nodes
 
@@ -83,26 +81,33 @@ Pixie's option parser and help output are designed to share the same definitions
 ```cs
 using Pixie.Options;
 
-var helpFlag = FlagOption.CreateFlagOption(
-    OptionForm.Short("h"),
-    OptionForm.Long("help"));
+var helpFlag = Option.Flag("-h", "--help");
+var filesOption = Option.StringSequence("--files")
+    .WithParameter("file");
 
-var filesOption = SequenceOption.CreateStringOption(
-    OptionForm.Long("files"));
-
-var parser = new GnuOptionSetParser(
+var commandLine = new CommandLine(
     new Option[] { helpFlag },
     filesOption);
 ```
 
-Once parsed, read typed values back through `OptionSet`:
+Once parsed, read typed values back through `OptionParseResult`:
 
 ```cs
+var parsedArgs = commandLine.Parse(args, log);
+
 bool showHelp = parsedArgs.GetValue<bool>(helpFlag);
 string[] files = parsedArgs.GetValue<string[]>(filesOption);
 ```
 
-The same option definitions can feed `HelpMessage`, which keeps parsing and `--help` output aligned.
+If you want the common `--help` and `--version` flow handled automatically, add it once:
+
+```cs
+var commandLine = new CommandLine(filesOption)
+    .WithHelp("Example program.", "example [files-or-options]")
+    .WithVersion("example 1.0.0");
+```
+
+The same option definitions can still feed `HelpMessage` directly when you want to generate help as markup yourself.
 
 See:
 
@@ -111,25 +116,25 @@ See:
 
 ## Decide how to handle parse failures
 
-`GnuOptionSetParser.Parse(...)` logs problems but still returns an `OptionSet`. That gives applications room to recover, continue, or abort as needed.
+`CommandLine.Parse(...)` logs problems and returns an `OptionParseResult`. That gives applications room to inspect typed values, see whether parsing succeeded, and decide whether to continue.
 
 For command-line applications, a practical pattern is:
 
 ```cs
-using Pixie;
 using Pixie.Options;
 using Pixie.Terminal;
 
-var terminalLog = TerminalLog.Acquire();
-var recordingLog = new RecordingLog(terminalLog);
+var log = TerminalLog.Acquire();
 
-var parsedArgs = parser.Parse(args, recordingLog);
+var result = commandLine.Parse(args, log);
 
-if (recordingLog.Contains(Severity.Error))
+if (!result.IsSuccess || result.WasHandled)
 {
-    return 1;
+    return result.ExitCode;
 }
 ```
+
+`WasHandled` is for parser-managed early exits such as generated help or version output. Parse failures are represented by `IsSuccess == false`.
 
 For tests or strict tooling, `TestLog` can throw when selected severities are logged.
 

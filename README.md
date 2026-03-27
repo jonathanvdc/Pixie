@@ -68,8 +68,8 @@ Use this as a quick decision guide:
 | Write regular terminal output with wrapping and layout | `TerminalLog.AcquireStandardOutput()` |
 | Write diagnostics, warnings, or help text | `TerminalLog.Acquire()` |
 | Turn ordinary log entries into compiler-style diagnostics | `log.WithDiagnostics("program")` |
-| Parse GNU-style options and read typed values back | `GnuOptionSetParser` + `OptionSet` |
-| Generate `--help` output from option definitions | `HelpMessage` |
+| Parse GNU-style options and read typed values back | `CommandLine` + `OptionParseResult` |
+| Generate `--help` output from option definitions | `CommandLine.WithHelp(...)` or `HelpMessage` |
 | Control styling, encoding, or terminal capabilities manually | `TextWriterTerminal` + `TerminalLog.Acquire(...)` |
 | Translate Loyc diagnostics into Pixie output | `PixieMessageSink` from `Pixie.Loyc` |
 
@@ -150,7 +150,7 @@ If you want standard output instead, use `TerminalLog.AcquireStandardOutput()`.
 
 ### 2. Log a message
 
-A `LogEntry` consists of a `Severity` and a `MarkupNode`. Plain strings can be used directly as markup, so the smallest useful example is:
+Plain strings can be used directly as markup, so the smallest useful example is:
 
 ```cs
 using Pixie;
@@ -161,7 +161,7 @@ var log = TerminalLog.Acquire();
 log.Error("Something went wrong.");
 ```
 
-If you want explicit markup nodes, use types from `Pixie.Markup`, such as `Text`, `Sequence`, `BulletedList`, or `HighlightedSource`.
+If you need full control, `log.Log(new LogEntry(...))` is still available. For explicit markup nodes, use types from `Pixie.Markup`, such as `Text`, `Sequence`, `BulletedList`, or `HighlightedSource`.
 
 ### 3. Parse command-line arguments
 
@@ -219,22 +219,21 @@ var portOption = Option.Value(
 
 When parsing fails, Pixie can report errors to the log and also capture them in the returned `OptionParseResult`. The same result can also tell you whether built-in help or version handling already printed output via `WasHandled`. In other words, `WasHandled` is for parser-managed early exits like help/version, not for parse failures.
 
-By design, `Parse(...)` still returns an `OptionSet`, so applications can decide how to recover. A common pattern is to capture log entries and then bail out if any errors were reported:
+`Parse(...)` returns an `OptionParseResult`, so applications can inspect typed values, see whether parsing succeeded, and decide what to do next. A common pattern is to stop when parsing failed or when Pixie already handled a built-in early-exit flow:
 
 ```cs
 using Pixie;
 using Pixie.Options;
 using Pixie.Terminal;
 
-var terminalLog = TerminalLog.Acquire();
-var recordingLog = new RecordingLog(terminalLog);
+var log = TerminalLog.Acquire();
 
-var parser = new GnuOptionSetParser(new Option[] { helpFlag }, filesOption);
-var parsedArgs = parser.Parse(args, recordingLog);
+var commandLine = new CommandLine(new Option[] { helpFlag }, filesOption);
+var parsedArgs = commandLine.Parse(args, log);
 
-if (recordingLog.Contains(Severity.Error))
+if (!parsedArgs.IsSuccess || parsedArgs.WasHandled)
 {
-    return 1;
+    return parsedArgs.ExitCode;
 }
 ```
 
