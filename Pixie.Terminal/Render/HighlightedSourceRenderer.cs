@@ -568,7 +568,70 @@ namespace Pixie.Terminal.Render
                             .TrimEnd()
                             .Replace("\t", "    ")));
             }
-            
+
+            // Trailing whitespace is normally trimmed from the visible source line,
+            // but diagnostics that point into that whitespace still need a visible
+            // caret/squiggle. Preserve a single synthetic column in that case.
+            return EnsureVisibleTrailingWhitespaceMarker(
+                spans,
+                lineText,
+                lineStartOffset,
+                highlightRegion,
+                focusRegion);
+        }
+
+        private static IReadOnlyList<HighlightedSourceSpan> EnsureVisibleTrailingWhitespaceMarker(
+            List<HighlightedSourceSpan> spans,
+            string lineText,
+            int lineStartOffset,
+            SourceRegion highlightRegion,
+            SourceRegion focusRegion)
+        {
+            int trimmedLength = lineText.TrimEnd().Length;
+            if (trimmedLength == lineText.Length)
+            {
+                return spans;
+            }
+
+            bool hasTrailingFocus = false;
+            bool hasTrailingHighlight = false;
+            for (int i = trimmedLength; i < lineText.Length; i++)
+            {
+                var kind = GetCharacterKind(
+                    lineStartOffset + i,
+                    highlightRegion,
+                    focusRegion);
+                if (kind == HighlightedSourceSpanKind.Focus)
+                {
+                    hasTrailingFocus = true;
+                }
+                else if (kind == HighlightedSourceSpanKind.Highlight)
+                {
+                    hasTrailingHighlight = true;
+                }
+            }
+
+            if (!hasTrailingFocus && !hasTrailingHighlight)
+            {
+                return spans;
+            }
+
+            // The visible line has already dropped trailing whitespace, so add a
+            // single placeholder cell at the end. This keeps whitespace-only focus
+            // regions from disappearing completely and lets the caret land at the
+            // nearest visible column.
+            while (spans.Count > 0 && spans[spans.Count - 1].Text.Length == 0)
+            {
+                spans.RemoveAt(spans.Count - 1);
+            }
+
+            spans.Add(
+                new HighlightedSourceSpan(
+                    hasTrailingFocus
+                        ? HighlightedSourceSpanKind.Focus
+                        : HighlightedSourceSpanKind.Highlight,
+                    " "));
+
             return spans;
         }
 
@@ -599,7 +662,12 @@ namespace Pixie.Terminal.Render
                 return null;
             }
 
-            var lineText = document.GetText(lineStart, lineEnd - lineStart).TrimEnd();
+            // Strip only the newline terminator here. Significant trailing spaces
+            // must remain available so whitespace-only focus/highlight regions can
+            // still produce a visible caret marker.
+            var lineText = document
+                .GetText(lineStart, lineEnd - lineStart)
+                .TrimEnd('\r', '\n');
 
             return LineToSpans(lineText, lineStart, highlightRegion, focusRegion);
         }

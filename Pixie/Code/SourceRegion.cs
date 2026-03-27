@@ -90,7 +90,7 @@ namespace Pixie.Code
             newRegion.regionIndices.UnionWith(region.regionIndices);
             newRegion.minIndex = Math.Min(region.minIndex, minIndex);
             newRegion.maxIndex = Math.Max(region.maxIndex, maxIndex);
-            return region;
+            return newRegion;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Pixie.Code
             region.regionIndices = new HashSet<int>(regionIndices);
             for (int i = 0; i < span.Length; i++)
             {
-                this.regionIndices.Add(span.Offset + i);
+                region.regionIndices.Add(span.Offset + i);
             }
             region.minIndex = Math.Min(span.Offset, minIndex);
             region.maxIndex = Math.Max(span.Offset + span.Length, maxIndex);
@@ -147,7 +147,7 @@ namespace Pixie.Code
                     }
                     if (offset > newMax)
                     {
-                        newMax = offset;
+                        newMax = offset + 1;
                     }
                     newSet.Add(offset);
                 }
