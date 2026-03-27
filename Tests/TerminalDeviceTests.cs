@@ -73,7 +73,7 @@ namespace Pixie.Tests
             terminal.Write("x");
             terminal.WriteLine();
 
-            Assert.AreEqual("\nx\n", writer.ToString());
+            Assert.AreEqual("x\n", writer.ToString());
         }
 
         [Test]

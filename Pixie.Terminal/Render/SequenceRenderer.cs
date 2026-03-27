@@ -25,6 +25,26 @@ namespace Pixie.Terminal.Render
         {
             var children = ((Sequence)node).Contents;
             int count = children.Count;
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
+
+            if (suppressLeading && count > 0)
+            {
+                state.Render(children[0]);
+                state = state.WithThemeProperty(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    false);
+                for (int i = 1; i < count; i++)
+                {
+                    state.Render(children[i]);
+                }
+                return;
+            }
+
             for (int i = 0; i < count; i++)
             {
                 state.Render(children[i]);

@@ -24,11 +24,33 @@ namespace Pixie.Terminal.Render
         public override void Render(MarkupNode node, RenderState state)
         {
             var diag = (Diagnostic)node;
-            state
+            var titlePart = Text.IsEmpty(diag.Title)
+                ? diag.Title
+                : new Sequence(diag.Title, new Text(": "));
+
+            var header =
+                new Sequence(
+                    diag.Origin,
+                    new Text(": "),
+                    new ColorSpan(
+                        new Text(diag.Kind + ": "),
+                        diag.ThemeColor),
+                    titlePart);
+
+            var bodyState = state
                 .WithThemeProperty(
                     HighlightedSourceRenderer.HighlightColorProperty,
                     diag.ThemeColor)
-                .Render(diag.Fallback);
+                .WithThemeProperty(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    true);
+
+            bodyState.Render(new DecorationSpan(header, TextDecoration.Bold));
+            if (!Text.IsEmpty(diag.Message))
+            {
+                bodyState.Terminal.WriteLine();
+            }
+            bodyState.Render(diag.Message);
         }
     }
 }

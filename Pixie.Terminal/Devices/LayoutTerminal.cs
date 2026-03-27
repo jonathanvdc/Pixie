@@ -90,6 +90,11 @@ namespace Pixie.Terminal.Devices
         /// <inheritdoc/>
         public override int Width => width;
 
+        /// <inheritdoc/>
+        public override bool HasWrittenContent =>
+            lineLength > 0
+            || UnalignedTerminal.HasWrittenContent;
+
         private List<Action<TerminalBase>> commandBuffer;
 
         private int lineLength;
@@ -149,7 +154,10 @@ namespace Pixie.Terminal.Devices
         public override void WriteLine()
         {
             Flush();
-            UnalignedTerminal.WriteLine();
+            if (HasWrittenContent)
+            {
+                UnalignedTerminal.WriteLine();
+            }
         }
 
         /// <inheritdoc/>
@@ -159,7 +167,18 @@ namespace Pixie.Terminal.Devices
             {
                 Flush();
             }
+            if (!HasWrittenContent)
+            {
+                return;
+            }
             UnalignedTerminal.WriteSeparator(lineCount);
+        }
+
+        /// <inheritdoc/>
+        public override void FinishOutput()
+        {
+            Flush();
+            UnalignedTerminal.FinishOutput();
         }
 
         /// <summary>
@@ -171,14 +190,22 @@ namespace Pixie.Terminal.Devices
         /// <param name="state">
         /// The old render state to create a new box in.
         /// </param>
+        /// <param name="writeLeadingSeparator">
+        /// Tells if the layout box should insert its usual leading separator.
+        /// </param>
         /// <returns>A new render state for a layout box.</returns>
-        public RenderState StartLayoutBox(RenderState state)
+        public RenderState StartLayoutBox(
+            RenderState state,
+            bool writeLeadingSeparator = true)
         {
             if (state.Terminal is LayoutTerminal)
             {
                 ((LayoutTerminal)state.Terminal).Flush();
             }
-            WriteSeparator(1);
+            if (writeLeadingSeparator)
+            {
+                WriteSeparator(1);
+            }
             return state.WithTerminal(this);
         }
 

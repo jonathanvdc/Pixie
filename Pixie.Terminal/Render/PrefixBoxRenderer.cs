@@ -26,10 +26,16 @@ namespace Pixie.Terminal.Render
         {
             var boxNode = (PrefixBox)node;
             var newState = state;
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
             var newTerm = LayoutTerminal.Align(
                 state.Terminal, Alignment.Left);
 
-            newState = newTerm.StartLayoutBox(state);
+            newState = newTerm.StartLayoutBox(state, !suppressLeading);
             newState.Render(boxNode.Prefix);
             int lineLength = newTerm.BufferedLineLength;
             newTerm.Flush();
