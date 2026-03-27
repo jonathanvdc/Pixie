@@ -55,7 +55,14 @@ dotnet add package Pixie.Loyc
 
 ### Caret diagnostics
 
-Pixie has built-in support for caret diagnostics. It can highlight a source region, emphasize the most relevant span, and render line numbers with surrounding context.
+Pixie has built-in support for compiler-style diagnostics. In Pixie, a diagnostic is a message with:
+
+* an origin, such as a file location or application name,
+* a kind, such as `error` or `warning`,
+* a short title, and
+* an optional body with extra context, such as highlighted source code.
+
+That means Pixie can render both the diagnostic header, like `code.cs:3:5: error: expected token`, and the caret-highlighted snippet underneath it.
 
 ![Diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/caret.svg)
 
@@ -190,6 +197,13 @@ To see a more complete example, check [Examples/PrintHelp/Program.cs](Examples/P
 
 Pixie's diagnostic model is especially useful when you already know the source span you want to highlight.
 
+There are two layers here:
+
+* `HighlightedSource` renders a code snippet with line numbers and caret/squiggle markers.
+* `WithDiagnostics(...)` wraps log entries as full diagnostics so they also get a header like `code.cs:3:5: error: Expected constructor name`.
+
+In practice, most applications want both, so the usual setup is to enable diagnostics once on the log and then log `HighlightedSource` nodes normally.
+
 ```cs
 using Pixie;
 using Pixie.Code;
@@ -197,7 +211,7 @@ using Pixie.Markup;
 using Pixie.Terminal;
 using Pixie.Transforms;
 
-var log = TerminalLog.Acquire();
+var log = TerminalLog.Acquire().WithDiagnostics("program");
 
 const string source = "public static class Program\n{\n    public Program()\n    { }\n}";
 var document = new StringDocument("code.cs", source);
@@ -206,17 +220,15 @@ var nameOffset = source.IndexOf("Program()");
 var focusRegion = new SourceRegion(
     new SourceSpan(document, nameOffset, "Program".Length));
 
-var entry = new LogEntry(
+log.Log(new LogEntry(
     Severity.Error,
     "Expected constructor name",
-    new HighlightedSource(focusRegion, focusRegion));
-
-log.Log(DiagnosticExtractor.Transform(entry, new Text("program")));
+    new HighlightedSource(focusRegion, focusRegion)));
 ```
 
-`HighlightedSource` renders the numbered source snippet and caret highlight. The `code.cs:line:column: error: ...` header is added by `DiagnosticExtractor.Transform(...)`, which wraps the entry in a diagnostic using the highlighted source span as the origin.
+This works because `log.WithDiagnostics("program")` converts each `LogEntry` into a diagnostic before rendering it. When the entry contains a `HighlightedSource`, Pixie uses that source span as the diagnostic origin, which is what makes the filename and line/column information appear in the header.
 
-If you log a raw `LogEntry` with `new HighlightedSource(...)`, Pixie will render the snippet but not the document identifier header.
+If you log a raw `LogEntry` with `new HighlightedSource(...)` but do not wrap the log with `WithDiagnostics(...)`, Pixie will still render the snippet and caret, but it will not render the `code.cs:line:column: error: ...` header.
 
 For a fuller version with transforms and custom renderer configuration, see [Examples/CaretDiagnostics/Program.cs](Examples/CaretDiagnostics/Program.cs).
 
