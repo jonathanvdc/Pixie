@@ -10,6 +10,14 @@ namespace Pixie.Terminal.Devices
     /// </summary>
     public class TextWriterTerminal : OutputTerminalBase
     {
+        private static Func<string> terminalIdentifierProvider =
+            () => Environment.GetEnvironmentVariable("TERM");
+
+        private static Func<bool> windowsIsOSProvider = WindowsIsOSImpl;
+
+        private static Func<int> consoleBufferWidthProvider =
+            () => Console.BufferWidth;
+
         /// <summary>
         /// Creates a text writer terminal from a text writer
         /// and a terminal width.
@@ -298,7 +306,7 @@ namespace Pixie.Terminal.Devices
         /// </summary>
         /// <returns>A terminal identifier.</returns>
         public static string EnvironmentTerminalIdentifier =>
-            Environment.GetEnvironmentVariable("TERM");
+            terminalIdentifierProvider();
 
         private static bool IsAnsiTerminalIdentifier(string identifier)
         {
@@ -313,6 +321,11 @@ namespace Pixie.Terminal.Devices
         }
 
         private static bool WindowsIsOS()
+        {
+            return windowsIsOSProvider();
+        }
+
+        private static bool WindowsIsOSImpl()
         {
             var platformId = Environment.OSVersion.Platform;
             switch (platformId)
@@ -332,10 +345,15 @@ namespace Pixie.Terminal.Devices
 
         private static int GetTerminalWidth()
         {
+            return GetTerminalWidthImpl();
+        }
+
+        private static int GetTerminalWidthImpl()
+        {
             int result = 0;
             try
             {
-                result = Console.BufferWidth;
+                result = consoleBufferWidthProvider();
             }
             catch (Exception)
             {

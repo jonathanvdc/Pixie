@@ -54,6 +54,7 @@ namespace Pixie.Code
                 {
                     var readCount = Math.Min(offset, bufSize);
                     reader.Read(buffer, 0, readCount);
+                    offset -= readCount;
                 }
             }
             return reader;

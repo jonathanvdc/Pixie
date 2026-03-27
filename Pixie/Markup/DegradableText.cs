@@ -52,7 +52,7 @@ namespace Pixie.Markup
             if (newFallback == fallbackNode)
                 return this;
             else
-                return new DegradableText(Contents, fallbackNode);
+                return new DegradableText(Contents, newFallback);
         }
     }
 }
