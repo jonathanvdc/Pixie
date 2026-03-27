@@ -50,9 +50,8 @@ build/
 [Bb]in/
 [Oo]bj/
 
-# MSTest test Results
+# Test results
 [Tt]est[Rr]esult*/
-TestResult.xml
 [Bb]uild[Ll]og.*
 
 *_i.c
@@ -218,9 +217,6 @@ pip-log.txt
 
 # MonoDevelop
 *.userprefs
-
-# NUnit test results
-TestResult.xml
 
 # NuGet packages
 packages/

@@ -1,7 +1,7 @@
 version: 0.1.9.{build}
 
 image:
-  - Visual Studio 2017
+  - Visual Studio 2022
 
 dotnet_csproj:
   patch: true
@@ -19,10 +19,9 @@ build_script:
   - set /p PKG_VERSION=<pkg-version.txt
   - echo %PKG_VERSION%
 
-  # Restore NuGet packages.
-  - nuget restore Pixie.sln
-  # Build Pixie with csc.
-  - msbuild /p:Configuration=Release /verbosity:quiet /nologo Pixie.sln
+  # Restore and build with the SDK used by global.json.
+  - dotnet restore Pixie.sln
+  - dotnet build Pixie.sln --configuration Release --no-restore
 
 after_build:
   # Create the NuGet packages.
@@ -39,7 +38,7 @@ test_script:
   - Examples\SimpleErrorMessage\bin\Release\net45\SimpleErrorMessage.exe
 
   # Run tests.
-  - Tests\bin\Release\net45\Tests.exe
+  - dotnet test Tests\Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx"
 
 artifacts:
   - path: '*.nupkg'

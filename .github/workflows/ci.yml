@@ -27,11 +27,13 @@ jobs:
         run: dotnet build Pixie.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet Tests/bin/Release/net10.0/Tests.dll "--result=TestResult.xml;format=nunit3"
+        run: dotnet test Tests/Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx" --collect:"XPlat Code Coverage"
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: TestResult.xml
+          path: |
+            Tests/TestResults/**/*.trx
+            Tests/TestResults/**/coverage.cobertura.xml
