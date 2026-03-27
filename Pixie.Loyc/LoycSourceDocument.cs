@@ -39,7 +39,7 @@ namespace Pixie.Loyc
         public override GridPosition GetGridPosition(int offset)
         {
             var linePos = source.IndexToLine(offset);
-            return new GridPosition(linePos.Line - 1, linePos.PosInLine - 1);
+            return new GridPosition(linePos.Line - 1, linePos.Column - 1);
         }
 
         /// <inheritdoc/>
@@ -67,4 +67,3 @@ namespace Pixie.Loyc
         }
     }
 }
-

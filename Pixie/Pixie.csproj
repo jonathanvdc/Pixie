@@ -7,6 +7,18 @@
     <AssemblyName>Pixie</AssemblyName>
     <Version>1.0</Version>
     <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <PackageId>Pixie</PackageId>
+    <Authors>Jonathan Van der Cruysse</Authors>
+    <PackageProjectUrl>https://github.com/jonathanvdc/Pixie</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jonathanvdc/Pixie</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Pixie is a C# library that prints beautifully formatted output to the console. You describe your layout using a high-level API and Pixie turns it into neatly-formatted text.</Description>
+    <PackageTags>terminal;console;output;formatting</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeTerminalAssembly</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,4 +39,19 @@
     <ConsolePause>false</ConsolePause>
     <DocumentationFile>bin\Release\Pixie.xml</DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <Target Name="IncludeTerminalAssembly">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(MSBuildThisFileDirectory)..\Pixie.Terminal\bin\$(Configuration)\$(TargetFramework)\Pixie.Terminal.dll">
+        <TargetPath>Pixie.Terminal.dll</TargetPath>
+      </BuildOutputInPackage>
+      <BuildOutputInPackage Include="$(MSBuildThisFileDirectory)..\Pixie.Terminal\bin\$(Configuration)\$(TargetFramework)\Pixie.Terminal.xml"
+                            Condition="Exists('$(MSBuildThisFileDirectory)..\Pixie.Terminal\bin\$(Configuration)\$(TargetFramework)\Pixie.Terminal.xml')">
+        <TargetPath>Pixie.Terminal.xml</TargetPath>
+      </BuildOutputInPackage>
+    </ItemGroup>
+  </Target>
 </Project>
