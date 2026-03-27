@@ -8,6 +8,31 @@ namespace Pixie.Transforms
     public static class LogExtensions
     {
         /// <summary>
+        /// Wraps a log so that every entry is first transformed before
+        /// being forwarded to the underlying log.
+        /// </summary>
+        /// <param name="log">The log to wrap.</param>
+        /// <param name="transform">The transform to apply to each entry.</param>
+        /// <returns>A log that applies the requested transform.</returns>
+        public static ILog WithTransform(
+            this ILog log,
+            System.Func<LogEntry, LogEntry> transform)
+        {
+            return new TransformLog(log, transform);
+        }
+
+        /// <summary>
+        /// Wraps a log so that every entry's contents are passed through
+        /// <see cref="WrapBox.WordWrap(MarkupNode)"/> before rendering.
+        /// </summary>
+        /// <param name="log">The log to wrap.</param>
+        /// <returns>A log that word-wraps each entry.</returns>
+        public static ILog WithWordWrap(this ILog log)
+        {
+            return log.WithTransform(entry => entry.Map(WrapBox.WordWrap));
+        }
+
+        /// <summary>
         /// Wraps a log so that every entry is first converted to a
         /// compiler-style diagnostic.
         /// This is the easiest way to get headers such as
@@ -28,8 +53,7 @@ namespace Pixie.Transforms
         /// <returns>A log that emits diagnostic-formatted entries.</returns>
         public static ILog WithDiagnostics(this ILog log, MarkupNode defaultOrigin)
         {
-            return new TransformLog(
-                log,
+            return log.WithTransform(
                 entry => DiagnosticExtractor.Transform(entry, defaultOrigin));
         }
 

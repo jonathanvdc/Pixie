@@ -33,16 +33,14 @@ namespace SimpleErrorMessage
                 });
 
             // Log an error diagnostic.
-            log.Log(
-                new LogEntry(
-                    Severity.Error,
-                    WrapBox.WordWrap(
-                        new Diagnostic(
-                            "mcs",
-                            "error",
-                            Colors.Red,
-                            "CS5001",
-                            message))));
+            log.Error(
+                WrapBox.WordWrap(
+                    new Diagnostic(
+                        "mcs",
+                        "error",
+                        Colors.Red,
+                        "CS5001",
+                        message)));
         }
     }
 }

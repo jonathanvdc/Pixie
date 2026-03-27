@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace ParseOptions
 
         // This option is a simple flag. It takes no arguments.
         private static readonly FlagOption optimizeFastFlag =
-            new FlagOption(OptionForm.Short("Ofast"))
+            Option.Flag("-Ofast")
             .WithCategory("Optimization options")
             .WithDescription("Enable aggressive optimizations.");
 
@@ -24,54 +25,40 @@ namespace ParseOptions
         // different forms:
         //     -h and --help.
         private static readonly FlagOption helpFlag =
-            FlagOption.CreateFlagOption(
-                new OptionForm[]
-                {
-                    OptionForm.Short("h"),
-                    OptionForm.Long("help")
-                })
+            Option.Flag("-h", "--help")
             .WithDescription(
                 "Print a description of the options understood.");
 
         // This option has both a positive and a negative form:
         //     -fsyntax-only and -fno-syntax-only.
         private static readonly FlagOption syntaxOnlyFlag =
-            new FlagOption(
-                OptionForm.Short("fsyntax-only"),
-                OptionForm.Short("fno-syntax-only"),
-                false)
+            Option.Toggle(
+                "-fsyntax-only",
+                "-fno-syntax-only")
             .WithDescription("Check the code for syntax errors only.");
 
         // This option takes zero or more strings as arguments.
         private static readonly SequenceOption<string> filesOption =
-            SequenceOption.CreateStringOption(
-                OptionForm.Long("files"))
+            Option.StringSequence("--files")
             .WithDescription("Consume files as input.")
-            .WithParameters(
-                new OptionParameter[]
-                {
-                    new SymbolicOptionParameter("file", true)
-                });
+            .WithParameter("file");
 
         // This option takes a 32-bit signed integer as argument.
         private static readonly ValueOption<int> optimizeOption =
-            ValueOption.CreateInt32Option(
-                OptionForm.Short("O"),
-                0)
+            Option.Int32WithDefault(
+                0,
+                "-O")
             .WithCategory("Optimization options")
             .WithDescription("Pick an optimization level.")
-            .WithParameter(new SymbolicOptionParameter("n"));
+            .WithParameter("n");
 
         // This option takes a 32-bit signed integer as argument.
         // It also happens to have two forms.
         private static readonly ValueOption<int> maxErrorsOption =
-            ValueOption.CreateInt32Option(
-                new OptionForm[]
-                {
-                    OptionForm.Short("fmax-errors"),
-                    OptionForm.Short("ferror-limit")
-                },
-                0)
+            Option.Int32WithDefault(
+                0,
+                "-fmax-errors",
+                "-ferror-limit")
             .WithDescription(
                 new Sequence(
                     new MarkupNode[]
@@ -80,22 +67,15 @@ namespace ParseOptions
                         new SymbolicOptionParameter("n").Representation,
                         "."
                     }))
-            .WithParameter(new SymbolicOptionParameter("n"));
-
-        private static OptionSet parsedOptions;
-
+            .WithParameter("n");
         public static void Main(string[] args)
         {
             // First, acquire a terminal log. You should acquire
             // a log once and then re-use it in your application.
-            ILog log = TerminalLog.Acquire();
-
-            log = new TransformLog(
-                log,
-                new Func<LogEntry, LogEntry>[]
-                {
-                    MakeDiagnostic
-                });
+            ILog log = TerminalLog
+                .Acquire()
+                .WithDiagnostics("program")
+                .WithWordWrap();
 
             var allOptions = new Option[]
             {
@@ -107,64 +87,87 @@ namespace ParseOptions
                 maxErrorsOption
             };
 
-            var parser = new GnuOptionSetParser(
+            // `filesOption` plays two roles in this example:
+            // it can be spelled explicitly as `--files`,
+            // and it is also the option that should consume bare
+            // positional arguments such as `a.txt`.
+            //
+            // The third constructor argument picks the form Pixie should
+            // mention when it needs to describe that positional behavior
+            // in help or diagnostics.
+            var commandLine = new CommandLine(
                 allOptions, filesOption, filesOption.Forms[0]);
 
-            parsedOptions = parser.Parse(args, log);
+            var parsedOptions = commandLine.Parse(args, log);
+
+            if (!parsedOptions.IsSuccess || parsedOptions.WasHandled)
+            {
+                return;
+            }
 
             if (!parsedOptions.GetValue<bool>(syntaxOnlyFlag))
             {
-                log.Log(
-                    new LogEntry(
-                        Severity.Info,
-                        new BulletedList(
-                            allOptions
-                                .Select<Option, MarkupNode>(TypesetParsedOption)
-                                .ToArray<MarkupNode>(),
-                            true)));
+                log.Info(RenderParsedOptions(allOptions, parsedOptions));
             }
         }
 
-        private static MarkupNode TypesetParsedOption(Option opt)
+        private static MarkupNode RenderParsedOptions(
+            IReadOnlyList<Option> options,
+            OptionParseResult parsedOptions)
         {
-            return new Sequence(
-                new MarkupNode[]
-                {
-                    new DecorationSpan(new Text(opt.Forms[0].ToString()), TextDecoration.Bold),
-                    new Text(": "),
-                    new Text(ValueToString(parsedOptions.GetValue<object>(opt)))
-                });
+            return new BulletedList(
+                options
+                    .Select(opt => RenderParsedOption(opt, parsedOptions))
+                    .ToArray(),
+                true);
         }
 
-        private static string ValueToString(object value)
+        private static MarkupNode RenderParsedOption(
+            Option opt,
+            OptionParseResult parsedOptions)
         {
-            if (value is IReadOnlyList<object>)
+            // Pixie can accept many forms for the same option, such as
+            // `-h` and `--help`.
+            //
+            // For this little report, we print the option's first form as
+            // its canonical display name. That keeps the output stable and
+            // makes it obvious which spelling the example treats as the
+            // primary one, even though the parser still accepts the others.
+            return new Sequence(
+                DecorationSpan.MakeBold(opt.Forms[0].ToString()),
+                ": ",
+                ValueToMarkup(parsedOptions.GetValue<object>(opt)));
+        }
+
+        private static MarkupNode ValueToMarkup(object value)
+        {
+            // Sequence options come back as enumerable values, so format them
+            // as `{ a, b, c }` to make it clear that multiple arguments were
+            // gathered into one parsed option value.
+            if (value is IEnumerable sequence && !(value is string))
             {
                 var sb = new StringBuilder();
                 sb.Append("{ ");
-                var arr = (IReadOnlyList<object>)value;
-                for (int i = 0; i < arr.Count; i++)
+                bool first = true;
+                foreach (var element in sequence)
                 {
-                    if (i > 0)
+                    if (!first)
                     {
                         sb.Append(", ");
                     }
-                    sb.Append(ValueToString(arr[i]));
+                    sb.Append(ValueToText(element));
+                    first = false;
                 }
                 sb.Append(" }");
-                return sb.ToString();
+                return new Text(sb.ToString());
             }
-            else
-            {
-                return value.ToString();
-            }
+
+            return new Text(ValueToText(value));
         }
 
-        private static LogEntry MakeDiagnostic(LogEntry entry)
+        private static string ValueToText(object value)
         {
-            return DiagnosticExtractor
-                .Transform(entry, new Text("program"))
-                .Map(WrapBox.WordWrap);
+            return value == null ? "" : value.ToString();
         }
     }
 }
