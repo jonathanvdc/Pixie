@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Pixie.Transforms;
 
 namespace Pixie.Tests
 {
@@ -30,6 +31,18 @@ namespace Pixie.Tests
 
             StringAssert.Contains("first", RenderTests.Render(sink.RecordedEntries[0].Contents));
             StringAssert.Contains("second", RenderTests.Render(sink.RecordedEntries[0].Contents));
+        }
+
+        [Test]
+        public void WithDiagnosticsWrapsEntriesInDiagnosticTransform()
+        {
+            var sink = new RecordingLog();
+            var log = sink.WithDiagnostics("program");
+
+            log.Log(new LogEntry(Severity.Error, "oops"));
+
+            var rendered = RenderTests.Render(sink.RecordedEntries[0].Contents);
+            StringAssert.Contains("program: error: oops", rendered);
         }
     }
 }

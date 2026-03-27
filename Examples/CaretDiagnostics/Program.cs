@@ -32,12 +32,7 @@ namespace CaretDiagnostics
                     new HighlightedSourceRenderer(5)
                 });
 
-            log = new TransformLog(
-                log,
-                new Func<LogEntry, LogEntry>[]
-                {
-                    MakeDiagnostic
-                });
+            log = log.WithDiagnostics("program");
 
             var doc = new StringDocument("code.cs", SourceCode);
             var ctorStartOffset = SourceCode.IndexOf("public Program()");
@@ -62,13 +57,6 @@ namespace CaretDiagnostics
                         new HighlightedSource(highlightRegion, focusRegion)
                     }));
         }
-
-
-        private static LogEntry MakeDiagnostic(LogEntry entry)
-        {
-            return DiagnosticExtractor.Transform(entry, new Text("program"));
-        }
-
         private const string SourceCode = @"public static class Program
 {
     public Program()
