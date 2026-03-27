@@ -114,5 +114,49 @@ namespace Pixie.Options
         {
             return new OptionForm(name, false);
         }
+
+        /// <summary>
+        /// Parses an option form from its command-line spelling.
+        /// </summary>
+        /// <param name="text">
+        /// The option form as it appears on the command line,
+        /// for example <c>-h</c> or <c>--help</c>.
+        /// </param>
+        /// <returns>The parsed option form.</returns>
+        public static OptionForm Parse(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentException(
+                    "Option forms cannot be null or empty.",
+                    nameof(text));
+            }
+
+            if (text.StartsWith("--"))
+            {
+                if (text.Length <= 2)
+                {
+                    throw new ArgumentException(
+                        "Long option forms must include a name after '--'.",
+                        nameof(text));
+                }
+                return Long(text.Substring(2));
+            }
+
+            if (text.StartsWith("-"))
+            {
+                if (text.Length <= 1)
+                {
+                    throw new ArgumentException(
+                        "Short option forms must include a name after '-'.",
+                        nameof(text));
+                }
+                return Short(text.Substring(1));
+            }
+
+            throw new ArgumentException(
+                "Option forms must start with '-' or '--'.",
+                nameof(text));
+        }
     }
 }

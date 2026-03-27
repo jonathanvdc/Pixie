@@ -130,6 +130,29 @@ namespace Pixie.Options
             return WithParameters((IReadOnlyList<OptionParameter>)parameters);
         }
 
+        /// <summary>
+        /// Creates a copy of this option that has a single symbolic parameter.
+        /// </summary>
+        /// <param name="name">The parameter's display name.</param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithParameter(string name)
+        {
+            return WithParameters(new SymbolicOptionParameter(name, true));
+        }
+
+        /// <summary>
+        /// Creates a copy of this option that has a single symbolic parameter.
+        /// </summary>
+        /// <param name="name">The parameter's display name.</param>
+        /// <param name="isVarargs">
+        /// Tells if the parameter can take more than one argument.
+        /// </param>
+        /// <returns>An option.</returns>
+        public SequenceOption<T> WithParameter(string name, bool isVarargs)
+        {
+            return WithParameters(new SymbolicOptionParameter(name, isVarargs));
+        }
+
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => forms;
 
@@ -166,6 +189,34 @@ namespace Pixie.Options
     /// </summary>
     public static class SequenceOption
     {
+        /// <summary>
+        /// Creates a typed sequence option that takes a single form.
+        /// </summary>
+        /// <typeparam name="T">The parsed element type.</typeparam>
+        /// <param name="form">The option's form.</param>
+        /// <param name="parseArgument">A function that parses each argument.</param>
+        /// <returns>A typed sequence option.</returns>
+        public static SequenceOption<T> CreateOption<T>(
+            OptionForm form,
+            Func<OptionForm, string, ILog, T> parseArgument)
+        {
+            return new SequenceOption<T>(form, parseArgument);
+        }
+
+        /// <summary>
+        /// Creates a typed sequence option that takes a list of forms.
+        /// </summary>
+        /// <typeparam name="T">The parsed element type.</typeparam>
+        /// <param name="forms">The option's forms.</param>
+        /// <param name="parseArgument">A function that parses each argument.</param>
+        /// <returns>A typed sequence option.</returns>
+        public static SequenceOption<T> CreateOption<T>(
+            IReadOnlyList<OptionForm> forms,
+            Func<OptionForm, string, ILog, T> parseArgument)
+        {
+            return new SequenceOption<T>(forms, parseArgument);
+        }
+
         /// <summary>
         /// Creates a string-sequence option that takes a single form.
         /// </summary>
