@@ -195,6 +195,7 @@ using Pixie;
 using Pixie.Code;
 using Pixie.Markup;
 using Pixie.Terminal;
+using Pixie.Transforms;
 
 var log = TerminalLog.Acquire();
 
@@ -205,10 +206,17 @@ var nameOffset = source.IndexOf("Program()");
 var focusRegion = new SourceRegion(
     new SourceSpan(document, nameOffset, "Program".Length));
 
-log.Log(new LogEntry(
+var entry = new LogEntry(
     Severity.Error,
-    new HighlightedSource(focusRegion, focusRegion)));
+    "Expected constructor name",
+    new HighlightedSource(focusRegion, focusRegion));
+
+log.Log(DiagnosticExtractor.Transform(entry, new Text("program")));
 ```
+
+`HighlightedSource` renders the numbered source snippet and caret highlight. The `code.cs:line:column: error: ...` header is added by `DiagnosticExtractor.Transform(...)`, which wraps the entry in a diagnostic using the highlighted source span as the origin.
+
+If you log a raw `LogEntry` with `new HighlightedSource(...)`, Pixie will render the snippet but not the document identifier header.
 
 For a fuller version with transforms and custom renderer configuration, see [Examples/CaretDiagnostics/Program.cs](Examples/CaretDiagnostics/Program.cs).
 

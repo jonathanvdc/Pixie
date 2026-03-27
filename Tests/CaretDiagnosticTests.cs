@@ -36,6 +36,20 @@ namespace Pixie.Tests
             return writer.ToString();
         }
 
+        private static string RenderEntry(
+            LogEntry entry,
+            int terminalWidth,
+            int contextLineCount)
+        {
+            var writer = new StringWriter();
+            var terminal = new TextWriterTerminal(writer, terminalWidth, Encoding.ASCII);
+            var log = new TerminalLog(terminal).WithRenderers(
+                DiagnosticRenderer.Instance,
+                new HighlightedSourceRenderer(contextLineCount));
+            log.Log(entry);
+            return writer.ToString();
+        }
+
         [Test]
         public void CaretDiagnosticRendersHeaderMessageAndCaretSnippet()
         {
@@ -67,6 +81,45 @@ namespace Pixie.Tests
             StringAssert.Contains("~", rendered);
             StringAssert.Contains("^", rendered);
             StringAssert.Contains("4 |     { }", rendered);
+        }
+
+        [Test]
+        public void RawHighlightedSourceLogEntryDoesNotRenderDocumentIdentifierHeader()
+        {
+            const string source = "<{%>";
+            var doc = new StringDocument("code.eol", source);
+            var errOffset = source.IndexOf("%", StringComparison.InvariantCulture);
+            var highlightRegion = new SourceRegion(new SourceSpan(doc, errOffset, 1));
+            var entry = new LogEntry(
+                Severity.Error,
+                new Text("Expected ending curly"),
+                new HighlightedSource(highlightRegion));
+
+            var rendered = RenderEntry(entry, 80, 1);
+
+            Assert.IsFalse(rendered.Contains("code.eol"));
+            StringAssert.Contains("Expected ending curly", rendered);
+            StringAssert.Contains("1 | <{%>", rendered);
+            StringAssert.Contains("^", rendered);
+        }
+
+        [Test]
+        public void DiagnosticTransformAddsDocumentIdentifierHeaderForHighlightedSource()
+        {
+            const string source = "<{%>";
+            var doc = new StringDocument("code.eol", source);
+            var errOffset = source.IndexOf("%", StringComparison.InvariantCulture);
+            var highlightRegion = new SourceRegion(new SourceSpan(doc, errOffset, 1));
+            var entry = new LogEntry(
+                Severity.Error,
+                "Expected ending curly",
+                new HighlightedSource(highlightRegion));
+
+            var rendered = RenderDiagnostic(entry, 80, 1);
+
+            StringAssert.Contains("code.eol:1:3: error: Expected ending curly:", rendered);
+            StringAssert.Contains("1 | <{%>", rendered);
+            StringAssert.Contains("^", rendered);
         }
 
         [Test]

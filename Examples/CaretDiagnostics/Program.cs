@@ -22,6 +22,9 @@ namespace CaretDiagnostics
             //
             // After that, we'll add a transformation to the log
             // that turns all log entries into diagnostics.
+            // This is what adds the "code.cs:line:column: error: ..."
+            // header. HighlightedSource on its own only renders
+            // the source snippet and caret markers.
             ILog log = TerminalLog
                 .Acquire()
                 .WithRenderers(new NodeRenderer[]
