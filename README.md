@@ -57,19 +57,19 @@ dotnet add package Pixie.Loyc
 
 Pixie has built-in support for caret diagnostics. It can highlight a source region, emphasize the most relevant span, and render line numbers with surrounding context.
 
-![Diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/caret.svg)
+![Diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/caret.svg)
 
 ### Argument parsing with feedback
 
 Pixie can parse GNU-style command-line options and report mistakes in a user-friendly way, including usage guidance and option name suggestions.
 
-![Option parsing feedback](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/option-parsing-feedback.svg)
+![Option parsing feedback](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/option-parsing-feedback.svg)
 
 ### Help messages
 
 Pixie can generate help output from the same option definitions you use for parsing, so parsing and documentation stay in sync.
 
-![Help message](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/help-message.svg)
+![Help message](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/help-message.svg)
 
 ### Graceful terminal degradation
 
@@ -77,11 +77,11 @@ Pixie tries to produce the nicest output your terminal can handle. When Unicode 
 
 Unicode-rich rendering:
 
-![Fancy bullets](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/degradation-fancy.svg)
+![Fancy bullets](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/degradation-fancy.svg)
 
 Simpler fallback rendering:
 
-![Simple bullets](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/degradation-simple.svg)
+![Simple bullets](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/degradation-simple.svg)
 
 ### Readable layout
 
@@ -89,17 +89,17 @@ Pixie supports alignment, wrapping, and reusable markup nodes for common CLI out
 
 Without careful layout, terminal messages can become awkward:
 
-![Sad line break](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/sad-line-break.svg)
+![Sad line break](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/sad-line-break.svg)
 
 With Pixie, the same message can be wrapped and structured more cleanly:
 
-![Happy line break](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/happy-line-break.svg)
+![Happy line break](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/happy-line-break.svg)
 
 ### Loyc interoperability
 
 If you use Loyc libraries such as EC# or LeMP, `Pixie.Loyc` can translate their diagnostics into Pixie markup so they render consistently with the rest of your application output.
 
-![Loyc diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/main/docs/img/loyc-interop.svg)
+![Loyc diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/loyc-interop.svg)
 
 ## Getting started
 
