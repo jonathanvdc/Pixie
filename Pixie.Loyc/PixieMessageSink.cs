@@ -110,9 +110,9 @@ namespace Pixie.Loyc
             {
                 return FormatContext(((LNode)context).Range);
             }
-            else if (context is IHasLocation)
+            else if (context is ILocation)
             {
-                return FormatContext(((IHasLocation)context).Location);
+                return FormatContext(((ILocation)context).Location);
             }
             else if (context is SourcePos)
             {
@@ -134,7 +134,7 @@ namespace Pixie.Loyc
                     // OTOH, we're not even use if the message we're
                     // generating is a diagnostic.
                     return "At " + pos.FileName + ":" + pos.Line +
-                        ":" + pos.PosInLine + ".";
+                        ":" + pos.Column + ".";
                 }
             }
             else if (context == null)
@@ -160,7 +160,7 @@ namespace Pixie.Loyc
             if (DocumentCache.TryGetDocument(pos.FileName, out document))
             {
                 int lineOffset = document.GetLineOffset(pos.Line - 1);
-                int offset = lineOffset + pos.PosInLine - 1;
+                int offset = lineOffset + pos.Column - 1;
                 result = new SourceRegion(new SourceSpan(document, offset, 1));
                 return true;
             }

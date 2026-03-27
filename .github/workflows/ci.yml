@@ -5,11 +5,17 @@ on:
     branches:
       - main
       - master
+    tags:
+      - "*"
   pull_request:
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      DOTNET_NOLOGO: true
 
     steps:
       - name: Check out repository
@@ -20,11 +26,31 @@ jobs:
         with:
           global-json-file: global.json
 
+      - name: Compute package version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="1.0.0-ci.${GITHUB_RUN_NUMBER}"
+          fi
+          echo "PACKAGE_VERSION=${version}" >> "${GITHUB_ENV}"
+
       - name: Restore
         run: dotnet restore Pixie.sln
 
       - name: Build
-        run: dotnet build Pixie.sln --configuration Release --no-restore
+        run: dotnet build Pixie.sln --configuration Release --no-restore -p:Version=${{ env.PACKAGE_VERSION }}
+
+      - name: Run examples
+        shell: bash
+        run: |
+          dotnet ./Examples/CaretDiagnostics/bin/Release/net10.0/CaretDiagnostics.dll
+          dotnet ./Examples/FormattedList/bin/Release/net10.0/FormattedList.dll
+          dotnet ./Examples/LoycInterop/bin/Release/net10.0/LoycInterop.dll
+          dotnet ./Examples/ParseOptions/bin/Release/net10.0/ParseOptions.dll a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
+          dotnet ./Examples/PrintHelp/bin/Release/net10.0/PrintHelp.dll
+          dotnet ./Examples/SimpleErrorMessage/bin/Release/net10.0/SimpleErrorMessage.dll
 
       - name: Run tests
         run: dotnet test Tests/Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=TestResults.trx" --collect:"XPlat Code Coverage"
@@ -37,3 +63,31 @@ jobs:
           path: |
             Tests/TestResults/**/*.trx
             Tests/TestResults/**/coverage.cobertura.xml
+
+      - name: Pack NuGet packages
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          dotnet pack Pixie/Pixie.csproj --configuration Release --no-build --output ./artifacts/packages -p:PackageVersion=${{ env.PACKAGE_VERSION }}
+          dotnet pack Pixie.Loyc/Pixie.Loyc.csproj --configuration Release --no-build --output ./artifacts/packages -p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      - name: Upload packages
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: |
+            artifacts/packages/*.nupkg
+
+      - name: Publish to NuGet
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [[ -z "${NUGET_API_KEY}" ]]; then
+            echo "NUGET_API_KEY secret is not configured." >&2
+            exit 1
+          fi
+          dotnet nuget push "artifacts/packages/*.nupkg" \
+            --api-key "${NUGET_API_KEY}" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --skip-duplicate
