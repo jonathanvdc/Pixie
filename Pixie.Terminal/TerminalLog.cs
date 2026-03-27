@@ -87,6 +87,13 @@ namespace Pixie.Terminal
         /// Acquires a terminal log for the current environment.
         /// The terminal's output is sent to standard error.
         /// </summary>
+        /// <remarks>
+        /// This is the usual entry point for diagnostics, warnings, help text,
+        /// and other CLI feedback that should not be mixed with standard
+        /// program output.
+        /// Use <see cref="AcquireStandardOutput()"/> when the log should write
+        /// to standard output instead.
+        /// </remarks>
         /// <returns>A terminal log.</returns>
         public static TerminalLog Acquire()
         {
@@ -134,6 +141,10 @@ namespace Pixie.Terminal
         /// Acquires a terminal log for the current environment.
         /// The terminal's output is sent to standard output.
         /// </summary>
+        /// <remarks>
+        /// Prefer this over <see cref="Acquire()"/> when the log is used for
+        /// regular application output rather than diagnostics.
+        /// </remarks>
         /// <returns>A terminal log.</returns>
         public static TerminalLog AcquireStandardOutput()
         {

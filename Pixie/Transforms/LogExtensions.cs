@@ -15,6 +15,11 @@ namespace Pixie.Transforms
         /// <see cref="DiagnosticExtractor.Transform(LogEntry, MarkupNode)"/>
         /// at each call site.
         /// </summary>
+        /// <remarks>
+        /// This is typically combined with <c>TerminalLog.Acquire()</c> once at
+        /// application startup, after which callers can log ordinary
+        /// <see cref="LogEntry"/> values and still get diagnostic headers.
+        /// </remarks>
         /// <param name="log">The log to wrap.</param>
         /// <param name="defaultOrigin">
         /// The fallback origin to use when a log entry does not already
@@ -32,6 +37,10 @@ namespace Pixie.Transforms
         /// Wraps a log so that every entry is first converted to a
         /// compiler-style diagnostic.
         /// </summary>
+        /// <remarks>
+        /// This overload is a convenience for simple applications that want a
+        /// plain-text fallback origin such as an executable name.
+        /// </remarks>
         /// <param name="log">The log to wrap.</param>
         /// <param name="defaultOrigin">
         /// The fallback origin to use when a log entry does not already

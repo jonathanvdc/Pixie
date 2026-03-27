@@ -122,6 +122,12 @@ namespace Pixie.Options
         internal Lazy<string[]> allForms;
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// Parsing problems are reported to <paramref name="log"/>, but this
+        /// method still returns an <see cref="OptionSet"/> so callers can choose
+        /// whether to recover, continue with defaults, or abort based on the
+        /// logged severities.
+        /// </remarks>
         public override OptionSet Parse(
             IReadOnlyList<string> arguments,
             ILog log)

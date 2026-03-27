@@ -33,7 +33,17 @@ log.Log(new LogEntry(
     "Hello from Pixie."));
 ```
 
-`TerminalLog.Acquire()` is the usual entry point for application output. In most applications, you should acquire a log once and reuse it.
+`TerminalLog.Acquire()` is the usual entry point for diagnostics and other CLI feedback. It writes to standard error by default, which is often what you want for warnings, errors, and help output.
+
+If you want to write normal program output to standard output instead, use:
+
+```cs
+using Pixie.Terminal;
+
+var log = TerminalLog.AcquireStandardOutput();
+```
+
+In most applications, you should acquire a log once and reuse it.
 
 ## Packages
 
@@ -50,6 +60,22 @@ Install Loyc support only if you need it:
 ```sh
 dotnet add package Pixie.Loyc
 ```
+
+## Choose the right starting point
+
+Use this as a quick decision guide:
+
+| If you want to... | Start with... |
+| --- | --- |
+| Write regular terminal output with wrapping and layout | `TerminalLog.AcquireStandardOutput()` |
+| Write diagnostics, warnings, or help text | `TerminalLog.Acquire()` |
+| Turn ordinary log entries into compiler-style diagnostics | `log.WithDiagnostics("program")` |
+| Parse GNU-style options and read typed values back | `GnuOptionSetParser` + `OptionSet` |
+| Generate `--help` output from option definitions | `HelpMessage` |
+| Control styling, encoding, or terminal capabilities manually | `TextWriterTerminal` + `TerminalLog.Acquire(...)` |
+| Translate Loyc diagnostics into Pixie output | `PixieMessageSink` from `Pixie.Loyc` |
+
+For a fuller walkthrough, see [docs/getting-started.md](docs/getting-started.md).
 
 ## What Pixie can do
 
@@ -114,13 +140,15 @@ If you use Loyc libraries such as EC# or LeMP, `Pixie.Loyc` can translate their 
 
 Pixie's main output abstraction is `ILog`. Logs accept `LogEntry` values, which are self-contained messages with a severity and a markup tree.
 
-For terminal applications, `TerminalLog.Acquire()` is the usual choice:
+For terminal applications, `TerminalLog.Acquire()` is the usual choice when you want output on standard error:
 
 ```cs
 using Pixie.Terminal;
 
 var log = TerminalLog.Acquire();
 ```
+
+If you want standard output instead, use `TerminalLog.AcquireStandardOutput()`.
 
 ### 2. Log a message
 
@@ -168,6 +196,27 @@ string[] files = parsedArgs.GetValue<string[]>(filesOption);
 ```
 
 When parsing fails, Pixie can report errors to the log instead of leaving formatting and recovery entirely up to the application.
+
+By design, `Parse(...)` still returns an `OptionSet`, so applications can decide how to recover. A common pattern is to capture log entries and then bail out if any errors were reported:
+
+```cs
+using Pixie;
+using Pixie.Options;
+using Pixie.Terminal;
+
+var terminalLog = TerminalLog.Acquire();
+var recordingLog = new RecordingLog(terminalLog);
+
+var parser = new GnuOptionSetParser(new Option[] { helpFlag }, filesOption);
+var parsedArgs = parser.Parse(args, recordingLog);
+
+if (recordingLog.Contains(Severity.Error))
+{
+    return 1;
+}
+```
+
+If you prefer exceptions in tests or strict tooling, `TestLog` can turn selected severities into failures.
 
 ### 4. Document options and generate help
 
@@ -232,6 +281,12 @@ If you log a raw `LogEntry` with `new HighlightedSource(...)` but do not wrap th
 
 For a fuller version with transforms and custom renderer configuration, see [Examples/CaretDiagnostics/Program.cs](Examples/CaretDiagnostics/Program.cs).
 
+## Package notes
+
+`Pixie` is enough for most applications. It includes the core APIs plus the `Pixie.Terminal` assembly, so you can use `TerminalLog`, terminal renderers, and terminal device helpers after installing the main package.
+
+`Pixie.Loyc` is optional. Install it only when you already use Loyc libraries and want their diagnostics to flow through Pixie. For a dedicated walkthrough, see [docs/loyc.md](docs/loyc.md).
+
 ## Examples
 
 The repository includes small example programs you can run directly:
@@ -242,7 +297,18 @@ dotnet run --project Examples/ParseOptions/ParseOptions.csproj -- --helo file.cs
 dotnet run --project Examples/CaretDiagnostics/CaretDiagnostics.csproj
 ```
 
-Other examples live in [`Examples/`](Examples).
+Available examples:
+
+| Example | What it demonstrates |
+| --- | --- |
+| [`Examples/SimpleErrorMessage`](Examples/SimpleErrorMessage) | A minimal diagnostic-style message. |
+| [`Examples/FormattedList`](Examples/FormattedList) | Titles, colors, wrapping, bullets, and manual terminal configuration. |
+| [`Examples/PrintHelp`](Examples/PrintHelp) | Building help output from option definitions. |
+| [`Examples/ParseOptions`](Examples/ParseOptions) | GNU-style parsing, typed values, suggestions, and diagnostic feedback. |
+| [`Examples/CaretDiagnostics`](Examples/CaretDiagnostics) | Source snippets, focus regions, and compiler-style diagnostic headers. |
+| [`Examples/LoycInterop`](Examples/LoycInterop) | Translating Loyc parser diagnostics into Pixie output. |
+
+For a more guided tour, see [docs/examples.md](docs/examples.md).
 
 ## Building and testing
 

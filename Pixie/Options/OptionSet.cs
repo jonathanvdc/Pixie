@@ -82,6 +82,11 @@ namespace Pixie.Options
         /// option. If there is no such value, then the default
         /// value for that option is returned.
         /// </summary>
+        /// <remarks>
+        /// This method does not tell you whether the option was explicitly
+        /// present on the command line. Use <see cref="TryGetValue{T}(Option, out T)"/>
+        /// or <see cref="ContainsOption(Option)"/> when that distinction matters.
+        /// </remarks>
         /// <param name="opt">An option to find a parsed value for.</param>
         /// <returns>
         /// The option's value if a form of the option has been parsed;
