@@ -5,25 +5,30 @@ using Pixie.Markup;
 namespace Pixie.Transforms
 {
     /// <summary>
-    /// A transformation that turns log entries into diagnostics.
+    /// A transformation that upgrades plain log entries into
+    /// compiler-style diagnostics.
+    /// It looks for a title, text, and highlighted source in the markup tree
+    /// and uses that information to construct a diagnostic header and origin.
     /// </summary>
     public sealed class DiagnosticExtractor
     {
         /// <summary>
-        /// Creates a diagnostic extractor.
+        /// Creates a diagnostic extractor with defaults to use when the source
+        /// markup does not already provide a complete diagnostic.
         /// </summary>
         /// <param name="defaultOrigin">
-        /// The default origin to use, for when a log entry
-        /// does not specify an origin.
+        /// The fallback origin to use when a log entry does not contain a
+        /// source reference.
         /// </param>
         /// <param name="defaultKind">
-        /// The kind of diagnostic to provide.
+        /// The fallback diagnostic kind, such as <c>error</c> or
+        /// <c>warning</c>.
         /// </param>
         /// <param name="defaultThemeColor">
-        /// The diagnostic theme color.
+        /// The fallback theme color to use for the resulting diagnostic.
         /// </param>
         /// <param name="defaultTitle">
-        /// The diagnostic title.
+        /// The fallback title to use when the log entry does not contain one.
         /// </param>
         public DiagnosticExtractor(
             MarkupNode defaultOrigin,
@@ -63,10 +68,11 @@ namespace Pixie.Transforms
         public MarkupNode DefaultTitle { get; private set; }
 
         /// <summary>
-        /// Transforms a markup tree to include a diagnostic.
+        /// Wraps a markup tree in a <see cref="Diagnostic"/> unless it already
+        /// contains one.
         /// </summary>
         /// <param name="tree">The tree to transform.</param>
-        /// <returns>A transformed tree.</returns>
+        /// <returns>A diagnostic node or the original diagnostic markup.</returns>
         public MarkupNode Transform(MarkupNode tree)
         {
             var visitor = new DiagnosticExtractingVisitor(this);
@@ -92,13 +98,15 @@ namespace Pixie.Transforms
         };
 
         /// <summary>
-        /// Transforms a log entry to include a diagnostic.
+        /// Wraps a log entry in a <see cref="Diagnostic"/> using defaults based
+        /// on the entry's severity.
         /// </summary>
         /// <param name="entry">The log entry to transform.</param>
         /// <param name="defaultOrigin">
-        /// The default origin of a diagnostic. This is typically the
-        /// name of the application.</param>
-        /// <returns>A transformed log entry.</returns>
+        /// The fallback diagnostic origin. This is typically the name of the
+        /// application.
+        /// </param>
+        /// <returns>A log entry whose contents are diagnostic markup.</returns>
         public static LogEntry Transform(LogEntry entry, MarkupNode defaultOrigin)
         {
             var extractor = new DiagnosticExtractor(

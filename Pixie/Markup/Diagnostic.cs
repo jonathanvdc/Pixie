@@ -3,30 +3,38 @@ using System;
 namespace Pixie.Markup
 {
     /// <summary>
-    /// Describes a diagnostic as issued by typical command-line tools:
-    /// a self-contained nugget of information to the user.
+    /// Describes a compiler-style diagnostic such as an error, warning, or
+    /// informational message.
+    /// A diagnostic combines an origin, a kind, an optional title, and a
+    /// message body into a single markup node that can render as a header like
+    /// <c>file.cs:12:4: error: expected expression</c> followed by additional
+    /// context such as highlighted source code.
     /// </summary>
     public sealed class Diagnostic : MarkupNode
     {
         /// <summary>
-        /// Creates a diagnostic.
+        /// Creates a diagnostic with a header and message body.
         /// </summary>
         /// <param name="origin">
-        /// The origin of the diagnostic: the line of code
-        /// or application that causes the diagnostic to be
-        /// issued.
+        /// The origin of the diagnostic, such as a source location or
+        /// application name.
         /// </param>
         /// <param name="kind">
-        /// A single-word description of the kind of diagnostic
-        /// to create.
+        /// A single-word category such as <c>error</c>, <c>warning</c>, or
+        /// <c>info</c>.
         /// </param>
         /// <param name="themeColor">
-        /// The diagnostic's theme color.
+        /// The color used to emphasize the diagnostic's kind and related
+        /// content.
         /// </param>
         /// <param name="title">
-        /// The contents of the diagnostic's title.
+        /// The short headline that appears in the diagnostic header after the
+        /// kind.
         /// </param>
-        /// <param name="message"></param>
+        /// <param name="message">
+        /// The diagnostic's body, which may contain explanatory text,
+        /// highlighted source code, or other markup.
+        /// </param>
         public Diagnostic(
             MarkupNode origin,
             string kind,
@@ -42,16 +50,15 @@ namespace Pixie.Markup
         }
 
         /// <summary>
-        /// Gets the origin of this diagnostic: the line of code
-        /// or application that causes the diagnostic to be
-        /// issued.
+        /// Gets the origin of this diagnostic, typically a source reference or
+        /// application name that appears at the start of the header.
         /// </summary>
         /// <returns>The origin of the diagnostic.</returns>
         public MarkupNode Origin { get; private set; }
 
         /// <summary>
-        /// Gets a (single-word) description of the kind of diagnostic
-        /// this instance is.
+        /// Gets the single-word category of this diagnostic, for example
+        /// <c>error</c> or <c>warning</c>.
         /// </summary>
         /// <returns>The kind of diagnostic.</returns>
         public string Kind { get; private set; }
@@ -74,7 +81,10 @@ namespace Pixie.Markup
         /// <returns>The message node.</returns>
         public MarkupNode Message { get; private set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets a default rendering of this diagnostic as a bold header
+        /// followed by its message body.
+        /// </summary>
         public override MarkupNode Fallback
         {
             get
