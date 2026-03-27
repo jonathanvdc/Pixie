@@ -3,7 +3,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>PrintHelp</RootNamespace>
     <AssemblyName>PrintHelp</AssemblyName>
-    <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
