@@ -8,7 +8,7 @@ namespace Pixie.Loyc
     /// A container for a set of source documents that can be addressed
     /// by file name. This data structure is used by
     /// <see cref="Pixie.Loyc.PixieMessageSink"/> instances to translate
-    /// <see cref="global::Loyc.Syntax.SourcePos"/> values to caret
+    /// <see cref="global::Loyc.Syntax.LineColumnFile"/> values to caret
     /// diagnostics.
     /// </summary>
     public sealed class SourceDocumentCache

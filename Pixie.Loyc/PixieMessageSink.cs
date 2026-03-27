@@ -25,7 +25,7 @@ namespace Pixie.Loyc
         /// <param name="log">The log to redirect messages to.</param>
         /// <param name="documentCache">
         /// The source document cache to use for translating
-        /// <see cref="global::Loyc.Syntax.SourcePos"/> values
+        /// <see cref="global::Loyc.Syntax.LineColumnFile"/> values
         /// to caret diagnostics.
         /// </param>
         public PixieMessageSink(ILog log, SourceDocumentCache documentCache)
@@ -114,12 +114,12 @@ namespace Pixie.Loyc
             {
                 return FormatContext(((ILocation)context).Location);
             }
-            else if (context is SourcePos)
+            else if (context is LineColumnFile)
             {
                 // Source positions are actually pretty tough to create
                 // caret diagnostics for. We'll just try to index the source
                 // document cache.
-                var pos = (SourcePos)context;
+                var pos = (LineColumnFile)context;
                 SourceRegion region;
                 if (TryIndexSourceDocumentCache(pos, out region))
                 {
@@ -154,7 +154,7 @@ namespace Pixie.Loyc
             }
         }
 
-        private bool TryIndexSourceDocumentCache(SourcePos pos, out SourceRegion result)
+        private bool TryIndexSourceDocumentCache(LineColumnFile pos, out SourceRegion result)
         {
             SourceDocument document;
             if (DocumentCache.TryGetDocument(pos.FileName, out document))
