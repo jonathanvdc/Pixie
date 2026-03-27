@@ -26,6 +26,12 @@ namespace Pixie.Terminal.Render
         {
             var boxNode = (WrapBox)node;
             var newState = state;
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
             var newTerm = LayoutTerminal.Wrap(
                 LayoutTerminal.AddHorizontalMargin(
                     state.Terminal,
@@ -33,7 +39,7 @@ namespace Pixie.Terminal.Render
                     boxNode.RightMargin),
                 boxNode.Wrapping);
 
-            newState = newTerm.StartLayoutBox(state);
+            newState = newTerm.StartLayoutBox(state, !suppressLeading);
             newState.Render(boxNode.Contents);
             newTerm.EndLayoutBox();
         }

@@ -47,15 +47,10 @@ namespace CaretDiagnostics
 
             // Write an entry to the log that contains the things
             // we would like to print.
-            log.Log(
-                new LogEntry(
-                    Severity.Error,
-                    "hello world",
-                    new MarkupNode[]
-                    {
-                        new Text("look at this beautiful error message!"),
-                        new HighlightedSource(highlightRegion, focusRegion)
-                    }));
+            log.Error(
+                "hello world",
+                new Text("look at this beautiful error message!"),
+                new HighlightedSource(highlightRegion, focusRegion));
         }
         private const string SourceCode = @"public static class Program
 {

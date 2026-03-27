@@ -145,6 +145,12 @@ namespace Pixie.Terminal.Render
         public override void Render(MarkupNode node, RenderState state)
         {
             var src = (HighlightedSource)node;
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
 
             var highlightRegion = src.HighlightRegion;
             var focusRegion = src.FocusRegion;
@@ -173,7 +179,10 @@ namespace Pixie.Terminal.Render
             var maxLineWidth = GetLineWidth(
                 firstLineNumber + compressedLines.Count, state);
 
-            state.Terminal.WriteSeparator(2);
+            if (!suppressLeading)
+            {
+                state.Terminal.WriteSeparator(2);
+            }
 
             for (int i = 0; i < compressedLines.Count; i++)
             {

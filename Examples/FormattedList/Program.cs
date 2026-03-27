@@ -54,27 +54,22 @@ namespace FormattedList
 
             // Write an entry to the log that contains the things
             // we would like to print.
-            log.Log(
-                new LogEntry(
-                    Severity.Info,
-                    new MarkupNode[]
-                    {
-                        // Create a title, underline it and make it green because why not.
-                        new Title(
-                            DecorationSpan.MakeUnderlined(
-                                new ColorSpan("Hello world", Colors.Green))),
+            log.Info(
+                // Create a title, underline it and make it green because why not.
+                new Title(
+                    DecorationSpan.MakeUnderlined(
+                        new ColorSpan("Hello world", Colors.Green))),
 
-                        // Create a word-wrapped bulleted list with a uniform margin of four.
-                        new WrapBox(
-                            new BulletedList(
-                                LoremIpsum
-                                    .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Select<string, MarkupNode>(QuoteString)
-                                    .ToArray<MarkupNode>(),
-                                true),
-                            WrappingStrategy.Word,
-                            4)
-                    }));
+                // Create a word-wrapped bulleted list with a uniform margin of four.
+                new WrapBox(
+                    new BulletedList(
+                        LoremIpsum
+                            .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select<string, MarkupNode>(QuoteString)
+                            .ToArray<MarkupNode>(),
+                        true),
+                    WrappingStrategy.Word,
+                    4));
         }
 
         private static MarkupNode QuoteString(string text)

@@ -70,6 +70,7 @@ namespace Pixie.Terminal
             lock (renderLock)
             {
                 BaseRenderState.Render(new Box(node));
+                BaseRenderState.Terminal.FinishOutput();
             }
         }
 

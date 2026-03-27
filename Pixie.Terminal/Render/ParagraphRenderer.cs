@@ -25,7 +25,18 @@ namespace Pixie.Terminal.Render
         public override void Render(MarkupNode node, RenderState state)
         {
             var para = (Paragraph)node;
-            state.Terminal.WriteSeparator(2);
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
+
+            if (!suppressLeading)
+            {
+                state.Terminal.WriteSeparator(2);
+            }
+
             state.Render(para.Contents);
             state.Terminal.WriteSeparator(2);
         }
@@ -53,7 +64,18 @@ namespace Pixie.Terminal.Render
         public override void Render(MarkupNode node, RenderState state)
         {
             var para = (Box)node;
-            state.Terminal.WriteSeparator(1);
+            object suppressVal;
+            bool suppressLeading =
+                state.ThemeProperties.TryGetValue(
+                    RenderThemeProperties.SuppressLeadingSeparatorProperty,
+                    out suppressVal)
+                && (bool)suppressVal;
+
+            if (!suppressLeading)
+            {
+                state.Terminal.WriteSeparator(1);
+            }
+
             state.Render(para.Contents);
             state.Terminal.WriteSeparator(1);
         }

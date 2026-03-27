@@ -50,6 +50,19 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void TerminalLogDoesNotPrefixFirstEntryWithBlankLine()
+        {
+            var writer = new StringWriter();
+            var terminal = new TextWriterTerminal(writer, 80, Encoding.ASCII);
+            var log = new TerminalLog(terminal);
+
+            log.Info("Hello from Pixie.");
+
+            Assert.IsFalse(writer.ToString().StartsWith("\n", StringComparison.Ordinal));
+            StringAssert.Contains("Hello from Pixie.", writer.ToString());
+        }
+
+        [Test]
         public void TextBeforeBox()
         {
             AssertRendersAs(

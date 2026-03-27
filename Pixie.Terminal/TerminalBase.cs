@@ -56,6 +56,18 @@ namespace Pixie.Terminal
         }
 
         /// <summary>
+        /// Tells if this terminal has already emitted visible output content.
+        /// </summary>
+        public virtual bool HasWrittenContent => true;
+
+        /// <summary>
+        /// Flushes any pending layout or separator state to the output.
+        /// Call this after finishing a logical output entry.
+        /// </summary>
+        public virtual void FinishOutput()
+        { }
+
+        /// <summary>
         /// Gets the first renderable string in a sequence of strings.
         /// If the sequence is empty or no string is renderable, <c>null</c>
         /// is returned.

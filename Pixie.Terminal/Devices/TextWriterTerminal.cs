@@ -106,6 +106,7 @@ namespace Pixie.Terminal.Devices
         public override void Write(string text)
         {
             EndSeparator();
+            NoteWrittenContent();
             Writer.Write(text);
         }
 
@@ -119,6 +120,7 @@ namespace Pixie.Terminal.Devices
         public override void Write(char character)
         {
             EndSeparator();
+            NoteWrittenContent();
             Writer.Write(character);
         }
 

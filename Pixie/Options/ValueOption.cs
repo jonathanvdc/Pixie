@@ -130,6 +130,16 @@ namespace Pixie.Options
             return result;
         }
 
+        /// <summary>
+        /// Creates a copy of this option that has a symbolic parameter.
+        /// </summary>
+        /// <param name="name">The parameter's display name.</param>
+        /// <returns>An option.</returns>
+        public ValueOption<T> WithParameter(string name)
+        {
+            return WithParameter(new SymbolicOptionParameter(name));
+        }
+
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => forms;
 
@@ -162,6 +172,38 @@ namespace Pixie.Options
     /// </summary>
     public static class ValueOption
     {
+        /// <summary>
+        /// Creates a typed option that takes a single form.
+        /// </summary>
+        /// <typeparam name="T">The parsed value type.</typeparam>
+        /// <param name="form">The option's form.</param>
+        /// <param name="parseArgument">A function that parses the option's argument.</param>
+        /// <param name="defaultValue">The default value for the option.</param>
+        /// <returns>A typed option.</returns>
+        public static ValueOption<T> CreateOption<T>(
+            OptionForm form,
+            Func<OptionForm, string, ILog, T> parseArgument,
+            T defaultValue)
+        {
+            return new ValueOption<T>(form, parseArgument, defaultValue);
+        }
+
+        /// <summary>
+        /// Creates a typed option that takes a list of forms.
+        /// </summary>
+        /// <typeparam name="T">The parsed value type.</typeparam>
+        /// <param name="forms">The option's forms.</param>
+        /// <param name="parseArgument">A function that parses the option's argument.</param>
+        /// <param name="defaultValue">The default value for the option.</param>
+        /// <returns>A typed option.</returns>
+        public static ValueOption<T> CreateOption<T>(
+            IReadOnlyList<OptionForm> forms,
+            Func<OptionForm, string, ILog, T> parseArgument,
+            T defaultValue)
+        {
+            return new ValueOption<T>(forms, parseArgument, defaultValue);
+        }
+
         /// <summary>
         /// Creates a string option that takes a single form.
         /// </summary>

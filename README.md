@@ -28,9 +28,7 @@ using Pixie.Terminal;
 
 var log = TerminalLog.Acquire();
 
-log.Log(new LogEntry(
-    Severity.Info,
-    "Hello from Pixie."));
+log.Info("Hello from Pixie.");
 ```
 
 `TerminalLog.Acquire()` is the usual entry point for diagnostics and other CLI feedback. It writes to standard error by default, which is often what you want for warnings, errors, and help output.
@@ -160,9 +158,7 @@ using Pixie.Terminal;
 
 var log = TerminalLog.Acquire();
 
-log.Log(new LogEntry(
-    Severity.Error,
-    "Something went wrong."));
+log.Error("Something went wrong.");
 ```
 
 If you want explicit markup nodes, use types from `Pixie.Markup`, such as `Text`, `Sequence`, `BulletedList`, or `HighlightedSource`.
@@ -178,24 +174,50 @@ using Pixie.Terminal;
 
 var log = TerminalLog.Acquire();
 
-var helpFlag = FlagOption.CreateFlagOption(
-    OptionForm.Short("h"),
-    OptionForm.Long("help"));
+var helpFlag = Option.Flag("-h", "--help");
+var filesOption = Option.StringSequence("--files")
+    .WithParameter("file");
 
-var filesOption = SequenceOption.CreateStringOption(
-    OptionForm.Long("files"));
-
-var parser = new GnuOptionSetParser(
+var commandLine = new CommandLine(
     new Option[] { helpFlag },
     filesOption);
 
-var parsedArgs = parser.Parse(new[] { "input.cs", "-h" }, log);
+var parsedArgs = commandLine.Parse(new[] { "input.cs", "-h" }, log);
 
 bool showHelp = parsedArgs.GetValue<bool>(helpFlag);
 string[] files = parsedArgs.GetValue<string[]>(filesOption);
+
+if (!parsedArgs.IsSuccess)
+{
+    return;
+}
 ```
 
-When parsing fails, Pixie can report errors to the log instead of leaving formatting and recovery entirely up to the application.
+If you want the common `--help` and `--version` flow handled for you:
+
+```cs
+var commandLine = new CommandLine(filesOption)
+    .WithHelp("Example program.", "example [files-or-options]")
+    .WithVersion("example 1.0.0");
+
+var result = commandLine.Parse(args, log);
+if (result.WasHandled)
+{
+    return;
+}
+```
+
+For custom typed parsing, use the generic builders:
+
+```cs
+var portOption = Option.Value(
+    (OptionForm form, string argument, ILog log) => int.Parse(argument),
+    8080,
+    "--port")
+    .WithParameter("n");
+```
+
+When parsing fails, Pixie can report errors to the log and also capture them in the returned `OptionParseResult`. The same result can also tell you whether built-in help or version handling already printed output via `WasHandled`. In other words, `WasHandled` is for parser-managed early exits like help/version, not for parse failures.
 
 By design, `Parse(...)` still returns an `OptionSet`, so applications can decide how to recover. A common pattern is to capture log entries and then bail out if any errors were reported:
 

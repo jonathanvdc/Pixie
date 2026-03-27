@@ -20,12 +20,9 @@ namespace LoycInterop
 
             // First, acquire a terminal log. We'll configure it to
             // turn everything it sees into a diagnostic.
-            var log = new TransformLog(
-                TerminalLog.Acquire(),
-                new Func<LogEntry, LogEntry>[]
-                {
-                    MakeDiagnostic
-                });
+            var log = TerminalLog
+                .Acquire()
+                .WithTransform(MakeDiagnostic);
 
             // Create a message sink that redirects messages to the log.
             var messageSink = new PixieMessageSink(log);
