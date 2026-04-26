@@ -10,7 +10,7 @@ namespace Pixie.Tests
         [Test]
         public void OriginalSourceDocumentResolvesSpansToItself()
         {
-            var doc = new OriginalSourceDocument("input.txt", "first\nsecond");
+            var doc = new StringDocument("input.txt", "first\nsecond");
 
             var resolved = doc.ResolveSpan(6, 6);
 
@@ -23,7 +23,7 @@ namespace Pixie.Tests
         [Test]
         public void OriginalSourceDocumentUsesOneBasedDiagnosticPositions()
         {
-            var doc = new OriginalSourceDocument("input.txt", "first\nsecond");
+            var doc = new StringDocument("input.txt", "first\nsecond");
 
             var position = doc.GetPosition(6);
 
@@ -35,7 +35,7 @@ namespace Pixie.Tests
         [Test]
         public void SourceDocumentViewPositionsResolveThroughOriginalSource()
         {
-            var original = new OriginalSourceDocument("input.txt", "before target after");
+            var original = new StringDocument("input.txt", "before target after");
             var view = new FixedSourceDocumentView("target", original, 7);
 
             var position = view.GetPosition(0);

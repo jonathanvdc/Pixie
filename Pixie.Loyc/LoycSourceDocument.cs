@@ -68,7 +68,7 @@ namespace Pixie.Loyc
 
         private OriginalSourceDocument CreateOriginalDocument()
         {
-            return new OriginalSourceDocument(
+            return new StringDocument(
                 source.FileName,
                 source.Text.Slice(0, source.Text.Count).ToString());
         }

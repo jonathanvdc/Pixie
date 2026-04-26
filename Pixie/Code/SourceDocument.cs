@@ -5,8 +5,20 @@ using System.Text;
 namespace Pixie.Code
 {
     /// <summary>
-    /// A document of source code that can be read from.
+    /// Represents a source text buffer that can be consumed by a lexer or parser.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A source document may be an original user-authored file or a derived view such as
+    /// preprocessed text. <see cref="SourceSpan"/> values store offsets relative to this
+    /// document's text, while document implementations decide how those offsets
+    /// resolve back to original source coordinates for diagnostics.
+    /// </para>
+    /// <para>
+    /// Public position lookup returns diagnostic coordinates. For mapped documents, those
+    /// coordinates may come from an original document rather than from this document's own text.
+    /// </para>
+    /// </remarks>
     public abstract class SourceDocument
     {
         /// <summary>

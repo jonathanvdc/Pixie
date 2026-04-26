@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Pixie.Code
 {
     /// <summary>
@@ -11,8 +13,30 @@ namespace Pixie.Code
         /// <param name="identifier">The document's identifier.</param>
         /// <param name="contents">The document's contents.</param>
         public StringDocument(string identifier, string contents)
-            : base(identifier, contents)
+            : base(identifier)
         {
+            this.Contents = contents;
+        }
+
+        /// <summary>
+        /// Gets the string that defines this source document's contents.
+        /// </summary>
+        /// <returns>The document's contents string.</returns>
+        public string Contents { get; private set; }
+
+        /// <inheritdoc/>
+        public override int Length => Contents.Length;
+
+        /// <inheritdoc/>
+        public override TextReader Open(int offset)
+        {
+            return new StringReader(GetText(offset, Length - offset));
+        }
+
+        /// <inheritdoc/>
+        public override string GetText(int offset, int length)
+        {
+            return Contents.Substring(offset, length);
         }
     }
 }

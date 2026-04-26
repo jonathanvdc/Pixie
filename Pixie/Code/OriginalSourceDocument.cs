@@ -1,55 +1,38 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Pixie.Code
 {
     /// <summary>
-    /// A user-authored source document that owns its diagnostic coordinate mapping.
+    /// Represents a user-authored source document and owns its display coordinate mapping.
     /// </summary>
-    public class OriginalSourceDocument : SourceDocument
+    /// <remarks>
+    /// Original documents are the final diagnostic coordinate space. Mapped or preprocessed
+    /// documents ultimately resolve their locations to <see cref="OriginalSourceSpan"/> values
+    /// backed by instances of this type.
+    /// </remarks>
+    public abstract class OriginalSourceDocument : SourceDocument
     {
         private readonly string identifier;
-        private readonly List<int> lineOffsets;
+        private readonly Lazy<List<int>> lazyLineOffsets;
 
         /// <summary>
         /// Creates an original source document from an identifier and contents string.
         /// </summary>
         /// <param name="identifier">The document's identifier.</param>
-        /// <param name="contents">The document's contents.</param>
-        public OriginalSourceDocument(string identifier, string contents)
+        public OriginalSourceDocument(string identifier)
         {
             this.identifier = identifier;
-            this.Contents = contents ?? string.Empty;
-            this.lineOffsets = ComputeLineOffsets(this.Contents);
+            this.lazyLineOffsets = new Lazy<List<int>>(ComputeLineOffsets);
         }
 
-        /// <summary>
-        /// Gets the string that defines this source document's contents.
-        /// </summary>
-        /// <returns>The document's contents string.</returns>
-        public string Contents { get; private set; }
+        private IReadOnlyList<int> lineOffsets => lazyLineOffsets.Value;
 
         /// <inheritdoc/>
         public override string Identifier => identifier;
 
         /// <inheritdoc/>
-        public override int Length => Contents.Length;
-
-        /// <inheritdoc/>
         public override int LineCount => lineOffsets.Count;
-
-        /// <inheritdoc/>
-        public override TextReader Open(int offset)
-        {
-            return new StringReader(GetText(offset, Length - offset));
-        }
-
-        /// <inheritdoc/>
-        public override string GetText(int offset, int length)
-        {
-            return Contents.Substring(offset, length);
-        }
 
         /// <inheritdoc/>
         public override SourcePosition GetPosition(int offset)
@@ -111,11 +94,12 @@ namespace Pixie.Code
             return new ResolvedSourceSpan(span, new[] { span });
         }
 
-        private static List<int> ComputeLineOffsets(string str)
+        private List<int> ComputeLineOffsets()
         {
             var results = new List<int>();
             results.Add(0);
             int i = 0;
+            var str = GetText(0, Length);
             while (i < str.Length)
             {
                 i = str.IndexOf('\n', i);
