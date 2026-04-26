@@ -22,7 +22,7 @@ public sealed class StringDocument : OriginalSourceDocument
     /// Gets the string that defines this source document's contents.
     /// </summary>
     /// <returns>The document's contents string.</returns>
-    public string Contents { get; private set; }
+    public string Contents { get; }
 
     /// <inheritdoc/>
     public override int Length => Contents.Length;

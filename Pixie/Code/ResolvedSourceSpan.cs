@@ -12,30 +12,25 @@ namespace Pixie.Code;
 /// for classic diagnostic display, while <see cref="OriginSpans"/> preserves the complete
 /// original-source coverage for richer diagnostics.
 /// </remarks>
-public sealed class ResolvedSourceSpan
+/// <remarks>
+/// Creates resolved source span information.
+/// </remarks>
+/// <param name="primarySpan">The primary span for classic diagnostic display.</param>
+/// <param name="originSpans">All original source spans covered by the resolved span.</param>
+public sealed class ResolvedSourceSpan(
+    OriginalSourceSpan primarySpan,
+    IReadOnlyList<OriginalSourceSpan> originSpans)
 {
-    /// <summary>
-    /// Creates resolved source span information.
-    /// </summary>
-    /// <param name="primarySpan">The primary span for classic diagnostic display.</param>
-    /// <param name="originSpans">All original source spans covered by the resolved span.</param>
-    public ResolvedSourceSpan(
-        OriginalSourceSpan primarySpan,
-        IReadOnlyList<OriginalSourceSpan> originSpans)
-    {
-        this.PrimarySpan = primarySpan;
-        this.OriginSpans = originSpans ?? Array.Empty<OriginalSourceSpan>();
-    }
 
     /// <summary>
     /// Gets the best single span for classic diagnostic display.
     /// </summary>
     /// <returns>The primary original source span.</returns>
-    public OriginalSourceSpan PrimarySpan { get; private set; }
+    public OriginalSourceSpan PrimarySpan { get; } = primarySpan;
 
     /// <summary>
     /// Gets all original source spans covered by the resolved span.
     /// </summary>
     /// <returns>The original source spans covered by the resolved span.</returns>
-    public IReadOnlyList<OriginalSourceSpan> OriginSpans { get; private set; }
+    public IReadOnlyList<OriginalSourceSpan> OriginSpans { get; } = originSpans ?? Array.Empty<OriginalSourceSpan>();
 }

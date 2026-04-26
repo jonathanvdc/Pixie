@@ -9,50 +9,42 @@ namespace Pixie.Code;
 /// offsets in their assembled text and resolve those offsets back to original
 /// source for diagnostic display.
 /// </remarks>
-public readonly struct SourceLine
+/// <remarks>
+/// Creates a source line.
+/// </remarks>
+/// <param name="document">The original source document that owns the line.</param>
+/// <param name="index">The zero-based line index.</param>
+/// <param name="start">The zero-based offset of the first character in the line.</param>
+/// <param name="length">The line length, excluding line terminators.</param>
+public readonly struct SourceLine(
+    OriginalSourceDocument document,
+    int index,
+    int start,
+    int length)
 {
-    /// <summary>
-    /// Creates a source line.
-    /// </summary>
-    /// <param name="document">The original source document that owns the line.</param>
-    /// <param name="index">The zero-based line index.</param>
-    /// <param name="start">The zero-based offset of the first character in the line.</param>
-    /// <param name="length">The line length, excluding line terminators.</param>
-    public SourceLine(
-        OriginalSourceDocument document,
-        int index,
-        int start,
-        int length)
-    {
-        this.Document = document;
-        this.Index = index;
-        this.Start = start;
-        this.Length = length;
-    }
-
     /// <summary>
     /// Gets the original source document that owns this line.
     /// </summary>
     /// <returns>The original source document.</returns>
-    public OriginalSourceDocument Document { get; }
+    public OriginalSourceDocument Document { get; } = document;
 
     /// <summary>
     /// Gets the zero-based line index.
     /// </summary>
     /// <returns>The zero-based line index.</returns>
-    public int Index { get; }
+    public int Index { get; } = index;
 
     /// <summary>
     /// Gets the zero-based offset of the first character in the line.
     /// </summary>
     /// <returns>The zero-based start offset.</returns>
-    public int Start { get; }
+    public int Start { get; } = start;
 
     /// <summary>
     /// Gets the line length, excluding line terminators.
     /// </summary>
     /// <returns>The line length.</returns>
-    public int Length { get; }
+    public int Length { get; } = length;
 
     /// <summary>
     /// Gets the exclusive end offset of the line, excluding line terminators.

@@ -114,7 +114,7 @@ public readonly struct SourceSpan
     /// <summary>
     /// Gets an unknown source span.
     /// </summary>
-    public static SourceSpan Unknown => default(SourceSpan);
+    public static SourceSpan Unknown => default;
 
     /// <summary>
     /// Merges two source spans into a single span that covers both.
