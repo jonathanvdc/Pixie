@@ -31,8 +31,13 @@ namespace Pixie.Loyc
         {
             var document = ToSourceDocument(range.Source);
 
-            var clampedStartOffset = Math.Max(0, Math.Min(document.Length - 1, range.StartIndex));
-            var clampedEndOffset = Math.Max(0, Math.Min(document.Length - 1, range.EndIndex));
+            var clampedStartOffset = Math.Max(0, Math.Min(document.Length, range.StartIndex));
+            var clampedEndOffset = Math.Max(0, Math.Min(document.Length, range.EndIndex));
+            if (clampedEndOffset < clampedStartOffset)
+            {
+                clampedEndOffset = clampedStartOffset;
+            }
+
             return new SourceSpan(
                 document,
                 clampedStartOffset,

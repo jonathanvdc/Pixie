@@ -8,13 +8,12 @@ namespace Pixie.Code
     public struct SourceSpan
     {
         /// <summary>
-        /// Creates a source span from a document, an offset and
-        /// a span length.
+        /// Creates a source span from a document, a start offset and a span length.
         /// </summary>
         /// <param name="document">
         /// The source document this span is a part of.
         /// </param>
-        /// <param name="offset">
+        /// <param name="start">
         /// The offset of the first character in the span.
         /// </param>
         /// <param name="length">
@@ -22,21 +21,26 @@ namespace Pixie.Code
         /// </param>
         public SourceSpan(
             SourceDocument document,
-            int offset,
+            int start,
             int length)
         {
-            this = default(SourceSpan);
-            this.Document = document;
-            this.Offset = offset;
-            this.Length = length;
-            if (offset < 0 || offset >= document.Length)
+            if (document == null)
             {
-                throw new ArgumentException("offset is out of bounds.", nameof(offset));
+                throw new ArgumentNullException(nameof(document));
             }
-            if (length < 0 || offset + length > document.Length)
+            if (start < 0 || start > document.Length)
+            {
+                throw new ArgumentException("start is out of bounds.", nameof(start));
+            }
+            if (length < 0 || start + length > document.Length)
             {
                 throw new ArgumentException("length is out of bounds.", nameof(length));
             }
+
+            this = default(SourceSpan);
+            this.Document = document;
+            this.Start = start;
+            this.Length = length;
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace Pixie.Code
         /// Gets the offset of the first character in this span.
         /// </summary>
         /// <returns>The offset of the first character in this span.</returns>
-        public int Offset { get; private set; }
+        public int Start { get; private set; }
 
         /// <summary>
         /// Gets this span's length, in characters.
@@ -58,9 +62,68 @@ namespace Pixie.Code
         public int Length { get; private set; }
 
         /// <summary>
+        /// Gets the exclusive end offset of this span.
+        /// </summary>
+        /// <returns>The exclusive end offset of this span.</returns>
+        public int End => Start + Length;
+
+        /// <summary>
+        /// Gets a value indicating whether this span is backed by a source document.
+        /// </summary>
+        /// <returns><c>true</c> if this span is known; otherwise, <c>false</c>.</returns>
+        public bool IsKnown => Document != null;
+
+        /// <summary>
+        /// Gets the diagnostic display position of the span start.
+        /// </summary>
+        /// <returns>The diagnostic display position.</returns>
+        public SourcePosition Position =>
+            IsKnown ? Document.GetPosition(Start) : SourcePosition.Unknown;
+
+        /// <summary>
         /// Gets this span's contents as text.
         /// </summary>
         /// <returns>The span's contents.</returns>
-        public string Text => Document.GetText(Offset, Length);
+        public string Text => IsKnown ? Document.GetText(Start, Length) : string.Empty;
+
+        /// <summary>
+        /// Resolves this span to original source coverage.
+        /// </summary>
+        /// <returns>The resolved original source coverage.</returns>
+        public ResolvedSourceSpan Resolve()
+        {
+            return IsKnown ? Document.ResolveSpan(Start, Length) : null;
+        }
+
+        /// <summary>
+        /// Gets an unknown source span.
+        /// </summary>
+        public static SourceSpan Unknown => default(SourceSpan);
+
+        /// <summary>
+        /// Merges two source spans into a single span that covers both.
+        /// </summary>
+        /// <param name="first">The first span.</param>
+        /// <param name="second">The second span.</param>
+        /// <returns>The merged source span.</returns>
+        public static SourceSpan Merge(SourceSpan first, SourceSpan second)
+        {
+            if (!first.IsKnown)
+            {
+                return second;
+            }
+            if (!second.IsKnown)
+            {
+                return first;
+            }
+            if (!ReferenceEquals(first.Document, second.Document))
+            {
+                return first;
+            }
+
+            int start = Math.Min(first.Start, second.Start);
+            int end = Math.Max(first.End, second.End);
+            return new SourceSpan(first.Document, start, end - start);
+        }
     }
 }

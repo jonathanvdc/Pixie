@@ -14,10 +14,12 @@ namespace Pixie.Loyc
         {
             this.source = source;
             this.lineCountCache = new Lazy<int>(ComputeLineCount);
+            this.originalDocumentCache = new Lazy<OriginalSourceDocument>(CreateOriginalDocument);
         }
 
         private ISourceFile source;
         private Lazy<int> lineCountCache;
+        private Lazy<OriginalSourceDocument> originalDocumentCache;
 
         /// <inheritdoc/>
         public override string Identifier => source.FileName;
@@ -30,27 +32,19 @@ namespace Pixie.Loyc
 
         private int ComputeLineCount()
         {
-            return new StringDocument(
-                source.FileName,
-                source.Text.Slice(0, source.Text.Count).ToString()).LineCount;
+            return originalDocumentCache.Value.LineCount;
         }
 
         /// <inheritdoc/>
-        public override GridPosition GetGridPosition(int offset)
+        public override SourcePosition GetPosition(int offset)
         {
-            var linePos = source.IndexToLine(offset);
-            return new GridPosition(linePos.Line - 1, linePos.Column - 1);
+            return originalDocumentCache.Value.GetPosition(offset);
         }
 
         /// <inheritdoc/>
         public override int GetLineOffset(int lineIndex)
         {
-            if (lineIndex <= 0)
-                return 0;
-            else if (lineIndex >= source.IndexToLine(source.Text.Count - 1).Line)
-                return Length;
-            else
-                return source.LineToIndex(lineIndex + 1);
+            return originalDocumentCache.Value.GetLineOffset(lineIndex);
         }
 
         /// <inheritdoc/>
@@ -64,6 +58,19 @@ namespace Pixie.Loyc
         {
             // TODO: maybe implement this more efficiently?
             return new StringReader(GetText(offset, Length - offset));
+        }
+
+        /// <inheritdoc/>
+        public override ResolvedSourceSpan ResolveSpan(int start, int length)
+        {
+            return originalDocumentCache.Value.ResolveSpan(start, length);
+        }
+
+        private OriginalSourceDocument CreateOriginalDocument()
+        {
+            return new OriginalSourceDocument(
+                source.FileName,
+                source.Text.Slice(0, source.Text.Count).ToString());
         }
     }
 }

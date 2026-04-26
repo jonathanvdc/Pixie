@@ -33,11 +33,11 @@ namespace Pixie.Markup
         /// <returns>A markup node.</returns>
         protected virtual MarkupNode Render(
             string documentIdentifier,
-            GridPosition start,
-            GridPosition end)
+            SourcePosition start,
+            SourcePosition end)
         {
             return new Text(
-                documentIdentifier + ":" + (start.LineIndex + 1) + ":" + (start.Offset + 1));
+                documentIdentifier + ":" + start.Line + ":" + start.Column);
         }
 
         /// <inheritdoc/>
@@ -51,11 +51,11 @@ namespace Pixie.Markup
         {
             get
             {
-                var startGridPos = Range.Document.GetGridPosition(Range.Offset);
-                var endGridPos = Range.Document.GetGridPosition(
-                    Range.Offset + Math.Max(Range.Length, 1) - 1);
+                var start = Range.Document.GetPosition(Range.Start);
+                var end = Range.Document.GetPosition(
+                    Range.Start + Math.Max(Range.Length, 1) - 1);
 
-                return Render(Range.Document.Identifier, startGridPos, endGridPos);
+                return Render(Range.Document.Identifier, start, end);
             }
         }
     }
@@ -77,11 +77,11 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         protected override MarkupNode Render(
             string documentIdentifier,
-            GridPosition start,
-            GridPosition end)
+            SourcePosition start,
+            SourcePosition end)
         {
             return new Text(
-                documentIdentifier + "(" + (start.LineIndex + 1) + "," + (start.Offset + 1) + ")");
+                documentIdentifier + "(" + start.Line + "," + start.Column + ")");
         }
     }
 
@@ -102,11 +102,11 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         protected override MarkupNode Render(
             string documentIdentifier,
-            GridPosition start,
-            GridPosition end)
+            SourcePosition start,
+            SourcePosition end)
         {
             return new Text(
-                documentIdentifier + " +" + (start.LineIndex + 1) + ":" + (start.Offset + 1));
+                documentIdentifier + " +" + start.Line + ":" + start.Column);
         }
     }
 }

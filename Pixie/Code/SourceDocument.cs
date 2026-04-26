@@ -38,12 +38,12 @@ namespace Pixie.Code
         public abstract TextReader Open(int offset);
 
         /// <summary>
-        /// Gets the (line index, line offset) pair that corresponds to the
-        /// character in the document at a particular offset.
+        /// Gets the diagnostic display position that corresponds to a
+        /// particular offset in this document.
         /// </summary>
         /// <param name="offset">The offset to a character in the document.</param>
-        /// <returns>A (line index, line offset) pair.</returns>
-        public abstract GridPosition GetGridPosition(int offset);
+        /// <returns>A diagnostic display position.</returns>
+        public abstract SourcePosition GetPosition(int offset);
 
         /// <summary>
         /// Gets the offset of the first character on a particular line.
@@ -54,6 +54,14 @@ namespace Pixie.Code
         /// Otherwise, the resulting offset is truncated.
         /// </returns>
         public abstract int GetLineOffset(int lineIndex);
+
+        /// <summary>
+        /// Resolves a span in this document to its original source coverage.
+        /// </summary>
+        /// <param name="start">The zero-based start offset within this document.</param>
+        /// <param name="length">The span length within this document.</param>
+        /// <returns>The resolved original source coverage.</returns>
+        public abstract ResolvedSourceSpan ResolveSpan(int start, int length);
 
         /// <summary>
         /// Gets a span of text in the document.

@@ -31,15 +31,15 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void GridPositionsHandleCrLfSeparatedLines()
+        public void PositionsHandleCrLfSeparatedLines()
         {
             var doc = new StringDocument("windows.txt", "ab\r\ncd");
 
-            Assert.AreEqual(new GridPosition(0, 0).ToString(), doc.GetGridPosition(0).ToString());
-            Assert.AreEqual(new GridPosition(0, 2).ToString(), doc.GetGridPosition(2).ToString());
-            Assert.AreEqual(new GridPosition(0, 3).ToString(), doc.GetGridPosition(3).ToString());
-            Assert.AreEqual(new GridPosition(1, 0).ToString(), doc.GetGridPosition(4).ToString());
-            Assert.AreEqual(new GridPosition(1, 1).ToString(), doc.GetGridPosition(5).ToString());
+            AssertPosition(1, 1, doc.GetPosition(0));
+            AssertPosition(1, 3, doc.GetPosition(2));
+            AssertPosition(1, 4, doc.GetPosition(3));
+            AssertPosition(2, 1, doc.GetPosition(4));
+            AssertPosition(2, 2, doc.GetPosition(5));
         }
 
         [Test]
@@ -83,20 +83,20 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void GridPositionAtNewlineCharacterBelongsToPreviousLine()
+        public void PositionAtNewlineCharacterBelongsToPreviousLine()
         {
             var doc = new StringDocument("lines.txt", "ab\ncd");
 
-            Assert.AreEqual(new GridPosition(0, 2).ToString(), doc.GetGridPosition(2).ToString());
-            Assert.AreEqual(new GridPosition(1, 0).ToString(), doc.GetGridPosition(3).ToString());
+            AssertPosition(1, 3, doc.GetPosition(2));
+            AssertPosition(2, 1, doc.GetPosition(3));
         }
 
         [Test]
-        public void GridPositionAtDocumentEndUsesLastLine()
+        public void PositionAtDocumentEndUsesLastLine()
         {
             var doc = new StringDocument("lines.txt", "ab\ncd");
 
-            Assert.AreEqual(new GridPosition(1, 2).ToString(), doc.GetGridPosition(doc.Length).ToString());
+            AssertPosition(2, 3, doc.GetPosition(doc.Length));
         }
 
         [Test]
@@ -120,6 +120,12 @@ namespace Pixie.Tests
             {
                 Assert.AreEqual("tail", reader.ReadToEnd());
             }
+        }
+
+        private static void AssertPosition(int line, int column, SourcePosition position)
+        {
+            Assert.AreEqual(line, position.Line);
+            Assert.AreEqual(column, position.Column);
         }
     }
 }

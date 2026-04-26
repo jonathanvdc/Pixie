@@ -72,10 +72,7 @@ namespace Pixie.Markup
         /// highlighted by this node.
         /// </summary>
         public SourceSpan HighlightedSpan =>
-            new SourceSpan(
-                HighlightRegion.Document,
-                HighlightRegion.StartOffset,
-                HighlightRegion.Length);
+            HighlightRegion.BoundingSpan;
 
         /// <inheritdoc/>
         public override MarkupNode Fallback => 

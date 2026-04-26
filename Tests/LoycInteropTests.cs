@@ -25,7 +25,7 @@ namespace Pixie.Tests
         private const string TestSource = "int int x = 10; class A\n{\n \n";
 
         [Test]
-        public void LoycSourceDocumentGrid()
+        public void LoycSourceDocumentPositions()
         {
             var file = new SourceFile<ICharSource>(new UString(TestSource), "input.cs");
             var stringDoc = new StringDocument("input.cs", TestSource);
@@ -33,9 +33,10 @@ namespace Pixie.Tests
 
             for (int i = 0; i < stringDoc.Length; i++)
             {
-                var refGridPos = stringDoc.GetGridPosition(i);
-                var loycGridPos = loycDoc.GetGridPosition(i);
-                Assert.AreEqual(refGridPos, loycGridPos);
+                var refPosition = stringDoc.GetPosition(i);
+                var loycPosition = loycDoc.GetPosition(i);
+                Assert.AreEqual(refPosition.Line, loycPosition.Line);
+                Assert.AreEqual(refPosition.Column, loycPosition.Column);
             }
         }
 

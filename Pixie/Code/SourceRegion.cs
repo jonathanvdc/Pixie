@@ -18,13 +18,20 @@ namespace Pixie.Code
         /// <param name="span">A span of text in a document.</param>
         public SourceRegion(SourceSpan span)
         {
+            if (!span.IsKnown)
+            {
+                throw new ArgumentException(
+                    "Cannot create a source region from an unknown source span.",
+                    nameof(span));
+            }
+
             this.Document = span.Document;
-            this.minIndex = span.Offset;
-            this.maxIndex = span.Offset + span.Length;
+            this.minIndex = span.Start;
+            this.maxIndex = span.End;
             this.regionIndices = new HashSet<int>();
             for (int i = 0; i < span.Length; i++)
             {
-                this.regionIndices.Add(span.Offset + i);
+                this.regionIndices.Add(span.Start + i);
             }
         }
 
@@ -45,6 +52,12 @@ namespace Pixie.Code
         public int StartOffset => minIndex;
 
         /// <summary>
+        /// Gets the offset to the start of this region.
+        /// </summary>
+        /// <returns>The offset to the start of this region.</returns>
+        public int Start => minIndex;
+
+        /// <summary>
         /// Gets the offset to the end of this region: the index of the
         /// first character that does not belong to this region.
         /// </summary>
@@ -52,11 +65,24 @@ namespace Pixie.Code
         public int EndOffset => maxIndex;
 
         /// <summary>
+        /// Gets the offset to the end of this region: the index of the
+        /// first character that does not belong to this region.
+        /// </summary>
+        /// <returns>The offset to the end of this region.</returns>
+        public int End => maxIndex;
+
+        /// <summary>
         /// Gets the length of this region: the difference between the end
         /// and start of this region.
         /// </summary>
         /// <returns>The length of the region.</returns>
         public int Length => EndOffset - StartOffset;
+
+        /// <summary>
+        /// Gets a source span that covers the full extent of this region.
+        /// </summary>
+        /// <returns>A source span that covers the full extent of this region.</returns>
+        public SourceSpan BoundingSpan => new SourceSpan(Document, Start, Length);
 
         /// <summary>
         /// Checks if this region contains the character at the given offset.
@@ -112,10 +138,10 @@ namespace Pixie.Code
             region.regionIndices = new HashSet<int>(regionIndices);
             for (int i = 0; i < span.Length; i++)
             {
-                region.regionIndices.Add(span.Offset + i);
+                region.regionIndices.Add(span.Start + i);
             }
-            region.minIndex = Math.Min(span.Offset, minIndex);
-            region.maxIndex = Math.Max(span.Offset + span.Length, maxIndex);
+            region.minIndex = Math.Min(span.Start, minIndex);
+            region.maxIndex = Math.Max(span.End, maxIndex);
             return region;
         }
 

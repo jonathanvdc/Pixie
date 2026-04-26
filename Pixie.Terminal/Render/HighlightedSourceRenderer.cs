@@ -158,7 +158,7 @@ namespace Pixie.Terminal.Render
 
             // The idea is to visualize the first line of the focus region,
             // plus a number of lines of context.
-            int focusLine = document.GetGridPosition(focusRegion.StartOffset).LineIndex;
+            int focusLine = document.GetPosition(focusRegion.Start).Line - 1;
 
             int firstLineNumber = -1;
             var lines = new List<IReadOnlyList<HighlightedSourceSpan>>();
