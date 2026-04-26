@@ -189,5 +189,30 @@ public static class Program
   10 | }",
                 new HighlightedSourceRenderer(5));
         }
+
+        [Test]
+        public void PiecewiseSourceDiagnosticsRenderOriginalSource()
+        {
+            var source = "before\nerror here\nafter";
+            var original = new StringDocument("input.txt", source);
+            var generatedPrefix = "// generated\n";
+            var document = PiecewiseSourceDocument.Create("expanded.txt")
+                .AddText(generatedPrefix)
+                .AddSource(new SourceSpan(original, 0, original.Length))
+                .Build();
+
+            int errorOffset = generatedPrefix.Length
+                + source.IndexOf("error", StringComparison.InvariantCulture);
+            var focusRegion = new SourceRegion(new SourceSpan(document, errorOffset, "error".Length));
+
+            AssertRendersAs(
+                new HighlightedSource(focusRegion, focusRegion),
+                @"
+  1 | before
+  2 | error here
+    | ^~~~~     
+  3 | after",
+                new HighlightedSourceRenderer(1));
+        }
     }
 }

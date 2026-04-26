@@ -65,16 +65,9 @@ namespace Pixie.Tests
 
             public override int Length => text.Length;
 
-            public override int LineCount => 1;
-
             public override TextReader Open(int offset)
             {
                 return new StringReader(GetText(offset, Length - offset));
-            }
-
-            public override int GetLineOffset(int lineIndex)
-            {
-                return lineIndex <= 0 ? 0 : Length;
             }
 
             public override string GetText(int offset, int length)

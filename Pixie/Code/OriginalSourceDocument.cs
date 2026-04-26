@@ -32,7 +32,7 @@ namespace Pixie.Code
         public override string Identifier => identifier;
 
         /// <inheritdoc/>
-        public override int LineCount => lineOffsets.Count;
+        public int LineCount => lineOffsets.Count;
 
         /// <inheritdoc/>
         public override LineAndColumnPosition GetPosition(int offset)
@@ -67,15 +67,81 @@ namespace Pixie.Code
                 offset - lineOffsets[lo] + 1);
         }
 
-        /// <inheritdoc/>
-        public override int GetLineOffset(int lineIndex)
+        /// <summary>
+        /// Tries to get a display line by its zero-based line index.
+        /// </summary>
+        /// <param name="lineIndex">The zero-based line index.</param>
+        /// <param name="line">The source line, if it exists.</param>
+        /// <returns><c>true</c> if the line exists; otherwise, <c>false</c>.</returns>
+        public bool TryGetLine(int lineIndex, out SourceLine line)
         {
-            if (lineIndex < 0)
-                return 0;
-            else if (lineIndex >= lineOffsets.Count)
-                return Length;
-            else
-                return lineOffsets[lineIndex];
+            if (lineIndex < 0 || lineIndex >= lineOffsets.Count)
+            {
+                line = default(SourceLine);
+                return false;
+            }
+
+            int lineStart = lineOffsets[lineIndex];
+            int lineEnd = lineIndex + 1 < lineOffsets.Count
+                ? lineOffsets[lineIndex + 1]
+                : Length;
+
+            while (lineEnd > lineStart)
+            {
+                var last = GetText(lineEnd - 1, 1)[0];
+                if (last != '\r' && last != '\n')
+                {
+                    break;
+                }
+
+                lineEnd--;
+            }
+
+            line = new SourceLine(this, lineIndex, lineStart, lineEnd - lineStart);
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the display line that contains a document offset.
+        /// </summary>
+        /// <param name="offset">The document offset.</param>
+        /// <returns>The source line that contains the offset.</returns>
+        public SourceLine GetLineByOffset(int offset)
+        {
+            var position = GetPosition(offset);
+            SourceLine line;
+            if (!TryGetLine(position.Line - 1, out line))
+            {
+                throw new ArgumentException("offset is out of bounds.", nameof(offset));
+            }
+
+            return line;
+        }
+
+        /// <summary>
+        /// Tries to convert one-based line and column coordinates to an offset.
+        /// </summary>
+        /// <param name="line">The one-based line.</param>
+        /// <param name="column">The one-based column.</param>
+        /// <param name="offset">The resulting offset, if the coordinates are valid.</param>
+        /// <returns><c>true</c> if an offset could be computed; otherwise, <c>false</c>.</returns>
+        public bool TryGetOffset(int line, int column, out int offset)
+        {
+            SourceLine sourceLine;
+            if (line < 1 || column < 1 || !TryGetLine(line - 1, out sourceLine))
+            {
+                offset = 0;
+                return false;
+            }
+
+            offset = sourceLine.Start + column - 1;
+            if (offset > sourceLine.End)
+            {
+                offset = 0;
+                return false;
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>
@@ -98,19 +164,19 @@ namespace Pixie.Code
         {
             var results = new List<int>();
             results.Add(0);
-            int i = 0;
-            var str = GetText(0, Length);
-            while (i < str.Length)
+
+            int offset = 0;
+            using (var reader = Open(0))
             {
-                i = str.IndexOf('\n', i);
-
-                if (i < 0)
+                int value;
+                while ((value = reader.Read()) >= 0)
                 {
-                    break;
+                    offset++;
+                    if ((char)value == '\n')
+                    {
+                        results.Add(offset);
+                    }
                 }
-
-                i++;
-                results.Add(i);
             }
 
             return results;

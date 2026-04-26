@@ -75,20 +75,27 @@ The source model is intentionally split by responsibility:
   `Open(int offset)`, plus targeted `GetText(int offset, int length)` reads.
 - `OriginalSourceDocument`
   Base type for user-authored source documents that own final diagnostic
-  coordinates and original-source provenance.
+  coordinates, original-source provenance, and source line extraction.
 - `StringDocument`
   String-backed original source document. Keep text reads efficient: do not make
   `Open(int offset)` allocate the entire remaining document as a substring.
 - `SourceDocumentView`
   Base type for generated, preprocessed, or otherwise derived documents that map
   offsets back to original source.
+- `PiecewiseSourceDocument`
+  Source document view assembled from source-backed and generated-text pieces.
+  It exposes assembled text offsets for parsers, but diagnostic positions should
+  resolve back to original documents.
 - `SourceSpan`
   A contiguous known-or-unknown span in a source document.
 - `SourceRegion`
   A possibly sparse set of characters in one document, used for highlighted
   source rendering.
-- `SourcePosition`
+- `LineAndColumnPosition`
   One-based diagnostic display coordinates.
+- `SourceLine`
+  A display line in an `OriginalSourceDocument`. Do not add line-grid APIs to
+  arbitrary `SourceDocument` implementations.
 - `ResolvedSourceSpan` and `OriginalSourceSpan`
   Original-source provenance for spans in original or derived documents.
 
@@ -104,6 +111,9 @@ Follow these rules when changing source behavior:
 - Keep offsets zero-based and half-open internally: `Start`, `Length`, `End`.
 - For derived documents, implement `ResolveSpan` so diagnostics point at
   user-authored source, not generated text.
+- Do not expose assembled-document line counts or line offsets for source views.
+  A piecewise or generated document's line grid is an implementation detail and
+  is usually the wrong diagnostic coordinate space.
 - Preserve unknown spans through APIs that can reasonably lack source
   information.
 

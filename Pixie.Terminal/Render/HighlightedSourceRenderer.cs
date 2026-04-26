@@ -154,22 +154,36 @@ namespace Pixie.Terminal.Render
 
             var highlightRegion = src.HighlightRegion;
             var focusRegion = src.FocusRegion;
-            var document = focusRegion.Document;
+            var resolvedFocus = focusRegion.BoundingSpan.Resolve();
+            var primaryFocus = resolvedFocus.PrimarySpan;
+            var document = primaryFocus.Document;
+            var renderHighlightRegion = ResolveRegionForDocument(highlightRegion, document);
+            var renderFocusRegion = ResolveRegionForDocument(focusRegion, document);
+            if (renderHighlightRegion == null || renderFocusRegion == null)
+            {
+                return;
+            }
 
             // The idea is to visualize the first line of the focus region,
             // plus a number of lines of context.
-            int focusLine = document.GetPosition(focusRegion.Start).Line - 1;
+            int focusLine = document.GetLineByOffset(primaryFocus.Start).Index;
 
             int firstLineNumber = -1;
             var lines = new List<IReadOnlyList<HighlightedSourceSpan>>();
             for (int i = -ContextLineCount; i <= ContextLineCount; i++)
             {
-                var lineSpans = LineToSpans(focusLine + i, highlightRegion, focusRegion);
+                SourceLine line;
+                if (!document.TryGetLine(focusLine + i, out line))
+                {
+                    continue;
+                }
+
+                var lineSpans = LineToSpans(line, renderHighlightRegion, renderFocusRegion);
                 if (lineSpans != null)
                 {
                     if (firstLineNumber < 0)
                     {
-                        firstLineNumber = focusLine + i;
+                        firstLineNumber = line.Index;
                     }
                     lines.Add(lineSpans);
                 }
@@ -194,6 +208,34 @@ namespace Pixie.Terminal.Render
             }
 
             state.Terminal.WriteSeparator(2);
+        }
+
+        private static SourceRegion ResolveRegionForDocument(
+            SourceRegion region,
+            OriginalSourceDocument document)
+        {
+            if (ReferenceEquals(region.Document, document))
+            {
+                return region;
+            }
+
+            var resolved = region.BoundingSpan.Resolve();
+            SourceRegion result = null;
+            for (int i = 0; i < resolved.OriginSpans.Count; i++)
+            {
+                var span = resolved.OriginSpans[i];
+                if (!ReferenceEquals(span.Document, document))
+                {
+                    continue;
+                }
+
+                var sourceSpan = new SourceSpan(span.Document, span.Start, span.Length);
+                result = result == null
+                    ? new SourceRegion(sourceSpan)
+                    : result.Union(sourceSpan);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -647,7 +689,7 @@ namespace Pixie.Terminal.Render
         /// <summary>
         /// Chunks a line into a list of highlighted spans.
         /// </summary>
-        /// <param name="lineIndex">The line's zero-based index.</param>
+        /// <param name="line">The line to render.</param>
         /// <param name="highlightRegion">
         /// The highlighted region.
         /// </param>
@@ -656,29 +698,16 @@ namespace Pixie.Terminal.Render
         /// </param>
         /// <returns>A list of highlighted spans.</returns>
         private static IReadOnlyList<HighlightedSourceSpan> LineToSpans(
-            int lineIndex,
+            SourceLine line,
             SourceRegion highlightRegion,
             SourceRegion focusRegion)
         {
-            var document = focusRegion.Document;
-
-            int lineStart = document.GetLineOffset(lineIndex);
-            int lineEnd = document.GetLineOffset(lineIndex + 1);
-
-            if (lineStart == lineEnd)
+            if (line.Length == 0)
             {
-                // Nothing to do here.
-                return null;
+                return Array.Empty<HighlightedSourceSpan>();
             }
 
-            // Strip only the newline terminator here. Significant trailing spaces
-            // must remain available so whitespace-only focus/highlight regions can
-            // still produce a visible caret marker.
-            var lineText = document
-                .GetText(lineStart, lineEnd - lineStart)
-                .TrimEnd('\r', '\n');
-
-            return LineToSpans(lineText, lineStart, highlightRegion, focusRegion);
+            return LineToSpans(line.Text, line.Start, highlightRegion, focusRegion);
         }
 
         private static bool IsHighlighted(

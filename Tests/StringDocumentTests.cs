@@ -14,8 +14,8 @@ namespace Pixie.Tests
 
             Assert.AreEqual(0, doc.Length);
             Assert.AreEqual(1, doc.LineCount);
-            Assert.AreEqual(0, doc.GetLineOffset(0));
-            Assert.AreEqual(0, doc.GetLineOffset(1));
+            AssertLine(0, 0, 0, doc);
+            AssertNoLine(1, doc);
         }
 
         [Test]
@@ -24,10 +24,10 @@ namespace Pixie.Tests
             var doc = new StringDocument("lines.txt", "a\nb\n");
 
             Assert.AreEqual(3, doc.LineCount);
-            Assert.AreEqual(0, doc.GetLineOffset(0));
-            Assert.AreEqual(2, doc.GetLineOffset(1));
-            Assert.AreEqual(4, doc.GetLineOffset(2));
-            Assert.AreEqual(doc.Length, doc.GetLineOffset(3));
+            AssertLine(0, 0, 1, doc);
+            AssertLine(1, 2, 1, doc);
+            AssertLine(2, 4, 0, doc);
+            AssertNoLine(3, doc);
         }
 
         [Test]
@@ -62,12 +62,12 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void LineOffsetIsClampedToValidBounds()
+        public void TryGetLineRejectsInvalidLineIndices()
         {
             var doc = new StringDocument("letters.txt", "abc");
 
-            Assert.AreEqual(0, doc.GetLineOffset(-10));
-            Assert.AreEqual(doc.Length, doc.GetLineOffset(10));
+            AssertNoLine(-10, doc);
+            AssertNoLine(10, doc);
         }
 
         [Test]
@@ -76,10 +76,10 @@ namespace Pixie.Tests
             var doc = new StringDocument("lines.txt", "a\n\n\nb");
 
             Assert.AreEqual(4, doc.LineCount);
-            Assert.AreEqual(0, doc.GetLineOffset(0));
-            Assert.AreEqual(2, doc.GetLineOffset(1));
-            Assert.AreEqual(3, doc.GetLineOffset(2));
-            Assert.AreEqual(4, doc.GetLineOffset(3));
+            AssertLine(0, 0, 1, doc);
+            AssertLine(1, 2, 0, doc);
+            AssertLine(2, 3, 0, doc);
+            AssertLine(3, 4, 1, doc);
         }
 
         [Test]
@@ -126,6 +126,27 @@ namespace Pixie.Tests
         {
             Assert.AreEqual(line, position.Line);
             Assert.AreEqual(column, position.Column);
+        }
+
+        private static void AssertLine(
+            int index,
+            int start,
+            int length,
+            OriginalSourceDocument document)
+        {
+            SourceLine line;
+            Assert.IsTrue(document.TryGetLine(index, out line));
+            Assert.AreEqual(index, line.Index);
+            Assert.AreEqual(start, line.Start);
+            Assert.AreEqual(length, line.Length);
+        }
+
+        private static void AssertNoLine(
+            int index,
+            OriginalSourceDocument document)
+        {
+            SourceLine line;
+            Assert.IsFalse(document.TryGetLine(index, out line));
         }
     }
 }

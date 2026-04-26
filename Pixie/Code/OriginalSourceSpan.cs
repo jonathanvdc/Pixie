@@ -7,7 +7,7 @@ namespace Pixie.Code
     /// Unlike <see cref="SourceSpan"/>, this type is not relative to an arbitrary parsed
     /// source view. It always points at an <see cref="OriginalSourceDocument"/>.
     /// </remarks>
-    public struct OriginalSourceSpan
+    public readonly struct OriginalSourceSpan
     {
         /// <summary>
         /// Creates an original source span from a document, start offset and length.
@@ -29,19 +29,19 @@ namespace Pixie.Code
         /// Gets the original source document that owns this span.
         /// </summary>
         /// <returns>The original source document.</returns>
-        public OriginalSourceDocument Document { get; private set; }
+        public OriginalSourceDocument Document { get; }
 
         /// <summary>
         /// Gets the zero-based start offset.
         /// </summary>
         /// <returns>The zero-based start offset.</returns>
-        public int Start { get; private set; }
+        public int Start { get; }
 
         /// <summary>
         /// Gets the span length.
         /// </summary>
         /// <returns>The span length.</returns>
-        public int Length { get; private set; }
+        public int Length { get; }
 
         /// <summary>
         /// Gets the exclusive end offset.

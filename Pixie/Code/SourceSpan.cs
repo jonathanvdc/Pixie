@@ -21,7 +21,7 @@ namespace Pixie.Code
     /// <see langword="null"/> document). Use <see cref="Unknown"/> to obtain one explicitly.
     /// </para>
     /// </remarks>
-    public struct SourceSpan
+    public readonly struct SourceSpan
     {
         /// <summary>
         /// Creates a source span from a document, a start offset and a span length.
@@ -63,19 +63,19 @@ namespace Pixie.Code
         /// Gets the document to which this span of source code refers.
         /// </summary>
         /// <returns>The source document.</returns>
-        public SourceDocument Document { get; private set; }
+        public SourceDocument Document { get; }
 
         /// <summary>
         /// Gets the offset of the first character in this span.
         /// </summary>
         /// <returns>The offset of the first character in this span.</returns>
-        public int Start { get; private set; }
+        public int Start { get; }
 
         /// <summary>
         /// Gets this span's length, in characters.
         /// </summary>
         /// <returns>The length of this span.</returns>
-        public int Length { get; private set; }
+        public int Length { get; }
 
         /// <summary>
         /// Gets the exclusive end offset of this span.

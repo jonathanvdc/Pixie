@@ -39,7 +39,7 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void LineOffsetsAreComputedAcrossPieces()
+        public void PiecewisePositionsResolveThroughOriginalSourceInsteadOfAssembledLines()
         {
             var original = new StringDocument("input.txt", "one\ntwo");
             var document = PiecewiseSourceDocument.Create("expanded.txt")
@@ -48,10 +48,11 @@ namespace Pixie.Tests
                 .AddSource(new SourceSpan(original, 4, 3))
                 .Build();
 
-            Assert.AreEqual(3, document.LineCount);
-            Assert.AreEqual(0, document.GetLineOffset(0));
-            Assert.AreEqual(4, document.GetLineOffset(1));
-            Assert.AreEqual(11, document.GetLineOffset(2));
+            var position = document.GetPosition("one\nmiddle\n".Length);
+
+            Assert.AreEqual("input.txt", position.Identifier);
+            Assert.AreEqual(2, position.Line);
+            Assert.AreEqual(1, position.Column);
         }
 
         [Test]

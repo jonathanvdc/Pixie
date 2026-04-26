@@ -35,12 +35,6 @@ namespace Pixie.Code
         public abstract int Length { get; }
 
         /// <summary>
-        /// Gets the number of lines in the document.
-        /// </summary>
-        /// <returns>The number of lines in the document.</returns>
-        public abstract int LineCount { get; }
-
-        /// <summary>
         /// Opens this source document at the given offset.
         /// </summary>
         /// <param name="offset">
@@ -56,16 +50,6 @@ namespace Pixie.Code
         /// <param name="offset">The offset to a character in the document.</param>
         /// <returns>A diagnostic display position.</returns>
         public abstract LineAndColumnPosition GetPosition(int offset);
-
-        /// <summary>
-        /// Gets the offset of the first character on a particular line.
-        /// </summary>
-        /// <param name="lineIndex">The zero-based index of the line to address.</param>
-        /// <returns>
-        /// The offset of the first character on the line, if it exists.
-        /// Otherwise, the resulting offset is truncated.
-        /// </returns>
-        public abstract int GetLineOffset(int lineIndex);
 
         /// <summary>
         /// Resolves a span in this document to its original source coverage.
