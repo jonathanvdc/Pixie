@@ -50,6 +50,56 @@ namespace Pixie.Markup
         }
 
         /// <summary>
+        /// Creates a diagnostic from a log severity.
+        /// </summary>
+        /// <param name="severity">The diagnostic severity.</param>
+        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="title">The diagnostic title.</param>
+        /// <param name="message">The diagnostic body.</param>
+        /// <returns>A diagnostic markup node.</returns>
+        public static Diagnostic FromSeverity(
+            Severity severity,
+            MarkupNode origin,
+            MarkupNode title,
+            MarkupNode message)
+        {
+            return new Diagnostic(
+                origin,
+                GetKind(severity),
+                GetThemeColor(severity),
+                title,
+                message);
+        }
+
+        private static string GetKind(Severity severity)
+        {
+            switch (severity)
+            {
+                case Severity.Info:
+                    return "info";
+                case Severity.Message:
+                    return "message";
+                case Severity.Warning:
+                    return "warning";
+                default:
+                    return "error";
+            }
+        }
+
+        private static Color GetThemeColor(Severity severity)
+        {
+            switch (severity)
+            {
+                case Severity.Warning:
+                    return Colors.Yellow;
+                case Severity.Error:
+                    return Colors.Red;
+                default:
+                    return Colors.Green;
+            }
+        }
+
+        /// <summary>
         /// Gets the origin of this diagnostic, typically a source reference or
         /// application name that appears at the start of the header.
         /// </summary>

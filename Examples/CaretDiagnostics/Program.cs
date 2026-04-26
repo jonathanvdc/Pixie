@@ -5,7 +5,6 @@ using Pixie.Terminal;
 using Pixie.Markup;
 using Pixie.Code;
 using Pixie.Terminal.Render;
-using Pixie.Transforms;
 
 namespace CaretDiagnostics
 {
@@ -20,19 +19,12 @@ namespace CaretDiagnostics
             // caret diagnostics renderer with a variation that
             // tries to print five lines of context.
             //
-            // After that, we'll add a transformation to the log
-            // that turns all log entries into diagnostics.
-            // This is what adds the "code.cs:line:column: error: ..."
-            // header. HighlightedSource on its own only renders
-            // the source snippet and caret markers.
             ILog log = TerminalLog
                 .Acquire()
                 .WithRenderers(new NodeRenderer[]
                 {
                     new HighlightedSourceRenderer(5)
                 });
-
-            log = log.WithDiagnostics("program");
 
             var doc = new StringDocument("code.cs", SourceCode);
             var ctorStartOffset = SourceCode.IndexOf("public Program()");
@@ -45,12 +37,12 @@ namespace CaretDiagnostics
             var focusRegion = new SourceRegion(
                 new SourceSpan(doc, ctorNameOffset, "Program".Length));
 
-            // Write an entry to the log that contains the things
-            // we would like to print.
-            log.Error(
+            var highlightedSource = new HighlightedSource(highlightRegion, focusRegion);
+            log.ErrorDiagnostic(
+                new SourceReference(highlightedSource.HighlightedSpan),
                 "hello world",
                 new Text("look at this beautiful error message!"),
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightedSource);
         }
         private const string SourceCode = @"public static class Program
 {

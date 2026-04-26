@@ -277,18 +277,17 @@ namespace Pixie.Options
             int result;
             if (!int.TryParse(argument, out result))
             {
-                log.Log(
-                    new LogEntry(
-                        Severity.Error,
-                        "option error",
-                        "argument to ",
-                        Quotation.CreateBoldQuotation(form.ToString()),
-                        " should be an integer; got ",
-                        argument == null
-                            ? (MarkupNode)"nothing."
-                            : new Sequence(
-                                Quotation.CreateBoldQuotation(argument),
-                                ".")));
+                log.ErrorDiagnostic(
+                    "command line",
+                    "option error",
+                    "argument to ",
+                    Quotation.CreateBoldQuotation(form.ToString()),
+                    " should be an integer; got ",
+                    argument == null
+                        ? (MarkupNode)"nothing."
+                        : new Sequence(
+                            Quotation.CreateBoldQuotation(argument),
+                            "."));
             }
             return result;
         }

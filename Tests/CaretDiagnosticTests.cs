@@ -8,7 +8,6 @@ using Pixie.Terminal;
 using Pixie.Terminal.Devices;
 using Pixie.Markup;
 using Pixie.Terminal.Render;
-using Pixie.Transforms;
 
 namespace Pixie.Tests
 {
@@ -26,13 +25,12 @@ namespace Pixie.Tests
             int terminalWidth,
             int contextLineCount)
         {
-            var diagnostic = DiagnosticExtractor.Transform(entry, new Text("program"));
             var writer = new StringWriter();
             var terminal = new TextWriterTerminal(writer, terminalWidth, Encoding.ASCII);
             var log = new TerminalLog(terminal).WithRenderers(
                 DiagnosticRenderer.Instance,
                 new HighlightedSourceRenderer(contextLineCount));
-            log.Log(diagnostic.Contents);
+            log.Log(entry);
             return writer.ToString();
         }
 
@@ -50,6 +48,25 @@ namespace Pixie.Tests
             return writer.ToString();
         }
 
+        private static LogEntry ErrorDiagnostic(
+            string title,
+            SourceRegion highlightRegion,
+            SourceRegion focusRegion,
+            params MarkupNode[] contents)
+        {
+            var highlightedSource = new HighlightedSource(highlightRegion, focusRegion);
+            var message = new MarkupNode[contents.Length + 1];
+            Array.Copy(contents, message, contents.Length);
+            message[message.Length - 1] = highlightedSource;
+            return new LogEntry(
+                Severity.Error,
+                Diagnostic.FromSeverity(
+                    Severity.Error,
+                    new SourceReference(highlightedSource.HighlightedSpan),
+                    title,
+                    new Sequence(message)));
+        }
+
         [Test]
         public void CaretDiagnosticRendersHeaderMessageAndCaretSnippet()
         {
@@ -64,14 +81,11 @@ namespace Pixie.Tests
             var focusRegion = new SourceRegion(
                 new SourceSpan(doc, ctorNameOffset, "Program".Length));
 
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "hello world",
-                new MarkupNode[]
-                {
-                    new Text("look at this beautiful error message!"),
-                    new HighlightedSource(highlightRegion, focusRegion)
-                });
+                highlightRegion,
+                focusRegion,
+                new Text("look at this beautiful error message!"));
 
             var rendered = RenderDiagnostic(entry, 80, 5);
 
@@ -104,16 +118,16 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void DiagnosticTransformAddsDocumentIdentifierHeaderForHighlightedSource()
+        public void ExplicitDiagnosticAddsDocumentIdentifierHeaderForHighlightedSource()
         {
             const string source = "<{%>";
             var doc = new StringDocument("code.eol", source);
             var errOffset = source.IndexOf("%", StringComparison.InvariantCulture);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, errOffset, 1));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "Expected ending curly",
-                new HighlightedSource(highlightRegion));
+                highlightRegion,
+                highlightRegion);
 
             var rendered = RenderDiagnostic(entry, 80, 1);
 
@@ -172,14 +186,11 @@ namespace Pixie.Tests
                 }
 
                 var focusRegion = new SourceRegion(new SourceSpan(doc, focusStart, Math.Max(1, focusLength)));
-                var entry = new LogEntry(
-                    Severity.Error,
+                var entry = ErrorDiagnostic(
                     $"generated case {i}",
-                    new MarkupNode[]
-                    {
-                        "generated diagnostic body",
-                        new HighlightedSource(highlightRegion, focusRegion)
-                    });
+                    highlightRegion,
+                    focusRegion,
+                    "generated diagnostic body");
 
                 var width = rng.Next(18, 50);
                 var context = rng.Next(0, 4);
@@ -208,11 +219,11 @@ namespace Pixie.Tests
             var doc = new StringDocument("narrow.txt", source);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, 6, 10));
             var focusRegion = new SourceRegion(new SourceSpan(doc, 11, 5));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "narrow width",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 18, 0);
 
@@ -230,11 +241,11 @@ namespace Pixie.Tests
             var focusStart = source.IndexOf("target", StringComparison.InvariantCulture);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, highlightStart, "line\nsecond target".Length));
             var focusRegion = new SourceRegion(new SourceSpan(doc, focusStart, "target".Length));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "multiline",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 2);
 
@@ -252,11 +263,11 @@ namespace Pixie.Tests
             var focusStart = source.IndexOf("42", StringComparison.InvariantCulture);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, source.IndexOf("value", StringComparison.InvariantCulture), "value\t=\t42".Length));
             var focusRegion = new SourceRegion(new SourceSpan(doc, focusStart, 2));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "tabs",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 1);
 
@@ -273,11 +284,11 @@ namespace Pixie.Tests
             var doc = new StringDocument("space.txt", source);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, 4, 3));
             var focusRegion = new SourceRegion(new SourceSpan(doc, 4, 1));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "whitespace only",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 0);
 
@@ -294,11 +305,11 @@ namespace Pixie.Tests
             var focusStart = source.IndexOf("end", StringComparison.InvariantCulture);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, focusStart - 2, 5));
             var focusRegion = new SourceRegion(new SourceSpan(doc, focusStart + 2, 1));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "line end",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 0);
 
@@ -314,11 +325,11 @@ namespace Pixie.Tests
             var doc = new StringDocument("trail.txt", source);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, 5, 3));
             var focusRegion = new SourceRegion(new SourceSpan(doc, 7, 1));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "trailing whitespace",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 0);
 
@@ -334,17 +345,116 @@ namespace Pixie.Tests
             var whitespaceLineStart = source.IndexOf("   ", StringComparison.InvariantCulture);
             var highlightRegion = new SourceRegion(new SourceSpan(doc, whitespaceLineStart, 3));
             var focusRegion = new SourceRegion(new SourceSpan(doc, whitespaceLineStart + 1, 1));
-            var entry = new LogEntry(
-                Severity.Error,
+            var entry = ErrorDiagnostic(
                 "blank line whitespace",
-                "body",
-                new HighlightedSource(highlightRegion, focusRegion));
+                highlightRegion,
+                focusRegion,
+                "body");
 
             var rendered = RenderDiagnostic(entry, 80, 1);
 
             StringAssert.Contains("blank.txt:2:1: error: blank line whitespace:", rendered);
             StringAssert.Contains("2 |", rendered);
             StringAssert.Contains("^", rendered);
+        }
+
+        [Test]
+        public void PiecewiseCaretDiagnosticWithGeneratedPrefixRendersOriginalSource()
+        {
+            var source = "before\nerror here\nafter";
+            var original = new StringDocument("input.txt", source);
+            var prefix = "// generated header\n";
+            var document = PiecewiseSourceDocument.Create("expanded.txt")
+                .AddText(prefix)
+                .AddSource(new SourceSpan(original, 0, original.Length))
+                .Build();
+            var errorOffset = prefix.Length + source.IndexOf("error", StringComparison.InvariantCulture);
+            var highlightRegion = new SourceRegion(new SourceSpan(document, errorOffset, "error".Length));
+
+            var rendered = RenderDiagnostic(
+                ErrorDiagnostic("piecewise", highlightRegion, highlightRegion, "body"),
+                80,
+                1);
+
+            StringAssert.Contains("input.txt:2:1: error: piecewise:", rendered);
+            StringAssert.Contains("1 | before", rendered);
+            StringAssert.Contains("2 | error here", rendered);
+            StringAssert.Contains("3 | after", rendered);
+            Assert.IsFalse(rendered.Contains("generated header"));
+            StringAssert.Contains("^", rendered);
+        }
+
+        [Test]
+        public void PiecewiseCaretDiagnosticWithSourcePiecesSeparatedByGeneratedTextUsesOriginalLines()
+        {
+            var source = "alpha\nbeta target\ngamma";
+            var original = new StringDocument("input.txt", source);
+            var firstLength = source.IndexOf("target", StringComparison.InvariantCulture);
+            var document = PiecewiseSourceDocument.Create("expanded.txt")
+                .AddSource(new SourceSpan(original, 0, firstLength))
+                .AddText("/* generated */")
+                .AddSource(new SourceSpan(original, firstLength, "target".Length))
+                .Build();
+            var targetOffset = firstLength + "/* generated */".Length;
+            var highlightRegion = new SourceRegion(new SourceSpan(document, targetOffset, "target".Length));
+
+            var rendered = RenderDiagnostic(
+                ErrorDiagnostic("split source", highlightRegion, highlightRegion, "body"),
+                80,
+                1);
+
+            StringAssert.Contains("input.txt:2:6: error: split source:", rendered);
+            StringAssert.Contains("2 | beta target", rendered);
+            Assert.IsFalse(rendered.Contains("generated"));
+            StringAssert.Contains("^", rendered);
+        }
+
+        [Test]
+        public void PiecewiseCaretDiagnosticForAnchoredGeneratedTextPointsAtAnchor()
+        {
+            var source = "alpha\nbeta\ngamma";
+            var original = new StringDocument("input.txt", source);
+            var anchorStart = source.IndexOf("beta", StringComparison.InvariantCulture);
+            var anchor = new SourceSpan(original, anchorStart, "beta".Length);
+            var document = PiecewiseSourceDocument.Create("expanded.txt")
+                .AddText("generated-token", anchor)
+                .Build();
+            var highlightRegion = new SourceRegion(new SourceSpan(document, 0, "generated".Length));
+
+            var rendered = RenderDiagnostic(
+                ErrorDiagnostic("anchored generated", highlightRegion, highlightRegion, "body"),
+                80,
+                1);
+
+            StringAssert.Contains("input.txt:2:1: error: anchored generated:", rendered);
+            StringAssert.Contains("2 | beta", rendered);
+            Assert.IsFalse(rendered.Contains("generated-token"));
+        }
+
+        [Test]
+        public void PiecewiseCaretDiagnosticCrossingGeneratedTextHighlightsKnownOriginalPieces()
+        {
+            var source = "abc def";
+            var original = new StringDocument("input.txt", source);
+            var document = PiecewiseSourceDocument.Create("expanded.txt")
+                .AddSource(new SourceSpan(original, 0, 3))
+                .AddText(" <generated> ")
+                .AddSource(new SourceSpan(original, 4, 3))
+                .Build();
+            var highlightRegion = new SourceRegion(new SourceSpan(document, 1, document.Length - 1));
+            var focusStart = document.Length - 3;
+            var focusRegion = new SourceRegion(new SourceSpan(document, focusStart, 3));
+
+            var rendered = RenderDiagnostic(
+                ErrorDiagnostic("cross piece", highlightRegion, focusRegion, "body"),
+                80,
+                0);
+
+            StringAssert.Contains("input.txt:1:2: error: cross piece:", rendered);
+            StringAssert.Contains("1 | abc def", rendered);
+            Assert.IsFalse(rendered.Contains("generated"));
+            StringAssert.Contains("^", rendered);
+            StringAssert.Contains("~", rendered);
         }
 
         private static string GenerateSource(Random rng)

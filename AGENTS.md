@@ -171,8 +171,8 @@ Important test areas:
 - `StringDocumentTests`, `SourceSpanTests`, `SourceRegionTests`,
   `SourceDocumentViewTests`
   Source model and source provenance behavior.
-- `CaretDiagnosticTests`, `DiagnosticExtractorTests`
-  Diagnostic extraction and source-highlight behavior.
+- `CaretDiagnosticTests`
+  Explicit diagnostic markup and source-highlight behavior.
 - `RenderTests`, `RenderingBehaviorTests`, `TerminalDeviceTests`
   Terminal rendering and device behavior.
 - `GnuOptionSetParserTests`, `OptionFormattingTests`

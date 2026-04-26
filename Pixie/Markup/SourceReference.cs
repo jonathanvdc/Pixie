@@ -55,7 +55,7 @@ namespace Pixie.Markup
                 var end = Range.Document.GetPosition(
                     Range.Start + Math.Max(Range.Length, 1) - 1);
 
-                return Render(Range.Document.Identifier, start, end);
+                return Render(start.Identifier ?? Range.Document.Identifier, start, end);
             }
         }
     }

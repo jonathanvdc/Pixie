@@ -90,5 +90,62 @@ namespace Pixie
         {
             log.Log(new LogEntry(Severity.Error, title, contents));
         }
+
+        /// <summary>
+        /// Logs a compiler-style diagnostic entry.
+        /// </summary>
+        /// <param name="log">The log to write to.</param>
+        /// <param name="severity">The diagnostic severity.</param>
+        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="title">The diagnostic title.</param>
+        /// <param name="contents">The diagnostic body contents.</param>
+        public static void Diagnostic(
+            this ILog log,
+            Severity severity,
+            MarkupNode origin,
+            MarkupNode title,
+            params MarkupNode[] contents)
+        {
+            log.Log(
+                new LogEntry(
+                    severity,
+                    Pixie.Markup.Diagnostic.FromSeverity(
+                        severity,
+                        origin,
+                        title,
+                        new Sequence(contents))));
+        }
+
+        /// <summary>
+        /// Logs an error as a compiler-style diagnostic entry.
+        /// </summary>
+        /// <param name="log">The log to write to.</param>
+        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="title">The diagnostic title.</param>
+        /// <param name="contents">The diagnostic body contents.</param>
+        public static void ErrorDiagnostic(
+            this ILog log,
+            MarkupNode origin,
+            MarkupNode title,
+            params MarkupNode[] contents)
+        {
+            log.Diagnostic(Severity.Error, origin, title, contents);
+        }
+
+        /// <summary>
+        /// Logs a warning as a compiler-style diagnostic entry.
+        /// </summary>
+        /// <param name="log">The log to write to.</param>
+        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="title">The diagnostic title.</param>
+        /// <param name="contents">The diagnostic body contents.</param>
+        public static void WarningDiagnostic(
+            this ILog log,
+            MarkupNode origin,
+            MarkupNode title,
+            params MarkupNode[] contents)
+        {
+            log.Diagnostic(Severity.Warning, origin, title, contents);
+        }
     }
 }

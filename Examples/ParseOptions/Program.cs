@@ -74,7 +74,6 @@ namespace ParseOptions
             // a log once and then re-use it in your application.
             ILog log = TerminalLog
                 .Acquire()
-                .WithDiagnostics("program")
                 .WithWordWrap();
 
             var allOptions = new Option[]

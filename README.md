@@ -60,7 +60,7 @@ Use this as a quick decision guide:
 | --- | --- |
 | Write regular terminal output with wrapping and layout | `TerminalLog.AcquireStandardOutput()` |
 | Write diagnostics, warnings, or help text | `TerminalLog.Acquire()` |
-| Turn ordinary log entries into compiler-style diagnostics | `log.WithDiagnostics("program")` |
+| Write compiler-style diagnostics with headers | `log.ErrorDiagnostic(...)` or `Diagnostic.FromSeverity(...)` |
 | Parse GNU-style options and read typed values back | `CommandLine` + `OptionParseResult` |
 | Generate `--help` output from option definitions | `CommandLine.WithHelp(...)` or `HelpMessage` |
 | Control styling, encoding, or terminal capabilities manually | `TextWriterTerminal` + `TerminalLog.Acquire(...)` |
@@ -256,18 +256,17 @@ Pixie's diagnostic model is especially useful when you already know the source s
 There are two layers here:
 
 * `HighlightedSource` renders a code snippet with line numbers and caret/squiggle markers.
-* `WithDiagnostics(...)` wraps log entries as full diagnostics so they also get a header like `code.cs:3:5: error: Expected constructor name`.
+* `Diagnostic` renders a full diagnostic header like `code.cs:3:5: error: Expected constructor name`.
 
-In practice, most applications want both, so the usual setup is to enable diagnostics once on the log and then log `HighlightedSource` nodes normally.
+In practice, most applications want both, so create the highlighted snippet and log it through one of the diagnostic helpers.
 
 ```cs
 using Pixie;
 using Pixie.Code;
 using Pixie.Markup;
 using Pixie.Terminal;
-using Pixie.Transforms;
 
-var log = TerminalLog.Acquire().WithDiagnostics("program");
+var log = TerminalLog.Acquire();
 
 const string source = "public static class Program\n{\n    public Program()\n    { }\n}";
 var document = new StringDocument("code.cs", source);
@@ -275,16 +274,17 @@ var nameOffset = source.IndexOf("Program()");
 
 var focusRegion = new SourceRegion(
     new SourceSpan(document, nameOffset, "Program".Length));
+var highlightedSource = new HighlightedSource(focusRegion, focusRegion);
 
-log.Log(new LogEntry(
-    Severity.Error,
+log.ErrorDiagnostic(
+    new SourceReference(highlightedSource.HighlightedSpan),
     "Expected constructor name",
-    new HighlightedSource(focusRegion, focusRegion)));
+    highlightedSource);
 ```
 
-This works because `log.WithDiagnostics("program")` converts each `LogEntry` into a diagnostic before rendering it. When the entry contains a `HighlightedSource`, Pixie uses that source span as the diagnostic origin, which is what makes the filename and line/column information appear in the header.
+The diagnostic origin controls the filename and line/column information in the header. `SourceReference` is the common origin for caret diagnostics because it can resolve a highlighted source span back to the original document location.
 
-If you log a raw `LogEntry` with `new HighlightedSource(...)` but do not wrap the log with `WithDiagnostics(...)`, Pixie will still render the snippet and caret, but it will not render the `code.cs:line:column: error: ...` header.
+If you log a raw `LogEntry` with `new HighlightedSource(...)`, Pixie will still render the snippet and caret, but it will not render the `code.cs:line:column: error: ...` header. This keeps diagnostic output explicit, so the same application can freely mix diagnostics, help text, progress messages, and other non-diagnostic output.
 
 For a fuller version with transforms and custom renderer configuration, see [Examples/CaretDiagnostics/Program.cs](Examples/CaretDiagnostics/Program.cs).
 

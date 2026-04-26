@@ -35,18 +35,6 @@ namespace Pixie.Tests
         }
 
         [Test]
-        public void WithDiagnosticsWrapsEntriesInDiagnosticTransform()
-        {
-            var sink = new RecordingLog();
-            var log = sink.WithDiagnostics("program");
-
-            log.Log(new LogEntry(Severity.Error, "oops"));
-
-            var rendered = RenderTests.Render(sink.RecordedEntries[0].Contents);
-            StringAssert.Contains("program: error: oops", rendered);
-        }
-
-        [Test]
         public void WithTransformAppliesSingleEntryTransform()
         {
             var sink = new RecordingLog();

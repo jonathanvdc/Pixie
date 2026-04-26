@@ -145,13 +145,12 @@ namespace Pixie.Options
                 // Parse an argument.
                 if (!state.Parse(arguments[i]))
                 {
-                    log.Log(
-                        new LogEntry(
-                            Severity.Error,
-                            "meaningless argument",
-                            new Text("cannot assign a meaning to excessive command-line argument "),
-                            Quotation.CreateBoldQuotation(arguments[i]),
-                            new Text(".")));
+                    log.ErrorDiagnostic(
+                        "command line",
+                        "meaningless argument",
+                        new Text("cannot assign a meaning to excessive command-line argument "),
+                        Quotation.CreateBoldQuotation(arguments[i]),
+                        new Text("."));
                     break;
                 }
             }
@@ -429,17 +428,16 @@ namespace Pixie.Options
 
         private void LogUnexpectedArgument(string key, string value)
         {
-            Log.Log(
-                new LogEntry(
-                    Severity.Error,
-                    "unexpected argument",
-                    Quotation.QuoteEvenInBold(
-                        "command line option ",
-                        key,
-                        " did not expect an argument, but was passed ",
-                        value,
-                        "."),
-                    CreateUsageParagraph(key)));
+            Log.ErrorDiagnostic(
+                "command line",
+                "unexpected argument",
+                Quotation.QuoteEvenInBold(
+                    "command line option ",
+                    key,
+                    " did not expect an argument, but was passed ",
+                    value,
+                    "."),
+                CreateUsageParagraph(key));
         }
 
         private void LogUnrecognized(string option)
@@ -450,29 +448,27 @@ namespace Pixie.Options
 
             if (suggestion == null)
             {
-                Log.Log(
-                    new LogEntry(
-                        Severity.Error,
-                        "unknown option",
-                        "unrecognized command line option ",
-                        Quotation.CreateBoldQuotation(option),
-                        "."));
+                Log.ErrorDiagnostic(
+                    "command line",
+                    "unknown option",
+                    "unrecognized command line option ",
+                    Quotation.CreateBoldQuotation(option),
+                    ".");
             }
             else
             {
                 var diff = Diff.Create<char>(option, suggestion);
-                Log.Log(
-                    new LogEntry(
-                        Severity.Error,
-                        "unknown option",
-                        "unrecognized command line option ",
-                        Quotation.CreateBoldQuotation(
-                            TextDiff.RenderDeletions(diff)),
-                        "; did you mean ",
-                        Quotation.CreateBoldQuotation(
-                            TextDiff.RenderInsertions(diff)),
-                        "?",
-                        CreateUsageParagraph(suggestion)));
+                Log.ErrorDiagnostic(
+                    "command line",
+                    "unknown option",
+                    "unrecognized command line option ",
+                    Quotation.CreateBoldQuotation(
+                        TextDiff.RenderDeletions(diff)),
+                    "; did you mean ",
+                    Quotation.CreateBoldQuotation(
+                        TextDiff.RenderInsertions(diff)),
+                    "?",
+                    CreateUsageParagraph(suggestion));
             }
         }
 

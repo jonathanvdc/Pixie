@@ -59,18 +59,30 @@ Common building blocks:
 
 The [FormattedList example](../Examples/FormattedList/Program.cs) is a good reference for layout and wrapping.
 
-## Turn entries into diagnostics
+## Log diagnostics
 
-If you want compiler-style output such as `file.cs:12:4: error: expected expression`, wrap your log once:
+If you want compiler-style output such as `file.cs:12:4: error: expected expression`, log an explicit diagnostic:
 
 ```cs
+using Pixie;
+using Pixie.Code;
+using Pixie.Markup;
 using Pixie.Terminal;
-using Pixie.Transforms;
 
-var log = TerminalLog.Acquire().WithDiagnostics("program");
+var log = TerminalLog.Acquire();
+
+var document = new StringDocument("file.cs", source);
+var span = new SourceSpan(document, offset, length);
+var region = new SourceRegion(span);
+var snippet = new HighlightedSource(region, region);
+
+log.ErrorDiagnostic(
+    new SourceReference(snippet.HighlightedSpan),
+    "expected expression",
+    snippet);
 ```
 
-After that, ordinary `LogEntry` values are rendered as diagnostics automatically. When a log entry contains a `HighlightedSource`, Pixie can use its source span to populate the filename and line/column header.
+`HighlightedSource` renders the caret snippet. `SourceReference` tells the diagnostic header where the error came from. Ordinary `LogEntry` values remain ordinary output, which makes it straightforward to mix diagnostics with help text or status messages in the same command-line application.
 
 See the [CaretDiagnostics example](../Examples/CaretDiagnostics/Program.cs) for the full pattern.
 
