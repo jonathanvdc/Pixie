@@ -16,7 +16,7 @@ namespace Pixie.Code;
 /// text is read from each piece as needed, and source resolution follows each
 /// piece back to its original source span or anchor.
 /// </remarks>
-public sealed class PiecewiseSourceDocument : SourceDocumentView
+public sealed class PiecewiseSourceDocument : DerivedSourceDocument
 {
     private readonly string identifier;
     private readonly IReadOnlyList<SourceDocumentPiece> pieces;

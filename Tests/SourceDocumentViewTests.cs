@@ -45,7 +45,7 @@ namespace Pixie.Tests
             Assert.AreEqual(8, position.Column);
         }
 
-        private sealed class FixedSourceDocumentView : SourceDocumentView
+        private sealed class FixedSourceDocumentView : DerivedSourceDocument
         {
             private readonly string text;
             private readonly OriginalSourceDocument originalDocument;

@@ -3,7 +3,7 @@ namespace Pixie.Code;
 /// <summary>
 /// A derived source document whose spans resolve back to original source documents.
 /// </summary>
-public abstract class SourceDocumentView : SourceDocument
+public abstract class DerivedSourceDocument : SourceDocument
 {
     /// <inheritdoc/>
     public sealed override LineAndColumnPosition GetPosition(int offset)
