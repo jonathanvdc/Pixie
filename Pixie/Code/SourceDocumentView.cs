@@ -1,15 +1,14 @@
-namespace Pixie.Code
+namespace Pixie.Code;
+
+/// <summary>
+/// A derived source document whose spans resolve back to original source documents.
+/// </summary>
+public abstract class SourceDocumentView : SourceDocument
 {
-    /// <summary>
-    /// A derived source document whose spans resolve back to original source documents.
-    /// </summary>
-    public abstract class SourceDocumentView : SourceDocument
+    /// <inheritdoc/>
+    public sealed override LineAndColumnPosition GetPosition(int offset)
     {
-        /// <inheritdoc/>
-        public sealed override LineAndColumnPosition GetPosition(int offset)
-        {
-            var primary = ResolveSpan(offset, 0).PrimarySpan;
-            return primary.Document.GetPosition(primary.Start);
-        }
+        var primary = ResolveSpan(offset, 0).PrimarySpan;
+        return primary.Document.GetPosition(primary.Start);
     }
 }

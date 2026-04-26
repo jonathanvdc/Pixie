@@ -2,218 +2,217 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixie.Code
+namespace Pixie.Code;
+
+/// <summary>
+/// Specifies a sparse region of text in a document.
+/// </summary>
+public sealed class SourceRegion
 {
+    private SourceRegion()
+    { }
+
     /// <summary>
-    /// Specifies a sparse region of text in a document.
+    /// Creates a source region from a span.
     /// </summary>
-    public sealed class SourceRegion
+    /// <param name="span">A span of text in a document.</param>
+    public SourceRegion(SourceSpan span)
     {
-        private SourceRegion()
-        { }
-
-        /// <summary>
-        /// Creates a source region from a span.
-        /// </summary>
-        /// <param name="span">A span of text in a document.</param>
-        public SourceRegion(SourceSpan span)
+        if (!span.IsKnown)
         {
-            if (!span.IsKnown)
-            {
-                throw new ArgumentException(
-                    "Cannot create a source region from an unknown source span.",
-                    nameof(span));
-            }
-
-            this.Document = span.Document;
-            this.minIndex = span.Start;
-            this.maxIndex = span.End;
-            this.regionIndices = new HashSet<int>();
-            for (int i = 0; i < span.Length; i++)
-            {
-                this.regionIndices.Add(span.Start + i);
-            }
+            throw new ArgumentException(
+                "Cannot create a source region from an unknown source span.",
+                nameof(span));
         }
 
-        private int minIndex;
-        private int maxIndex;
-        private HashSet<int> regionIndices;
-
-        /// <summary>
-        /// Gets the document that is the context for this region.
-        /// </summary>
-        /// <returns>The source document.</returns>
-        public SourceDocument Document { get; private set; }
-
-        /// <summary>
-        /// Gets the offset to the start of this region.
-        /// </summary>
-        /// <returns>The offset to the start of this region.</returns>
-        public int StartOffset => minIndex;
-
-        /// <summary>
-        /// Gets the offset to the start of this region.
-        /// </summary>
-        /// <returns>The offset to the start of this region.</returns>
-        public int Start => minIndex;
-
-        /// <summary>
-        /// Gets the offset to the end of this region: the index of the
-        /// first character that does not belong to this region.
-        /// </summary>
-        /// <returns>The offset to the end of this region.</returns>
-        public int EndOffset => maxIndex;
-
-        /// <summary>
-        /// Gets the offset to the end of this region: the index of the
-        /// first character that does not belong to this region.
-        /// </summary>
-        /// <returns>The offset to the end of this region.</returns>
-        public int End => maxIndex;
-
-        /// <summary>
-        /// Gets the length of this region: the difference between the end
-        /// and start of this region.
-        /// </summary>
-        /// <returns>The length of the region.</returns>
-        public int Length => EndOffset - StartOffset;
-
-        /// <summary>
-        /// Gets a source span that covers the full extent of this region.
-        /// </summary>
-        /// <returns>A source span that covers the full extent of this region.</returns>
-        public SourceSpan BoundingSpan => new SourceSpan(Document, Start, Length);
-
-        /// <summary>
-        /// Checks if this region contains the character at the given offset.
-        /// </summary>
-        /// <param name="offset">The offset of a character.</param>
-        /// <returns>
-        /// <c>true</c> if this region contains the character at the offset; otherwise, <c>false</c>.
-        /// </returns>
-        public bool Contains(int offset)
+        this.Document = span.Document;
+        this.minIndex = span.Start;
+        this.maxIndex = span.End;
+        this.regionIndices = new HashSet<int>();
+        for (int i = 0; i < span.Length; i++)
         {
-            return regionIndices.Contains(offset);
-        }
-
-        /// <summary>
-        /// Computes the union of this region and another region
-        /// </summary>
-        /// <param name="region">A region of text in the same document.</param>
-        /// <returns>A new source region.</returns>
-        public SourceRegion Union(SourceRegion region)
-        {
-            if (Document != region.Document)
-            {
-                throw new ArgumentException(
-                    "Regions are not in the same document.",
-                    nameof(region));
-            }
-
-            var newRegion = new SourceRegion();
-            newRegion.Document = Document;
-            newRegion.regionIndices = new HashSet<int>(regionIndices);
-            newRegion.regionIndices.UnionWith(region.regionIndices);
-            newRegion.minIndex = Math.Min(region.minIndex, minIndex);
-            newRegion.maxIndex = Math.Max(region.maxIndex, maxIndex);
-            return newRegion;
-        }
-
-        /// <summary>
-        /// Computes the union of this region and a span.
-        /// </summary>
-        /// <param name="span">A span of text in the same document.</param>
-        /// <returns>A new source region.</returns>
-        public SourceRegion Union(SourceSpan span)
-        {
-            if (Document != span.Document)
-            {
-                throw new ArgumentException(
-                    "Region and span are not in the same document.",
-                    nameof(span));
-            }
-
-            var region = new SourceRegion();
-            region.Document = Document;
-            region.regionIndices = new HashSet<int>(regionIndices);
-            for (int i = 0; i < span.Length; i++)
-            {
-                region.regionIndices.Add(span.Start + i);
-            }
-            region.minIndex = Math.Min(span.Start, minIndex);
-            region.maxIndex = Math.Max(span.End, maxIndex);
-            return region;
-        }
-
-        /// <summary>
-        /// Creates a new region that includes the intersection of the
-        /// current region's characters and the characters for which a
-        /// predicate returns <c>true</c>.
-        /// </summary>
-        /// <param name="include">
-        /// A predicate that decides whether a character is kept or discarded.
-        /// </param>
-        /// <returns>A new source region.</returns>
-        public SourceRegion FilterCharacters(Predicate<char> include)
-        {
-            var newSet = new HashSet<int>();
-
-            int newMin = int.MaxValue;
-            int newMax = int.MinValue;
-            
-            foreach (var offset in regionIndices)
-            {
-                char charValue = Enumerable.Single<char>(
-                    Document.GetText(offset, 1));
-                if (include(charValue))
-                {
-                    if (offset < newMin)
-                    {
-                        newMin = offset;
-                    }
-                    if (offset > newMax)
-                    {
-                        newMax = offset + 1;
-                    }
-                    newSet.Add(offset);
-                }
-            }
-
-            var result = new SourceRegion();
-            result.regionIndices = newSet;
-            result.minIndex = newMin;
-            result.maxIndex = newMax;
-            result.Document = Document;
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a new region that includes the intersection of the
-        /// current region's characters and the characters for which a
-        /// predicate returns <c>false</c>.
-        /// </summary>
-        /// <param name="exclude">
-        /// A predicate that decides whether a character is discarded or kept.
-        /// </param>
-        /// <returns>A new source region.</returns>
-        public SourceRegion ExcludeCharacters(Predicate<char> exclude)
-        {
-            return FilterCharacters(new NotPredicate<char>(exclude).Invoke);
+            this.regionIndices.Add(span.Start + i);
         }
     }
 
-    internal sealed class NotPredicate<T>
+    private int minIndex;
+    private int maxIndex;
+    private HashSet<int> regionIndices;
+
+    /// <summary>
+    /// Gets the document that is the context for this region.
+    /// </summary>
+    /// <returns>The source document.</returns>
+    public SourceDocument Document { get; private set; }
+
+    /// <summary>
+    /// Gets the offset to the start of this region.
+    /// </summary>
+    /// <returns>The offset to the start of this region.</returns>
+    public int StartOffset => minIndex;
+
+    /// <summary>
+    /// Gets the offset to the start of this region.
+    /// </summary>
+    /// <returns>The offset to the start of this region.</returns>
+    public int Start => minIndex;
+
+    /// <summary>
+    /// Gets the offset to the end of this region: the index of the
+    /// first character that does not belong to this region.
+    /// </summary>
+    /// <returns>The offset to the end of this region.</returns>
+    public int EndOffset => maxIndex;
+
+    /// <summary>
+    /// Gets the offset to the end of this region: the index of the
+    /// first character that does not belong to this region.
+    /// </summary>
+    /// <returns>The offset to the end of this region.</returns>
+    public int End => maxIndex;
+
+    /// <summary>
+    /// Gets the length of this region: the difference between the end
+    /// and start of this region.
+    /// </summary>
+    /// <returns>The length of the region.</returns>
+    public int Length => EndOffset - StartOffset;
+
+    /// <summary>
+    /// Gets a source span that covers the full extent of this region.
+    /// </summary>
+    /// <returns>A source span that covers the full extent of this region.</returns>
+    public SourceSpan BoundingSpan => new SourceSpan(Document, Start, Length);
+
+    /// <summary>
+    /// Checks if this region contains the character at the given offset.
+    /// </summary>
+    /// <param name="offset">The offset of a character.</param>
+    /// <returns>
+    /// <c>true</c> if this region contains the character at the offset; otherwise, <c>false</c>.
+    /// </returns>
+    public bool Contains(int offset)
     {
-        public NotPredicate(Predicate<T> predicate)
+        return regionIndices.Contains(offset);
+    }
+
+    /// <summary>
+    /// Computes the union of this region and another region
+    /// </summary>
+    /// <param name="region">A region of text in the same document.</param>
+    /// <returns>A new source region.</returns>
+    public SourceRegion Union(SourceRegion region)
+    {
+        if (Document != region.Document)
         {
-            this.Predicate = predicate;
+            throw new ArgumentException(
+                "Regions are not in the same document.",
+                nameof(region));
         }
 
-        public Predicate<T> Predicate { get; private set; }
+        var newRegion = new SourceRegion();
+        newRegion.Document = Document;
+        newRegion.regionIndices = new HashSet<int>(regionIndices);
+        newRegion.regionIndices.UnionWith(region.regionIndices);
+        newRegion.minIndex = Math.Min(region.minIndex, minIndex);
+        newRegion.maxIndex = Math.Max(region.maxIndex, maxIndex);
+        return newRegion;
+    }
 
-        public bool Invoke(T value)
+    /// <summary>
+    /// Computes the union of this region and a span.
+    /// </summary>
+    /// <param name="span">A span of text in the same document.</param>
+    /// <returns>A new source region.</returns>
+    public SourceRegion Union(SourceSpan span)
+    {
+        if (Document != span.Document)
         {
-            return !Predicate(value);
+            throw new ArgumentException(
+                "Region and span are not in the same document.",
+                nameof(span));
         }
+
+        var region = new SourceRegion();
+        region.Document = Document;
+        region.regionIndices = new HashSet<int>(regionIndices);
+        for (int i = 0; i < span.Length; i++)
+        {
+            region.regionIndices.Add(span.Start + i);
+        }
+        region.minIndex = Math.Min(span.Start, minIndex);
+        region.maxIndex = Math.Max(span.End, maxIndex);
+        return region;
+    }
+
+    /// <summary>
+    /// Creates a new region that includes the intersection of the
+    /// current region's characters and the characters for which a
+    /// predicate returns <c>true</c>.
+    /// </summary>
+    /// <param name="include">
+    /// A predicate that decides whether a character is kept or discarded.
+    /// </param>
+    /// <returns>A new source region.</returns>
+    public SourceRegion FilterCharacters(Predicate<char> include)
+    {
+        var newSet = new HashSet<int>();
+
+        int newMin = int.MaxValue;
+        int newMax = int.MinValue;
+        
+        foreach (var offset in regionIndices)
+        {
+            char charValue = Enumerable.Single<char>(
+                Document.GetText(offset, 1));
+            if (include(charValue))
+            {
+                if (offset < newMin)
+                {
+                    newMin = offset;
+                }
+                if (offset > newMax)
+                {
+                    newMax = offset + 1;
+                }
+                newSet.Add(offset);
+            }
+        }
+
+        var result = new SourceRegion();
+        result.regionIndices = newSet;
+        result.minIndex = newMin;
+        result.maxIndex = newMax;
+        result.Document = Document;
+        return result;
+    }
+
+    /// <summary>
+    /// Creates a new region that includes the intersection of the
+    /// current region's characters and the characters for which a
+    /// predicate returns <c>false</c>.
+    /// </summary>
+    /// <param name="exclude">
+    /// A predicate that decides whether a character is discarded or kept.
+    /// </param>
+    /// <returns>A new source region.</returns>
+    public SourceRegion ExcludeCharacters(Predicate<char> exclude)
+    {
+        return FilterCharacters(new NotPredicate<char>(exclude).Invoke);
+    }
+}
+
+internal sealed class NotPredicate<T>
+{
+    public NotPredicate(Predicate<T> predicate)
+    {
+        this.Predicate = predicate;
+    }
+
+    public Predicate<T> Predicate { get; private set; }
+
+    public bool Invoke(T value)
+    {
+        return !Predicate(value);
     }
 }
