@@ -4,7 +4,7 @@ namespace Pixie.Code
     /// Represents a span in user-authored original source text.
     /// </summary>
     /// <remarks>
-    /// Unlike <see cref="SourceLocation"/>, this type is not relative to an arbitrary parsed
+    /// Unlike <see cref="SourceSpan"/>, this type is not relative to an arbitrary parsed
     /// source view. It always points at an <see cref="OriginalSourceDocument"/>.
     /// </remarks>
     public struct OriginalSourceSpan
