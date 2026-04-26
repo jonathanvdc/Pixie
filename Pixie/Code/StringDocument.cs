@@ -30,7 +30,20 @@ namespace Pixie.Code
         /// <inheritdoc/>
         public override TextReader Open(int offset)
         {
-            return new StringReader(GetText(offset, Length - offset));
+            var reader = new StringReader(Contents);
+            if (offset > 0)
+            {
+                int bufferSize = 1024;
+                var buffer = new char[bufferSize];
+                while (offset > 0)
+                {
+                    int readCount = System.Math.Min(offset, bufferSize);
+                    reader.Read(buffer, 0, readCount);
+                    offset -= readCount;
+                }
+            }
+
+            return reader;
         }
 
         /// <inheritdoc/>
