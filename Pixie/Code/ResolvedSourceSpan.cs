@@ -4,8 +4,14 @@ using System.Collections.Generic;
 namespace Pixie.Code
 {
     /// <summary>
-    /// Describes the original source coverage for a span in a source document.
+    /// Represents the original source coverage for a span in a parsed source document.
     /// </summary>
+    /// <remarks>
+    /// A contiguous span in a mapped document may originate from several disjoint spans, and
+    /// eventually from several source files. <see cref="PrimarySpan"/> is the single best span
+    /// for classic diagnostic display, while <see cref="OriginSpans"/> preserves the complete
+    /// original-source coverage for richer diagnostics.
+    /// </remarks>
     public sealed class ResolvedSourceSpan
     {
         /// <summary>

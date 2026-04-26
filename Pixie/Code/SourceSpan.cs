@@ -3,8 +3,24 @@ using System;
 namespace Pixie.Code
 {
     /// <summary>
-    /// Specifies a contiguous span of text in a document.
+    /// Represents a source span backed by a document-relative character offset and length.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <see cref="Start"/> and <see cref="Length"/> are relative to the owning
+    /// <see cref="SourceDocument"/>'s text. The owning document may be original source text or a
+    /// derived source view such as preprocessed text.
+    /// </para>
+    /// <para>
+    /// Line, column, file name, and original source spans are resolved on demand through the owning
+    /// document. This keeps tokens compact while allowing mapped documents to report diagnostics
+    /// against user-authored source.
+    /// </para>
+    /// <para>
+    /// An <em>unknown</em> location is represented by the <see langword="default"/> value (i.e., a
+    /// <see langword="null"/> document). Use <see cref="Unknown"/> to obtain one explicitly.
+    /// </para>
+    /// </remarks>
     public struct SourceSpan
     {
         /// <summary>
