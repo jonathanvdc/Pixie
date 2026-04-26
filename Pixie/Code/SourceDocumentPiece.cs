@@ -55,7 +55,7 @@ public sealed class SourceDocumentPiece
     /// </summary>
     /// <param name="origin">The source span to copy into the assembled document.</param>
     /// <returns>A source-backed piece.</returns>
-    public static SourceDocumentPiece FromSource(SourceSpan origin)
+    public static SourceDocumentPiece FromSource(in SourceSpan origin)
     {
         if (!origin.IsKnown)
         {
@@ -83,7 +83,7 @@ public sealed class SourceDocumentPiece
     /// <param name="text">The generated text.</param>
     /// <param name="anchor">The span that caused the generated text to exist.</param>
     /// <returns>An anchored literal text piece.</returns>
-    public static SourceDocumentPiece FromText(string text, SourceSpan anchor)
+    public static SourceDocumentPiece FromText(string text, in SourceSpan anchor)
     {
         return new SourceDocumentPiece(text ?? string.Empty, anchor, false);
     }
