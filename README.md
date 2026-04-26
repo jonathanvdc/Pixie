@@ -51,13 +51,6 @@ Pixie is split into a small set of packages and assemblies:
 | --- | --- |
 | [`Pixie`](https://www.nuget.org/packages/Pixie) | Core logging, markup, diagnostics, option parsing, and terminal integration. |
 | `Pixie.Terminal` | Terminal rendering types. This assembly ships with the `Pixie` package, so you usually do not install it separately. |
-| [`Pixie.Loyc`](https://www.nuget.org/packages/Pixie.Loyc) | Optional Loyc interoperability for translating Loyc diagnostics into Pixie output. |
-
-Install Loyc support only if you need it:
-
-```sh
-dotnet add package Pixie.Loyc
-```
 
 ## Choose the right starting point
 
@@ -71,7 +64,6 @@ Use this as a quick decision guide:
 | Parse GNU-style options and read typed values back | `CommandLine` + `OptionParseResult` |
 | Generate `--help` output from option definitions | `CommandLine.WithHelp(...)` or `HelpMessage` |
 | Control styling, encoding, or terminal capabilities manually | `TextWriterTerminal` + `TerminalLog.Acquire(...)` |
-| Translate Loyc diagnostics into Pixie output | `PixieMessageSink` from `Pixie.Loyc` |
 
 For a fuller walkthrough, see [docs/getting-started.md](docs/getting-started.md).
 
@@ -125,12 +117,6 @@ Without careful layout, terminal messages can become awkward:
 With Pixie, the same message can be wrapped and structured more cleanly:
 
 ![Happy line break](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/happy-line-break.svg)
-
-### Loyc interoperability
-
-If you use Loyc libraries such as EC# or LeMP, `Pixie.Loyc` can translate their diagnostics into Pixie markup so they render consistently with the rest of your application output.
-
-![Loyc diagnostic](https://raw.githubusercontent.com/jonathanvdc/Pixie/master/docs/img/loyc-interop.svg)
 
 ## Getting started
 
@@ -306,8 +292,6 @@ For a fuller version with transforms and custom renderer configuration, see [Exa
 
 `Pixie` is enough for most applications. It includes the core APIs plus the `Pixie.Terminal` assembly, so you can use `TerminalLog`, terminal renderers, and terminal device helpers after installing the main package.
 
-`Pixie.Loyc` is optional. Install it only when you already use Loyc libraries and want their diagnostics to flow through Pixie. For a dedicated walkthrough, see [docs/loyc.md](docs/loyc.md).
-
 ## Examples
 
 The repository includes small example programs you can run directly:
@@ -327,7 +311,6 @@ Available examples:
 | [`Examples/PrintHelp`](Examples/PrintHelp) | Building help output from option definitions. |
 | [`Examples/ParseOptions`](Examples/ParseOptions) | GNU-style parsing, typed values, suggestions, and diagnostic feedback. |
 | [`Examples/CaretDiagnostics`](Examples/CaretDiagnostics) | Source snippets, focus regions, and compiler-style diagnostic headers. |
-| [`Examples/LoycInterop`](Examples/LoycInterop) | Translating Loyc parser diagnostics into Pixie output. |
 
 For a more guided tour, see [docs/examples.md](docs/examples.md).
 
@@ -351,7 +334,6 @@ dotnet test Tests/Tests.csproj
 | --- | --- |
 | [`Pixie/`](Pixie) | Core library: logs, markup nodes, diagnostics, options, and transforms. |
 | [`Pixie.Terminal/`](Pixie.Terminal) | Terminal rendering and device-specific behavior. |
-| [`Pixie.Loyc/`](Pixie.Loyc) | Loyc interoperability layer. |
 | [`Examples/`](Examples) | Small runnable sample applications. |
 | [`Tests/`](Tests) | NUnit test suite. |
 | [`docs/img/`](docs/img) | SVG assets used in this README. |

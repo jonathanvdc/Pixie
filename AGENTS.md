@@ -9,12 +9,9 @@ compiler-style diagnostics, help text, and GNU-style option parsing.
 - `Pixie.Terminal`
   Terminal devices and renderers that turn markup trees into terminal output with
   wrapping, styling, alignment, and graceful degradation.
-- `Pixie.Loyc`
-  Optional interop layer that translates Loyc source documents and diagnostics
-  into Pixie source references and markup.
 - `Tests`
   NUnit test suite covering core behavior, rendering, diagnostics, option
-  parsing, source references, and Loyc interop.
+  parsing, and source references.
 - `Examples`
   Small executable examples for documentation, screenshots, and user-facing
   scenarios.
@@ -39,7 +36,6 @@ Prefer implementing behavior at the earliest correct layer.
   `Pixie`.
 - If behavior is about how markup appears in a terminal, implement it in
   `Pixie.Terminal`.
-- If behavior is only about Loyc adaptation, keep it in `Pixie.Loyc`.
 - If behavior is only a usage demonstration, keep it in `Examples` or `docs`
   rather than adding library API.
 
@@ -156,19 +152,6 @@ When changing option parsing:
 `WasHandled` is for parser-managed early exits such as help/version. Parse
 failures should be represented by `IsSuccess == false`.
 
-## Loyc Interop
-
-`Pixie.Loyc` adapts Loyc concepts to Pixie concepts.
-
-Use this layer only for interop concerns:
-
-- wrapping Loyc source files as Pixie source documents
-- translating Loyc severity to Pixie severity
-- converting Loyc source ranges and message sink contexts into Pixie markup
-- maintaining a source-document cache for Loyc diagnostics
-
-Do not add Loyc-specific assumptions to `Pixie` or `Pixie.Terminal`.
-
 ## Tests
 
 The main test project is `Tests/Tests.csproj`.
@@ -184,8 +167,6 @@ Important test areas:
   Terminal rendering and device behavior.
 - `GnuOptionSetParserTests`, `OptionFormattingTests`
   Option parsing and help formatting.
-- `LoycInteropTests`
-  Optional Loyc adapter behavior.
 - `MarkupNodeBehaviorTests`, `CoreValueTests`, `LogBehaviorTests`
   Core object and logging behavior.
 
@@ -211,8 +192,7 @@ dotnet run --project Examples/PrintHelp/PrintHelp.csproj
 ```
 
 Use the full solution test command before finishing changes that touch public
-API, source diagnostics, rendering, option parsing, terminal devices, or Loyc
-interop.
+API, source diagnostics, rendering, option parsing, or terminal devices.
 
 If only docs changed, build/test may be unnecessary, but still inspect links,
 examples, and code snippets carefully.
@@ -257,8 +237,6 @@ Use examples this way:
   Source spans, regions, and caret diagnostics.
 - `Examples/FormattedList`
   Layout, wrapping, and terminal configuration.
-- `Examples/LoycInterop`
-  Loyc diagnostic translation.
 - `Examples/ParseOptions`
   Parsing and user-facing parse feedback.
 - `Examples/PrintHelp`
@@ -289,8 +267,7 @@ Ask:
 1. Is this about what the application wants to say? Put it in core markup,
    logging, options, diagnostics, or source modeling.
 2. Is this about how output appears on a terminal? Put it in `Pixie.Terminal`.
-3. Is this about adapting Loyc? Put it in `Pixie.Loyc`.
-4. Is this about teaching users? Put it in `Examples` or `docs`.
+3. Is this about teaching users? Put it in `Examples` or `docs`.
 
 When in doubt, choose the layer that can express the behavior without knowing
 about lower-level rendering or higher-level application details.
