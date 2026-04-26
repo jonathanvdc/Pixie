@@ -109,7 +109,7 @@ namespace Pixie
             log.Log(
                 new LogEntry(
                     severity,
-                    Pixie.Markup.Diagnostic.FromSeverity(
+                    Markup.Diagnostic.FromSeverity(
                         severity,
                         origin,
                         title,
