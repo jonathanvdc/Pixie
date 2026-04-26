@@ -11,7 +11,7 @@ namespace Pixie.Tests
         public void TestLogForwardsBeforeThrowingOnFatalSeverity()
         {
             var sink = new RecordingLog();
-            var log = new TestLog(new[] { Severity.Error }, sink);
+            var log = new ThrowingLog(new[] { Severity.Error }, sink);
             var entry = new LogEntry(Severity.Error, "fatal");
 
             Assert.Throws<PixieException>(() => log.Log(entry));

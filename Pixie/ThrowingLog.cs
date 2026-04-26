@@ -6,7 +6,7 @@ namespace Pixie
     /// A type of log that sends messages to another log and aborts
     /// execution if the severity of an error is deemed fatal
     /// </summary>
-    public sealed class TestLog : ILog
+    public sealed class ThrowingLog : ILog
     {
         /// <summary>
         /// Creates a test log.
@@ -19,7 +19,7 @@ namespace Pixie
         /// A log to which messages are sent before the decision to
         /// throw an exception or not is taken.
         /// </param>
-        public TestLog(
+        public ThrowingLog(
             IEnumerable<Severity> fatalSeverities,
             ILog redirectionLog)
         {

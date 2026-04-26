@@ -410,7 +410,7 @@ namespace Pixie.Tests
         {
             parser.Parse(
                 args,
-                new TestLog(
+                new ThrowingLog(
                     new Severity[] { Severity.Error },
                     NullLog.Instance));
         }
