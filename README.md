@@ -45,12 +45,13 @@ In most applications, you should acquire a log once and reuse it.
 
 ## Packages
 
-Pixie is split into a small set of packages and assemblies:
+Pixie ships as a single NuGet package:
 
-| Package | Purpose |
+| Package | Includes |
 | --- | --- |
-| [`Pixie`](https://www.nuget.org/packages/Pixie) | Core logging, markup, diagnostics, option parsing, and terminal integration. |
-| `Pixie.Terminal` | Terminal rendering types. This assembly ships with the `Pixie` package, so you usually do not install it separately. |
+| [`Pixie`](https://www.nuget.org/packages/Pixie) | Core APIs for logging, markup, diagnostics, option parsing, and terminal output (including `Pixie.Terminal`). |
+
+You normally only need to install `Pixie`. The `Pixie.Terminal` assembly is included in that package and does not need to be installed separately.
 
 ## Choose the right starting point
 
