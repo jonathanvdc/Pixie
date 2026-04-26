@@ -47,7 +47,6 @@ jobs:
         run: |
           dotnet ./Examples/CaretDiagnostics/bin/Release/net10.0/CaretDiagnostics.dll
           dotnet ./Examples/FormattedList/bin/Release/net10.0/FormattedList.dll
-          dotnet ./Examples/LoycInterop/bin/Release/net10.0/LoycInterop.dll
           dotnet ./Examples/ParseOptions/bin/Release/net10.0/ParseOptions.dll a.txt -fno-syntax-only --files -O1 -Ofast b.txt --files=c.txt - -- -v
           dotnet ./Examples/PrintHelp/bin/Release/net10.0/PrintHelp.dll
           dotnet ./Examples/SimpleErrorMessage/bin/Release/net10.0/SimpleErrorMessage.dll
