@@ -6,7 +6,7 @@ namespace Pixie.Code
     public abstract class SourceDocumentView : SourceDocument
     {
         /// <inheritdoc/>
-        public sealed override SourcePosition GetPosition(int offset)
+        public sealed override LineAndColumnPosition GetPosition(int offset)
         {
             var primary = ResolveSpan(offset, 0).PrimarySpan;
             return primary.Document.GetPosition(primary.Start);

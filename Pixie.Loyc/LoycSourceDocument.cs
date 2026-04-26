@@ -36,7 +36,7 @@ namespace Pixie.Loyc
         }
 
         /// <inheritdoc/>
-        public override SourcePosition GetPosition(int offset)
+        public override LineAndColumnPosition GetPosition(int offset)
         {
             return originalDocumentCache.Value.GetPosition(offset);
         }

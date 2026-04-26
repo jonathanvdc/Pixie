@@ -55,7 +55,7 @@ namespace Pixie.Code
         /// </summary>
         /// <param name="offset">The offset to a character in the document.</param>
         /// <returns>A diagnostic display position.</returns>
-        public abstract SourcePosition GetPosition(int offset);
+        public abstract LineAndColumnPosition GetPosition(int offset);
 
         /// <summary>
         /// Gets the offset of the first character on a particular line.

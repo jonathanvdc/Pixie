@@ -93,8 +93,8 @@ namespace Pixie.Code
         /// Gets the diagnostic display position of the span start.
         /// </summary>
         /// <returns>The diagnostic display position.</returns>
-        public SourcePosition Position =>
-            IsKnown ? Document.GetPosition(Start) : SourcePosition.Unknown;
+        public LineAndColumnPosition Position =>
+            IsKnown ? Document.GetPosition(Start) : LineAndColumnPosition.Unknown;
 
         /// <summary>
         /// Gets this span's contents as text.

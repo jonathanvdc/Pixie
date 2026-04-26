@@ -35,7 +35,7 @@ namespace Pixie.Code
         public override int LineCount => lineOffsets.Count;
 
         /// <inheritdoc/>
-        public override SourcePosition GetPosition(int offset)
+        public override LineAndColumnPosition GetPosition(int offset)
         {
             if (offset < 0)
             {
@@ -61,7 +61,7 @@ namespace Pixie.Code
                 }
             }
 
-            return new SourcePosition(
+            return new LineAndColumnPosition(
                 Identifier,
                 lo + 1,
                 offset - lineOffsets[lo] + 1);

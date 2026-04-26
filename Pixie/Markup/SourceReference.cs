@@ -33,8 +33,8 @@ namespace Pixie.Markup
         /// <returns>A markup node.</returns>
         protected virtual MarkupNode Render(
             string documentIdentifier,
-            SourcePosition start,
-            SourcePosition end)
+            LineAndColumnPosition start,
+            LineAndColumnPosition end)
         {
             return new Text(
                 documentIdentifier + ":" + start.Line + ":" + start.Column);
@@ -77,8 +77,8 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         protected override MarkupNode Render(
             string documentIdentifier,
-            SourcePosition start,
-            SourcePosition end)
+            LineAndColumnPosition start,
+            LineAndColumnPosition end)
         {
             return new Text(
                 documentIdentifier + "(" + start.Line + "," + start.Column + ")");
@@ -102,8 +102,8 @@ namespace Pixie.Markup
         /// <inheritdoc/>
         protected override MarkupNode Render(
             string documentIdentifier,
-            SourcePosition start,
-            SourcePosition end)
+            LineAndColumnPosition start,
+            LineAndColumnPosition end)
         {
             return new Text(
                 documentIdentifier + " +" + start.Line + ":" + start.Column);

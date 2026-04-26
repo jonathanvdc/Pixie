@@ -122,7 +122,7 @@ namespace Pixie.Tests
             }
         }
 
-        private static void AssertPosition(int line, int column, SourcePosition position)
+        private static void AssertPosition(int line, int column, LineAndColumnPosition position)
         {
             Assert.AreEqual(line, position.Line);
             Assert.AreEqual(column, position.Column);

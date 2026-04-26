@@ -3,7 +3,7 @@ namespace Pixie.Code
     /// <summary>
     /// Specifies a diagnostic display position in source code.
     /// </summary>
-    public struct SourcePosition
+    public struct LineAndColumnPosition
     {
         /// <summary>
         /// Creates a source position from an identifier, line and column.
@@ -11,7 +11,7 @@ namespace Pixie.Code
         /// <param name="identifier">The source document identifier.</param>
         /// <param name="line">The one-based source line.</param>
         /// <param name="column">The one-based source column.</param>
-        public SourcePosition(string identifier, int line, int column)
+        public LineAndColumnPosition(string identifier, int line, int column)
         {
             this.Identifier = identifier;
             this.Line = line;
@@ -39,6 +39,6 @@ namespace Pixie.Code
         /// <summary>
         /// Gets an unknown source position.
         /// </summary>
-        public static SourcePosition Unknown => default;
+        public static LineAndColumnPosition Unknown => default;
     }
 }
