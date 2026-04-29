@@ -21,7 +21,7 @@ namespace Pixie
             Func<LogEntry, LogEntry> transform)
             : this(
                 outputLog,
-                new Func<LogEntry, LogEntry>[] { transform })
+                [transform])
         { }
 
         /// <summary>
