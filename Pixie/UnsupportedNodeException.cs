@@ -13,7 +13,7 @@ namespace Pixie
         /// <summary>
         /// Creates an unsupported node exception.
         /// </summary>
-        public UnsupportedNodeException(MarkupNode node)
+        public UnsupportedNodeException(MarkupElement node)
             : base("Node not supported.")
         {
             this.Node = node;
@@ -24,7 +24,7 @@ namespace Pixie
         /// </summary>
         /// <param name="node">The node that is not supported.</param>
         /// <param name="message">The exception's error message.</param>
-        public UnsupportedNodeException(MarkupNode node, string message)
+        public UnsupportedNodeException(MarkupElement node, string message)
             : base(message)
         {
             this.Node = node;
@@ -36,7 +36,7 @@ namespace Pixie
         /// <param name="node">The node that is not supported.</param>
         /// <param name="message">The exception's error message.</param>
         /// <param name="inner">An inner exception.</param>
-        public UnsupportedNodeException(MarkupNode node, string message, Exception inner)
+        public UnsupportedNodeException(MarkupElement node, string message, Exception inner)
             : base(message, inner)
         {
             this.Node = node;
@@ -56,6 +56,6 @@ namespace Pixie
         /// Gets the node that triggered this exception.
         /// </summary>
         /// <returns>The unsupported node.</returns>
-        public MarkupNode Node { get; private set; }
+        public MarkupElement Node { get; private set; }
     }
 }

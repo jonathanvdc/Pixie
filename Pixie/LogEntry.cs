@@ -13,7 +13,7 @@ namespace Pixie
         /// </summary>
         /// <param name="severity">The log entry's severity.</param>
         /// <param name="contents">The log entry's contents.</param>
-        public LogEntry(Severity severity, MarkupNode contents)
+        public LogEntry(Severity severity, Block contents)
         {
             this = default(LogEntry);
             this.Severity = severity;
@@ -29,15 +29,15 @@ namespace Pixie
         public LogEntry(
             Severity severity,
             string title,
-            params MarkupNode[] contents)
+            params Block[] contents)
         {
             this = default(LogEntry);
             this.Severity = severity;
 
-            var extendedContents = new MarkupNode[contents.Length + 1];
+            var extendedContents = new Block[contents.Length + 1];
             extendedContents[0] = new Title(title);
             Array.Copy(contents, 0, extendedContents, 1, contents.Length);
-            this.Contents = new Sequence(extendedContents);
+            this.Contents = new Stack(extendedContents);
         }
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace Pixie
         /// </summary>
         /// <param name="severity">The log entry's severity.</param>
         /// <param name="contents">The log entry's contents.</param>
-        public LogEntry(Severity severity, params MarkupNode[] contents)
+        public LogEntry(Severity severity, params Block[] contents)
         {
             this = default(LogEntry);
             this.Severity = severity;
-            this.Contents = new Sequence(contents);
+            this.Contents = new Stack(contents);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Pixie
         /// Gets the markup nodes that make up this log entry's contents.
         /// </summary>
         /// <returns>The log entry's contents.</returns>
-        public MarkupNode Contents { get; private set; }
+        public Block Contents { get; private set; }
 
         /// <summary>
         /// Creates a new log entry by applying a mapping to this
@@ -70,7 +70,7 @@ namespace Pixie
         /// </summary>
         /// <param name="mapping">The mapping to apply.</param>
         /// <returns>A new log entry.</returns>
-        public LogEntry Map(Func<MarkupNode, MarkupNode> mapping)
+        public LogEntry Map(Func<Block, Block> mapping)
         {
             return new LogEntry(Severity, mapping(Contents));
         }

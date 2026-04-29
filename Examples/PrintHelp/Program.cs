@@ -12,7 +12,7 @@ namespace PrintHelp
         /// Composes the help message itself.
         /// </summary>
         /// <returns>The help message.</returns>
-        public static MarkupNode ComposeHelpMessage()
+        public static Block ComposeHelpMessage()
         {
             // This is the gist of this example.
 

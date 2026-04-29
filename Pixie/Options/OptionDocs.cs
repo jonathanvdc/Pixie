@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Options
 {
@@ -21,7 +22,7 @@ namespace Pixie.Options
         /// </param>
         public OptionDocs(
             string category,
-            MarkupNode description,
+            Block description,
             IReadOnlyDictionary<OptionForm, IReadOnlyList<OptionParameter>> parameters)
         {
             this.Category = category;
@@ -46,7 +47,7 @@ namespace Pixie.Options
         /// </param>
         public OptionDocs(
             string category,
-            MarkupNode description,
+            Block description,
             IReadOnlyList<OptionForm> forms,
             IReadOnlyList<OptionParameter> parameters)
         {
@@ -75,7 +76,7 @@ namespace Pixie.Options
         /// Gets a description of what the option does.
         /// </summary>
         /// <returns>A description.</returns>
-        public MarkupNode Description { get; private set; }
+        public Block Description { get; private set; }
 
         /// <summary>
         /// Gets a dictionary that maps each option form to

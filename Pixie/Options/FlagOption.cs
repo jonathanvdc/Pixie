@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Options
 {
@@ -76,7 +77,7 @@ namespace Pixie.Options
             IReadOnlyList<OptionForm> positiveForms,
             IReadOnlyList<OptionForm> negativeForms,
             bool defaultValue,
-            MarkupNode description)
+            Block description)
         {
             this.PositiveForms = positiveForms;
             this.NegativeForms = negativeForms;
@@ -116,7 +117,7 @@ namespace Pixie.Options
         private bool defaultVal;
 
         private string category;
-        private MarkupNode description;
+        private Block description;
 
         /// <inheritdoc/>
         public override IReadOnlyList<OptionForm> Forms => allForms;
@@ -149,7 +150,7 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="description">The new option's description.</param>
         /// <returns>An option.</returns>
-        public FlagOption WithDescription(MarkupNode description)
+        public FlagOption WithDescription(Block description)
         {
             var result = new FlagOption(this);
             result.description = description;

@@ -37,7 +37,7 @@ namespace Pixie.Markup
     /// <summary>
     /// A markup node that toggles text decorations for its contents.
     /// </summary>
-    public sealed class DecorationSpan : ContainerNode
+    public sealed class DecorationSpan : InlineContainer
     {
         /// <summary>
         /// Creates a decoration span from the given contents and decoration.
@@ -45,7 +45,7 @@ namespace Pixie.Markup
         /// <param name="contents">The decoration span's contents.</param>
         /// <param name="decoration">The decoration to apply to the contents.</param>
         public DecorationSpan(
-            MarkupNode contents,
+            Inline contents,
             TextDecoration decoration)
             : this(contents, decoration, UnifyDecorations)
         { }
@@ -57,7 +57,7 @@ namespace Pixie.Markup
         /// <param name="decoration">The decoration to apply to the contents.</param>
         /// <param name="updateDecoration">An operator that updates the decorations.</param>
         public DecorationSpan(
-            MarkupNode contents,
+            Inline contents,
             TextDecoration decoration,
             Func<TextDecoration, TextDecoration, TextDecoration> updateDecoration)
             : base(contents)
@@ -86,20 +86,23 @@ namespace Pixie.Markup
         public Func<TextDecoration, TextDecoration, TextDecoration> UpdateDecoration { get; private set; }
 
         /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
+        public override InlineContainer WithContents(Inline newContents)
         {
             return new DecorationSpan(newContents, Decoration, UpdateDecoration);
         }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback => Contents;
+        public override Inline Lower()
+        {
+            return Contents;
+        }
 
         /// <summary>
         /// Renders a node in bold.
         /// </summary>
         /// <param name="node">The node to render in bold.</param>
         /// <returns>A decoration span that renders the node in bold.</returns>
-        public static DecorationSpan MakeBold(MarkupNode node)
+        public static DecorationSpan MakeBold(Inline node)
         {
             return new DecorationSpan(node, TextDecoration.Bold);
         }
@@ -109,7 +112,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="node">The node to render in italics.</param>
         /// <returns>A decoration span that renders the node in italics.</returns>
-        public static DecorationSpan MakeItalicized(MarkupNode node)
+        public static DecorationSpan MakeItalicized(Inline node)
         {
             return new DecorationSpan(node, TextDecoration.Italic);
         }
@@ -119,7 +122,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="node">The node to render in strikethrough mode.</param>
         /// <returns>A decoration span that renders the node in strikethrough mode.</returns>
-        public static DecorationSpan MakeStruckthrough(MarkupNode node)
+        public static DecorationSpan MakeStruckthrough(Inline node)
         {
             return new DecorationSpan(node, TextDecoration.Strikethrough);
         }
@@ -129,7 +132,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="node">The node to render in underline mode.</param>
         /// <returns>A decoration span that renders the node in underline mode.</returns>
-        public static DecorationSpan MakeUnderlined(MarkupNode node)
+        public static DecorationSpan MakeUnderlined(Inline node)
         {
             return new DecorationSpan(node, TextDecoration.Underline);
         }

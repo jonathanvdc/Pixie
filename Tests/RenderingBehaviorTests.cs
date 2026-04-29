@@ -20,7 +20,11 @@ namespace Pixie.Tests
         [Test]
         public void ParagraphSeparatesItsContentsFromNeighbors()
         {
-            var rendered = RenderTests.Render(new Sequence("before", new Paragraph("middle"), "after")).Trim();
+            var rendered = RenderTests.Render(
+                new Stack(
+                    new Paragraph("before"),
+                    new Paragraph("middle"),
+                    new Paragraph("after"))).Trim();
 
             StringAssert.Contains("before", rendered);
             StringAssert.Contains("middle", rendered);
@@ -42,7 +46,7 @@ namespace Pixie.Tests
         [Test]
         public void DiagnosticFallbackIncludesOriginKindAndTitle()
         {
-            var diagnostic = new Diagnostic("pixie", "error", Colors.Red, "bad flag", "details");
+            var diagnostic = new Diagnostic("pixie", "error", Colors.Red, "bad flag", "details", null);
 
             var rendered = RenderTests.Render(diagnostic).Trim();
 

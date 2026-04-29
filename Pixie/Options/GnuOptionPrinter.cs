@@ -19,7 +19,7 @@ namespace Pixie.Options
             new GnuOptionPrinter();
 
         /// <inheritdoc/>
-        public override MarkupNode Print(
+        public override Inline Print(
             OptionForm form,
             IReadOnlyList<OptionParameter> parameters)
         {
@@ -47,7 +47,7 @@ namespace Pixie.Options
             }
 
             // General syntax. Example: -x language files...
-            var nodes = new List<MarkupNode>();
+            var nodes = new List<Inline>();
             nodes.Add(form.ToString());
             for (int i = 0; i < paramCount; i++)
             {

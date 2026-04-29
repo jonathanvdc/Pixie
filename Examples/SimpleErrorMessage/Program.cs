@@ -19,18 +19,15 @@ namespace SimpleErrorMessage
             // Compose an error message. We'll quote `Color.exe`
             // and `Main` and put them in bold.
             //
-            // Note that the array of MarkupNodes below contains
+            // Note that the array of inline markup below contains
             // only strings. That's fine because strings are
-            // implicitly convertible to text MarkupNodes.
+            // implicitly convertible to text nodes.
             var message = Quotation.QuoteEvenInBold(
-                new MarkupNode[]
-                {
-                    "program ",
-                    "Color.exe",
-                    " does not contain a static ",
-                    "Main",
-                    " method suitable for an entry point."
-                });
+                "program ",
+                "Color.exe",
+                " does not contain a static ",
+                "Main",
+                " method suitable for an entry point.");
 
             // Log an error diagnostic.
             log.Error(
@@ -40,7 +37,8 @@ namespace SimpleErrorMessage
                         "error",
                         Colors.Red,
                         "CS5001",
-                        message)));
+                        message,
+                        null)));
         }
     }
 }

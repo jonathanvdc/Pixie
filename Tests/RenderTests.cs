@@ -6,7 +6,6 @@ using Pixie.Code;
 using Pixie.Markup;
 using Pixie.Terminal;
 using Pixie.Terminal.Devices;
-using Pixie.Terminal.Render;
 
 namespace Pixie.Tests
 {
@@ -17,15 +16,19 @@ namespace Pixie.Tests
         /// Renders a markup node as a string using a terminal log.
         /// </summary>
         /// <param name="node">The node to render.</param>
-        /// <param name="extraRenderers">A sequence of additional renderers to use.</param>
         /// <returns>A rendered node.</returns>
-        public static string Render(MarkupNode node, params NodeRenderer[] extraRenderers)
+        public static string Render(Block node)
         {
             var writer = new StringWriter();
             var terminal = new TextWriterTerminal(writer, 80, Encoding.ASCII);
-            var log = new TerminalLog(terminal).WithRenderers(extraRenderers);
+            var log = new TerminalLog(terminal);
             log.Log(node);
             return writer.ToString();
+        }
+
+        public static string Render(Inline node)
+        {
+            return Render(new Paragraph(node));
         }
 
         private static string PrepareForComparison(string value)
@@ -38,15 +41,22 @@ namespace Pixie.Tests
         /// </summary>
         /// <param name="node">The node to render.</param>
         /// <param name="expected">The expected output.</param>
-        /// <param name="extraRenderers">A sequence of additional renderers to use.</param>
         public static void AssertRendersAs(
-            MarkupNode node,
-            string expected,
-            params NodeRenderer[] extraRenderers)
+            Block node,
+            string expected)
         {
             Assert.AreEqual(
                 PrepareForComparison(expected),
-                PrepareForComparison(Render(node, extraRenderers)));
+                PrepareForComparison(Render(node)));
+        }
+
+        public static void AssertRendersAs(
+            Inline node,
+            string expected)
+        {
+            Assert.AreEqual(
+                PrepareForComparison(expected),
+                PrepareForComparison(Render(node)));
         }
 
         [Test]
@@ -63,29 +73,47 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void TerminalLogTerminatesEachEntryWithNewline()
+        {
+            var writer = new StringWriter();
+            var terminal = new TextWriterTerminal(writer, 80, Encoding.ASCII);
+            var log = new TerminalLog(terminal);
+
+            log.Info("Hello from Pixie.");
+
+            Assert.IsTrue(writer.ToString().EndsWith("\n", StringComparison.Ordinal));
+        }
+
+        [Test]
+        public void TerminalLogDoesNotDuplicateExistingEntryNewline()
+        {
+            var writer = new StringWriter();
+            var terminal = new TextWriterTerminal(writer, 80, Encoding.ASCII);
+            var log = new TerminalLog(terminal);
+
+            log.Info(new Paragraph("Hello from Pixie.", NewLine.Instance));
+
+            Assert.AreEqual("Hello from Pixie.\n", writer.ToString());
+        }
+
+        [Test]
         public void TextBeforeBox()
         {
             AssertRendersAs(
-                new Sequence(
-                    new MarkupNode[]
-                    {
-                        "I did not hit her. I did naaahhht.",
-                        new Box("Oh hi Mark")
-                    }),
-                "I did not hit her. I did naaahhht.\nOh hi Mark");
+                new Stack(
+                    new Paragraph("I did not hit her. I did naaahhht."),
+                    new Paragraph("Oh hi Mark")),
+                "I did not hit her. I did naaahhht.\n\nOh hi Mark");
         }
 
         [Test]
         public void TextBeforeWrapBox()
         {
             AssertRendersAs(
-                new Sequence(
-                    new MarkupNode[]
-                    {
-                        "I did not hit her. I did naaahhht.",
-                        new WrapBox("Oh hi Mark", WrappingStrategy.Word)
-                    }),
-                "I did not hit her. I did naaahhht.\nOh hi Mark");
+                new Stack(
+                    new Paragraph("I did not hit her. I did naaahhht."),
+                    new WrapBox(new Paragraph("Oh hi Mark"), WrappingStrategy.Word)),
+                "I did not hit her. I did naaahhht.\n\nOh hi Mark");
         }
 
         [Test]
@@ -93,14 +121,11 @@ namespace Pixie.Tests
         {
             AssertRendersAs(
                 new WrapBox(
-                    new Sequence(
-                        new MarkupNode[]
-                        {
-                            "I did not hit her. I did naaahhht.",
-                            new WrapBox("Oh hi Mark", WrappingStrategy.Word)
-                        }),
+                    new Stack(
+                        new Paragraph("I did not hit her. I did naaahhht."),
+                        new WrapBox(new Paragraph("Oh hi Mark"), WrappingStrategy.Word)),
                     WrappingStrategy.Word),
-                "I did not hit her. I did naaahhht.\nOh hi Mark");
+                "I did not hit her. I did naaahhht.\n\nOh hi Mark");
         }
 
         [Test]
@@ -142,8 +167,7 @@ namespace Pixie.Tests
   6 | 
   7 |     }
   8 | 
-  9 | }",
-                new HighlightedSourceRenderer(5));
+  9 | }");
         }
 
         [Test]
@@ -186,8 +210,7 @@ public static class Program
    7 | 
    8 |     }
    9 | 
-  10 | }",
-                new HighlightedSourceRenderer(5));
+  10 | }");
         }
 
         [Test]
@@ -210,9 +233,8 @@ public static class Program
                 @"
   1 | before
   2 | error here
-    | ^~~~~     
-  3 | after",
-                new HighlightedSourceRenderer(1));
+    | ^~~~~
+  3 | after");
         }
     }
 }

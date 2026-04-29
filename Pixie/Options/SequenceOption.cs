@@ -57,7 +57,7 @@ namespace Pixie.Options
             IReadOnlyList<OptionForm> forms,
             Func<OptionForm, string, ILog, T> parseArgument,
             string category,
-            MarkupNode description,
+            Block description,
             IReadOnlyList<OptionParameter> parameters)
         {
             this.forms = forms;
@@ -80,7 +80,7 @@ namespace Pixie.Options
         private Func<OptionForm, string, ILog, T> parseArgument;
 
         private string category;
-        private MarkupNode description;
+        private Block description;
         private IReadOnlyList<OptionParameter> parameters;
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="description">The new option's description.</param>
         /// <returns>An option.</returns>
-        public SequenceOption<T> WithDescription(MarkupNode description)
+        public SequenceOption<T> WithDescription(Block description)
         {
             var result = new SequenceOption<T>(this);
             result.description = description;
@@ -280,14 +280,15 @@ namespace Pixie.Options
                 log.ErrorDiagnostic(
                     "command line",
                     "option error",
-                    "argument to ",
-                    Quotation.CreateBoldQuotation(form.ToString()),
-                    " should be an integer; got ",
-                    argument == null
-                        ? (MarkupNode)"nothing."
-                        : new Sequence(
-                            Quotation.CreateBoldQuotation(argument),
-                            "."));
+                    new Sequence(
+                        "argument to ",
+                        Quotation.CreateBoldQuotation(form.ToString()),
+                        " should be an integer; got ",
+                        argument == null
+                            ? (Inline)"nothing."
+                            : new Sequence(
+                                Quotation.CreateBoldQuotation(argument),
+                                ".")));
             }
             return result;
         }

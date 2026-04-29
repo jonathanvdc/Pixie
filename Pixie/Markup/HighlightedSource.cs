@@ -4,88 +4,35 @@ using Pixie.Code;
 namespace Pixie.Markup
 {
     /// <summary>
-    /// A node that points to a region of source code.
+    /// A block that renders a highlighted region of source code.
     /// </summary>
-    public sealed class HighlightedSource : MarkupNode
+    public sealed class HighlightedSource : Block
     {
-        /// <summary>
-        /// Creates a highlighted snippet of source from a
-        /// region of source code to highlight.
-        /// </summary>
-        /// <param name="highlightRegion">
-        /// The region of source that is to be highlighted.
-        /// </param>
-        public HighlightedSource(
-            SourceRegion highlightRegion)
-            : this(
-                highlightRegion,
-                new SourceRegion(
-                    new SourceSpan(
-                        highlightRegion.Document,
-                        highlightRegion.StartOffset,
-                        1)))
+        public HighlightedSource(SourceRegion focusRegion)
+            : this(focusRegion, focusRegion)
         { }
 
-        /// <summary>
-        /// Creates a highlighted snippet of source from a
-        /// region of source code to highlight and a region
-        /// of source code to focus on.
-        /// </summary>
-        /// <param name="highlightRegion">
-        /// The region of source that is to be highlighted.
-        /// </param>
-        /// <param name="focusRegion">
-        /// The region of source that users should focus on
-        /// specifically.
-        /// </param>
-        public HighlightedSource(
-            SourceRegion highlightRegion,
-            SourceRegion focusRegion)
+        public HighlightedSource(SourceRegion highlightedRegion, SourceRegion focusRegion)
         {
-            if (highlightRegion.Document != focusRegion.Document)
+            if (highlightedRegion.Document != focusRegion.Document)
             {
                 throw new ArgumentException(
-                    "Highlight and focus regions are in different documents.",
-                    nameof(focusRegion));
+                    "Highlighted and focused source regions must belong to the same document.");
             }
 
-            this.HighlightRegion = highlightRegion;
+            this.HighlightedRegion = highlightedRegion;
             this.FocusRegion = focusRegion;
         }
 
-        /// <summary>
-        /// Gets the region of source that is to be highlighted.
-        /// </summary>
-        /// <returns>The highlighted region of source.</returns>
-        public SourceRegion HighlightRegion { get; private set; }
+        public SourceRegion HighlightedRegion { get; private set; }
 
-        /// <summary>
-        /// Gets the region of source that users should focus
-        /// on specifically. It shouldn't be longer than a few
-        /// characters.
-        /// </summary>
-        /// <returns>The focus region.</returns>
         public SourceRegion FocusRegion { get; private set; }
 
-        /// <summary>
-        /// Gets a source span that encompasses all characters
-        /// highlighted by this node.
-        /// </summary>
-        public SourceSpan HighlightedSpan =>
-            HighlightRegion.BoundingSpan;
+        public SourceSpan HighlightedSpan => HighlightedRegion.BoundingSpan;
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback => 
-            new Paragraph(
-                new Sequence(
-                    new Text("At "),
-                    new SourceReference(HighlightedSpan),
-                    new Text(".")));
-
-        /// <inheritdoc/>
-        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        public override Block Lower()
         {
-            return this;
+            return new Paragraph(new SourceReference(HighlightedSpan));
         }
     }
 }

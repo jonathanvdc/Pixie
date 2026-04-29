@@ -42,11 +42,11 @@ namespace Pixie.Tests
         public void LogEntryTitleConstructorPrefixesATitleNode()
         {
             var entry = new LogEntry(Severity.Warning, "bad option", "details");
-            var contents = (Sequence)entry.Contents;
+            var contents = (Stack)entry.Contents;
 
             Assert.IsInstanceOf<Title>(contents.Contents[0]);
             Assert.AreEqual("bad option", ((Text)((Title)contents.Contents[0]).Contents).Contents);
-            Assert.AreEqual("details", ((Text)contents.Contents[1]).Contents);
+            Assert.AreEqual("details", ((Text)((Paragraph)contents.Contents[1]).Contents).Contents);
         }
 
         [Test]
@@ -54,10 +54,10 @@ namespace Pixie.Tests
         {
             var entry = new LogEntry(Severity.Info, "before");
 
-            var mapped = entry.Map(_ => (MarkupNode)"after");
+            var mapped = entry.Map(_ => (Block)"after");
 
             Assert.AreEqual(Severity.Info, mapped.Severity);
-            Assert.AreEqual("after", ((Text)mapped.Contents).Contents);
+            Assert.AreEqual("after", ((Text)((Paragraph)mapped.Contents).Contents).Contents);
         }
     }
 }

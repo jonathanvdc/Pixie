@@ -5,7 +5,7 @@ namespace Pixie.Markup
     /// <summary>
     /// A markup node that puts quotation signs around another node.
     /// </summary>
-    public sealed class Quotation : ContainerNode
+    public sealed class Quotation : InlineContainer
     {
         /// <summary>
         /// Creates a quotation node from a quoted contents
@@ -14,7 +14,7 @@ namespace Pixie.Markup
         /// <param name="contents">
         /// The contents to quote.
         /// </param>
-        public Quotation(MarkupNode contents)
+        public Quotation(Inline contents)
             : this(contents, 1)
         { }
 
@@ -30,7 +30,7 @@ namespace Pixie.Markup
         /// The number of quotation signs on each side of
         /// the contents.
         /// </param>
-        public Quotation(MarkupNode contents, int numberOfQuotes)
+        public Quotation(Inline contents, int numberOfQuotes)
             : base(contents)
         {
             this.NumberOfQuotes = numberOfQuotes;
@@ -44,23 +44,20 @@ namespace Pixie.Markup
         public int NumberOfQuotes { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback
+        public override Inline Lower()
         {
-            get
-            {
-                return new Sequence(
-                    new DegradableText(
-                        BuildQuotationSign(NumberOfQuotes, '‘', '“', true),
-                        BuildQuotationSign(NumberOfQuotes, '\'', '"', true)),
-                    Contents,
-                    new DegradableText(
-                        BuildQuotationSign(NumberOfQuotes, '’', '”', false),
-                        BuildQuotationSign(NumberOfQuotes, '\'', '"', false)));
-            }
+            return new Sequence(
+                new DegradableText(
+                    BuildQuotationSign(NumberOfQuotes, '‘', '“', true),
+                    BuildQuotationSign(NumberOfQuotes, '\'', '"', true)),
+                Contents,
+                new DegradableText(
+                    BuildQuotationSign(NumberOfQuotes, '’', '”', false),
+                    BuildQuotationSign(NumberOfQuotes, '\'', '"', false)));
         }
 
         /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
+        public override InlineContainer WithContents(Inline newContents)
         {
             return new Quotation(newContents, NumberOfQuotes);
         }
@@ -89,7 +86,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="contents">The contents to quote.</param>
         /// <returns>A bold quotation node.</returns>
-        public static MarkupNode CreateBoldQuotation(MarkupNode contents)
+        public static Inline CreateBoldQuotation(Inline contents)
         {
             return new Quotation(DecorationSpan.MakeBold(contents));
         }
@@ -99,7 +96,7 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="contents">The contents to quote.</param>
         /// <returns>A bold quotation node.</returns>
-        public static MarkupNode CreateBoldQuotation(string contents)
+        public static Inline CreateBoldQuotation(string contents)
         {
             return CreateBoldQuotation(new Text(contents));
         }
@@ -110,9 +107,9 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="nodes">The nodes to process.</param>
         /// <returns>A sequence container node.</returns>
-        public static Sequence QuoteEven(params MarkupNode[] nodes)
+        public static Sequence QuoteEven(params Inline[] nodes)
         {
-            var results = new MarkupNode[nodes.Length];
+            var results = new Inline[nodes.Length];
             for (int i = 0; i < nodes.Length; i++)
             {
                 if (i % 2 == 1)
@@ -133,9 +130,9 @@ namespace Pixie.Markup
         /// </summary>
         /// <param name="nodes">The nodes to process.</param>
         /// <returns>A sequence container node.</returns>
-        public static Sequence QuoteEvenInBold(params MarkupNode[] nodes)
+        public static Sequence QuoteEvenInBold(params Inline[] nodes)
         {
-            var results = new MarkupNode[nodes.Length];
+            var results = new Inline[nodes.Length];
             for (int i = 0; i < nodes.Length; i++)
             {
                 if (i % 2 == 1)

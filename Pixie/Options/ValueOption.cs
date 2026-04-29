@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Options
 {
@@ -64,7 +65,7 @@ namespace Pixie.Options
             Func<OptionForm, string, ILog, T> parseArgument,
             T defaultValue,
             string category,
-            MarkupNode description,
+            Block description,
             OptionParameter parameter)
         {
             this.forms = forms;
@@ -90,7 +91,7 @@ namespace Pixie.Options
         private T defaultValue;
 
         private string category;
-        private MarkupNode description;
+        private Block description;
         private OptionParameter parameter;
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace Pixie.Options
         /// </summary>
         /// <param name="description">The new option's description.</param>
         /// <returns>An option.</returns>
-        public ValueOption<T> WithDescription(MarkupNode description)
+        public ValueOption<T> WithDescription(Block description)
         {
             var result = new ValueOption<T>(this);
             result.description = description;

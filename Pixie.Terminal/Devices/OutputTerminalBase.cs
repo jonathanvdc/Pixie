@@ -10,6 +10,7 @@ namespace Pixie.Terminal
     {
         private int sepLineCounter;
         private bool hasWrittenContent;
+        private int trailingLineCounter;
 
         /// <summary>
         /// Writes a raw newline to the output.
@@ -22,6 +23,7 @@ namespace Pixie.Terminal
         protected void NoteWrittenContent()
         {
             hasWrittenContent = true;
+            trailingLineCounter = 0;
         }
 
         /// <inheritdoc/>
@@ -33,6 +35,7 @@ namespace Pixie.Terminal
             {
                 WriteLineImpl();
             }
+            trailingLineCounter += sepLineCounter;
             sepLineCounter = 0;
         }
 
@@ -54,7 +57,7 @@ namespace Pixie.Terminal
                 return;
             }
 
-            sepLineCounter = Math.Max(lineCount, sepLineCounter);
+            sepLineCounter = Math.Max(lineCount - trailingLineCounter, sepLineCounter);
         }
 
         /// <summary>

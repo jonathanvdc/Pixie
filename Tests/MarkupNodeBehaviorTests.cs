@@ -6,26 +6,24 @@ using Pixie.Markup;
 namespace Pixie.Tests
 {
     [TestFixture]
-    public class MarkupNodeBehaviorTests
+    public class MarkupBehaviorTests
     {
         [Test]
-        public void DegradableTextMapUsesMappedFallback()
+        public void DegradableTextExposesInlineFallback()
         {
             var degradable = new DegradableText("main", "fallback");
 
-            var mapped = (DegradableText)degradable.Map(_ => (MarkupNode)"mapped");
-
-            Assert.AreEqual("mapped", ((Text)mapped.Fallback).Contents);
+            Assert.AreEqual("fallback", ((Text)degradable.Fallback).Contents);
         }
 
         [Test]
         public void TextIsEmptyRecognizesSimpleEmptyCases()
         {
             Assert.IsTrue(Text.IsEmpty(new Text("")));
-            Assert.IsTrue(Text.IsEmpty(new Sequence(new MarkupNode[] { "" })));
-            Assert.IsTrue(Text.IsEmpty(new Sequence(Array.Empty<MarkupNode>())));
-            Assert.IsFalse(Text.IsEmpty(new Sequence(new MarkupNode[] { "", "x" })));
-            Assert.IsFalse(Text.IsEmpty(new Title("")));
+            Assert.IsTrue(Text.IsEmpty(new Sequence(new Inline[] { "" })));
+            Assert.IsTrue(Text.IsEmpty(new Sequence(Array.Empty<Inline>())));
+            Assert.IsFalse(Text.IsEmpty(new Sequence(new Inline[] { "", "x" })));
+            Assert.IsFalse(Text.IsEmpty(new Text("x")));
         }
 
         [Test]

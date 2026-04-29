@@ -23,7 +23,7 @@ namespace Pixie.Transforms
 
         /// <summary>
         /// Wraps a log so that every entry's contents are passed through
-        /// <see cref="WrapBox.WordWrap(MarkupNode)"/> before rendering.
+        /// <see cref="WrapBox.WordWrap(Block)"/> before rendering.
         /// </summary>
         /// <param name="log">The log to wrap.</param>
         /// <returns>A log that word-wraps each entry.</returns>

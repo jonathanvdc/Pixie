@@ -4,7 +4,7 @@ namespace Pixie.Markup
     /// A markup node that specifies the color with which its contents
     /// are printed.
     /// </summary>
-    public sealed class ColorSpan : ContainerNode
+    public sealed class ColorSpan : InlineContainer
     {
         /// <summary>
         /// Creates a color span from the given contents, foreground color
@@ -14,7 +14,7 @@ namespace Pixie.Markup
         /// <param name="foregroundColor">The foreground color to print the contents with.</param>
         /// <param name="backgroundColor">The background color to print the contents with.</param>
         public ColorSpan(
-            MarkupNode contents,
+            Inline contents,
             Color foregroundColor,
             Color backgroundColor)
             : base(contents)
@@ -29,7 +29,7 @@ namespace Pixie.Markup
         /// <param name="contents">The contents to print.</param>
         /// <param name="foregroundColor">The foreground color to print the contents with.</param>
         public ColorSpan(
-            MarkupNode contents,
+            Inline contents,
             Color foregroundColor)
             : this(contents, foregroundColor, Colors.Transparent)
         { }
@@ -46,11 +46,13 @@ namespace Pixie.Markup
         /// <returns>The background color.</returns>
         public Color BackgroundColor { get; private set; }
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback => Contents;
+        public override Inline Lower()
+        {
+            return Contents;
+        }
 
         /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
+        public override InlineContainer WithContents(Inline newContents)
         {
             return new ColorSpan(newContents, ForegroundColor, BackgroundColor);
         }

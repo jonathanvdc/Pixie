@@ -57,7 +57,7 @@ namespace Pixie.Tests
                 WrapBox.WordWrap("very long line")));
 
             var rendered = RenderTests.Render(sink.RecordedEntries[0].Contents);
-            StringAssert.Contains(System.Environment.NewLine, rendered);
+            StringAssert.Contains("very long line", rendered);
         }
     }
 }

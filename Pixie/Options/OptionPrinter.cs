@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pixie.Markup;
 
 namespace Pixie.Options
 {
@@ -18,9 +19,9 @@ namespace Pixie.Options
         /// The list of parameters for the option form.
         /// </param>
         /// <returns>
-        /// A markup node that represents the option.
+        /// Inline markup that represents the option.
         /// </returns>
-        public abstract MarkupNode Print(
+        public abstract Inline Print(
             OptionForm form,
             IReadOnlyList<OptionParameter> parameters);
     }

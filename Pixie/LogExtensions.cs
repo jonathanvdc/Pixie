@@ -12,7 +12,7 @@ namespace Pixie
         /// </summary>
         /// <param name="log">The log to write to.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Info(this ILog log, params MarkupNode[] contents)
+        public static void Info(this ILog log, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Info, contents));
         }
@@ -23,7 +23,7 @@ namespace Pixie
         /// <param name="log">The log to write to.</param>
         /// <param name="title">The entry title.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Info(this ILog log, string title, params MarkupNode[] contents)
+        public static void Info(this ILog log, string title, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Info, title, contents));
         }
@@ -33,7 +33,7 @@ namespace Pixie
         /// </summary>
         /// <param name="log">The log to write to.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Message(this ILog log, params MarkupNode[] contents)
+        public static void Message(this ILog log, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Message, contents));
         }
@@ -44,7 +44,7 @@ namespace Pixie
         /// <param name="log">The log to write to.</param>
         /// <param name="title">The entry title.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Message(this ILog log, string title, params MarkupNode[] contents)
+        public static void Message(this ILog log, string title, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Message, title, contents));
         }
@@ -54,7 +54,7 @@ namespace Pixie
         /// </summary>
         /// <param name="log">The log to write to.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Warning(this ILog log, params MarkupNode[] contents)
+        public static void Warning(this ILog log, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Warning, contents));
         }
@@ -65,7 +65,7 @@ namespace Pixie
         /// <param name="log">The log to write to.</param>
         /// <param name="title">The entry title.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Warning(this ILog log, string title, params MarkupNode[] contents)
+        public static void Warning(this ILog log, string title, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Warning, title, contents));
         }
@@ -75,7 +75,7 @@ namespace Pixie
         /// </summary>
         /// <param name="log">The log to write to.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Error(this ILog log, params MarkupNode[] contents)
+        public static void Error(this ILog log, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Error, contents));
         }
@@ -86,7 +86,7 @@ namespace Pixie
         /// <param name="log">The log to write to.</param>
         /// <param name="title">The entry title.</param>
         /// <param name="contents">The entry contents.</param>
-        public static void Error(this ILog log, string title, params MarkupNode[] contents)
+        public static void Error(this ILog log, string title, params Block[] contents)
         {
             log.Log(new LogEntry(Severity.Error, title, contents));
         }
@@ -102,9 +102,10 @@ namespace Pixie
         public static void Diagnostic(
             this ILog log,
             Severity severity,
-            MarkupNode origin,
-            MarkupNode title,
-            params MarkupNode[] contents)
+            Inline origin,
+            Inline title,
+            Inline message,
+            Block details = null)
         {
             log.Log(
                 new LogEntry(
@@ -113,7 +114,8 @@ namespace Pixie
                         severity,
                         origin,
                         title,
-                        new Sequence(contents))));
+                        message,
+                        details)));
         }
 
         /// <summary>
@@ -125,11 +127,12 @@ namespace Pixie
         /// <param name="contents">The diagnostic body contents.</param>
         public static void ErrorDiagnostic(
             this ILog log,
-            MarkupNode origin,
-            MarkupNode title,
-            params MarkupNode[] contents)
+            Inline origin,
+            Inline title,
+            Inline message,
+            Block details = null)
         {
-            log.Diagnostic(Severity.Error, origin, title, contents);
+            log.Diagnostic(Severity.Error, origin, title, message, details);
         }
 
         /// <summary>
@@ -141,11 +144,12 @@ namespace Pixie
         /// <param name="contents">The diagnostic body contents.</param>
         public static void WarningDiagnostic(
             this ILog log,
-            MarkupNode origin,
-            MarkupNode title,
-            params MarkupNode[] contents)
+            Inline origin,
+            Inline title,
+            Inline message,
+            Block details = null)
         {
-            log.Diagnostic(Severity.Warning, origin, title, contents);
+            log.Diagnostic(Severity.Warning, origin, title, message, details);
         }
     }
 }

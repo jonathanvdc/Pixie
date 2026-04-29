@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Pixie.Markup
@@ -6,107 +5,48 @@ namespace Pixie.Markup
     /// <summary>
     /// A common base class for list markup nodes.
     /// </summary>
-    public abstract class ListNode : MarkupNode
+    public abstract class ListNode : Block
     {
-        /// <summary>
-        /// Creates a list from a sequence of list items.
-        /// </summary>
-        /// <param name="items">The items in the list.</param>
-        public ListNode(IReadOnlyList<MarkupNode> items)
+        protected ListNode(IReadOnlyList<Block> items)
             : this(items, false)
         { }
 
-        /// <summary>
-        /// Creates a list from a sequence of list items.
-        /// </summary>
-        /// <param name="items">The items in the list.</param>
-        /// <param name="separateItems">
-        /// Tells if the list's items should be separated by
-        /// vertical whitespace.
-        /// </param>
-        public ListNode(IReadOnlyList<MarkupNode> items, bool separateItems)
+        protected ListNode(IReadOnlyList<Block> items, bool separateItems)
         {
             this.Items = items;
             this.SeparateItems = separateItems;
         }
 
-        /// <summary>
-        /// Gets the items in this list.
-        /// </summary>
-        /// <returns>The list's items.</returns>
-        public IReadOnlyList<MarkupNode> Items { get; private set; }
+        public IReadOnlyList<Block> Items { get; private set; }
 
-        /// <summary>
-        /// Tells if the list's items should be separated by
-        /// vertical whitespace.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if items should be separated by vertical whitespace; otherwise, <c>false</c>.
-        /// </returns>
         public bool SeparateItems { get; private set; }
     }
 
     /// <summary>
-    /// A markup node type that defines a list of bulleted items.
+    /// A block that defines a list of bulleted items.
     /// </summary>
     public sealed class BulletedList : ListNode
     {
-        /// <summary>
-        /// Creates a bulleted list from a sequence of list items.
-        /// </summary>
-        /// <param name="items">The items in the list.</param>
-        public BulletedList(IReadOnlyList<MarkupNode> items)
+        public BulletedList(IReadOnlyList<Block> items)
             : base(items)
         { }
 
-        /// <summary>
-        /// Creates a bulleted list from a sequence of list items.
-        /// </summary>
-        /// <param name="items">The items in the list.</param>
-        /// <param name="separateItems">
-        /// Tells if the list's items should be separated by
-        /// vertical whitespace.
-        /// </param>
-        public BulletedList(IReadOnlyList<MarkupNode> items, bool separateItems)
+        public BulletedList(IReadOnlyList<Block> items, bool separateItems)
             : base(items, separateItems)
         { }
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback
+        public override Block Lower()
         {
-            get
+            var bulletedItems = new List<Block>();
+            for (int i = 0; i < Items.Count; i++)
             {
-                var bulletedItems = new List<MarkupNode>();
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    MarkupNode bulleted = new PrefixBox(
+                bulletedItems.Add(
+                    new PrefixBox(
                         new DegradableText(" •  ", " *  "),
-                        Items[i]);
-
-                    if (SeparateItems)
-                    {
-                        bulleted = new Paragraph(bulleted);
-                    }
-
-                    bulletedItems.Add(bulleted);
-                }
-
-                return new Sequence(bulletedItems);
+                        Items[i]));
             }
-        }
 
-        /// <inheritdoc/>
-        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
-        {
-            var newItems = Sequence.Map(Items, mapping);
-            if (newItems == Items)
-            {
-                return this;
-            }
-            else
-            {
-                return new BulletedList(newItems, SeparateItems);
-            }
+            return new Stack(bulletedItems);
         }
     }
 }

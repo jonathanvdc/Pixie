@@ -14,7 +14,7 @@ namespace Pixie.Options
         /// Represents the parameter as a markup node.
         /// </summary>
         /// <returns>A markup node.</returns>
-        public abstract MarkupNode Representation { get; }
+        public abstract Inline Representation { get; }
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ namespace Pixie.Options
         public bool IsVarargs { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Representation
+        public override Inline Representation
         {
             get
             {
@@ -81,7 +81,7 @@ namespace Pixie.Options
         /// <param name="contents">
         /// The markup node that represents the parameter.
         /// </param>
-        public VerbatimOptionParameter(MarkupNode contents)
+        public VerbatimOptionParameter(Inline contents)
         {
             this.Contents = contents;
         }
@@ -91,10 +91,10 @@ namespace Pixie.Options
         /// as a parameter.
         /// </summary>
         /// <returns>The parameter.</returns>
-        public MarkupNode Contents { get; private set; }
+        public Inline Contents { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Representation => Contents;
+        public override Inline Representation => Contents;
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ namespace Pixie.Options
         public OptionParameter Parameter { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Representation =>
+        public override Inline Representation =>
             new Sequence(
                 "[",
                 Parameter.Representation,

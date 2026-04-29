@@ -65,14 +65,14 @@ namespace FormattedList
                     new BulletedList(
                         LoremIpsum
                             .Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select<string, MarkupNode>(QuoteString)
-                            .ToArray<MarkupNode>(),
+                            .Select(text => new Paragraph(QuoteString(text)))
+                            .ToArray(),
                         true),
                     WrappingStrategy.Word,
                     4));
         }
 
-        private static MarkupNode QuoteString(string text)
+        private static Inline QuoteString(string text)
         {
             // Quote each string using double quotes.
             //

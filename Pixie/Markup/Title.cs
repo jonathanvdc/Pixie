@@ -1,42 +1,30 @@
-using System;
-
 namespace Pixie.Markup
 {
     /// <summary>
-    /// A node that represents a message's title.
+    /// A centered, emphasized title block.
     /// </summary>
-    public sealed class Title : ContainerNode
+    public sealed class Title : Block
     {
-        /// <summary>
-        /// Creates a title node from the given title.
-        /// </summary>
-        /// <param name="title">A title string.</param>
         public Title(string title)
             : this(new Text(title))
         { }
 
-        /// <summary>
-        /// Creates a title node from the given contents.
-        /// </summary>
-        /// <param name="title">The contents of the title node.</param>
-        public Title(MarkupNode title)
-            : base(title)
-        { }
+        public Title(Inline title)
+        {
+            this.Contents = title;
+        }
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback =>
-            new Paragraph(
-                new AlignBox(
+        public Inline Contents { get; private set; }
+
+        public override Block Lower()
+        {
+            return new AlignBox(
+                new Paragraph(
                     new DecorationSpan(
                         Contents,
                         TextDecoration.Bold,
-                        DecorationSpan.UnifyDecorations),
-                    Alignment.Center));
-
-        /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
-        {
-            return new Title(newContents);
+                        DecorationSpan.UnifyDecorations)),
+                Alignment.Center);
         }
     }
 }

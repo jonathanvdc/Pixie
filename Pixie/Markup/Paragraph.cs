@@ -1,70 +1,22 @@
-using System.Collections.Generic;
-
 namespace Pixie.Markup
 {
     /// <summary>
-    /// A markup node that inserts whitespace around its body.
+    /// A paragraph of inline content.
     /// </summary>
-    public sealed class Paragraph : ContainerNode
+    public sealed class Paragraph : Block
     {
-        /// <summary>
-        /// Creates a paragraph from a body node.
-        /// </summary>
-        /// <param name="contents">A node to insulate in whitespace.</param>
-        public Paragraph(MarkupNode contents)
-            : base(contents)
-        { }
-
-        /// <summary>
-        /// Creates a paragraph from a sequence of body nodes.
-        /// </summary>
-        /// <param name="contents">A list of nodes to insulate in whitespace.</param>
-        public Paragraph(IReadOnlyList<MarkupNode> contents)
-            : base(contents)
-        { }
-
-        /// <summary>
-        /// Creates a paragraph from a sequence of body nodes.
-        /// </summary>
-        /// <param name="contents">A list of nodes to insulate in whitespace.</param>
-        public Paragraph(params MarkupNode[] contents)
-            : base(contents)
-        { }
-
-        /// <inheritdoc/>
-        public override MarkupNode Fallback =>
-            new Sequence(NewLine.Instance, Contents, NewLine.Instance);
-
-        /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
+        public Paragraph(Inline contents)
         {
-            return new Paragraph(newContents);
+            this.Contents = contents;
         }
-    }
 
-    /// <summary>
-    /// A markup node that visually separates its body from
-    /// other markup nodes by putting its body on different
-    /// lines from the box' successors and predecessors.
-    /// </summary>
-    public sealed class Box : ContainerNode
-    {
-        /// <summary>
-        /// Creates a box from a body node.
-        /// </summary>
-        /// <param name="contents">A node to insulate.</param>
-        public Box(MarkupNode contents)
-            : base(contents)
+        public Paragraph(params Inline[] contents)
+            : this(new Sequence(contents))
         { }
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback =>
-            new Sequence(NewLine.Instance, Contents, NewLine.Instance);
-
-        /// <inheritdoc/>
-        public override ContainerNode WithContents(MarkupNode newContents)
-        {
-            return new Box(newContents);
-        }
+        /// <summary>
+        /// Gets the paragraph's inline contents.
+        /// </summary>
+        public Inline Contents { get; private set; }
     }
 }

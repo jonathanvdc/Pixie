@@ -148,9 +148,10 @@ namespace Pixie.Options
                     log.ErrorDiagnostic(
                         "command line",
                         "meaningless argument",
-                        new Text("cannot assign a meaning to excessive command-line argument "),
-                        Quotation.CreateBoldQuotation(arguments[i]),
-                        new Text("."));
+                        new Sequence(
+                            "cannot assign a meaning to excessive command-line argument ",
+                            Quotation.CreateBoldQuotation(arguments[i]),
+                            "."));
                     break;
                 }
             }
@@ -451,9 +452,10 @@ namespace Pixie.Options
                 Log.ErrorDiagnostic(
                     "command line",
                     "unknown option",
-                    "unrecognized command line option ",
-                    Quotation.CreateBoldQuotation(option),
-                    ".");
+                    new Sequence(
+                        "unrecognized command line option ",
+                        Quotation.CreateBoldQuotation(option),
+                        "."));
             }
             else
             {
@@ -461,13 +463,14 @@ namespace Pixie.Options
                 Log.ErrorDiagnostic(
                     "command line",
                     "unknown option",
-                    "unrecognized command line option ",
-                    Quotation.CreateBoldQuotation(
-                        TextDiff.RenderDeletions(diff)),
-                    "; did you mean ",
-                    Quotation.CreateBoldQuotation(
-                        TextDiff.RenderInsertions(diff)),
-                    "?",
+                    new Sequence(
+                        "unrecognized command line option ",
+                        Quotation.CreateBoldQuotation(
+                            TextDiff.RenderDeletions(diff)),
+                        "; did you mean ",
+                        Quotation.CreateBoldQuotation(
+                            TextDiff.RenderInsertions(diff)),
+                        "?"),
                     CreateUsageParagraph(suggestion));
             }
         }
@@ -484,13 +487,17 @@ namespace Pixie.Options
             }
         }
 
-        private MarkupNode CreateUsageParagraph(string option)
+        private Block CreateUsageParagraph(string option)
         {
-            return new Paragraph(
-                DecorationSpan.MakeBold(new ColorSpan("usage: ", Colors.Gray)),
-                new OptionHelp(
-                    LookupOption(option),
-                    GnuOptionPrinter.Instance));
+            var opt = LookupOption(option);
+            var form = option.StartsWith("--")
+                ? opt.Forms[0]
+                : new OptionForm(option.Substring(1), true);
+            return new Stack(
+                new Paragraph(
+                    DecorationSpan.MakeBold(new ColorSpan("usage: ", Colors.Gray)),
+                    GnuOptionPrinter.Instance.Print(form, opt.Documentation.GetParameters(form))),
+                new IndentBox(opt.Documentation.Description));
         }
 
         private bool ParseArgument(string argument)

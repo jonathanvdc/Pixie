@@ -60,13 +60,10 @@ namespace ParseOptions
                 "-fmax-errors",
                 "-ferror-limit")
             .WithDescription(
-                new Sequence(
-                    new MarkupNode[]
-                    {
-                        "Limits the maximum number of error messages to ",
-                        new SymbolicOptionParameter("n").Representation,
-                        "."
-                    }))
+                new Paragraph(
+                    "Limits the maximum number of error messages to ",
+                    new SymbolicOptionParameter("n").Representation,
+                    "."))
             .WithParameter("n");
         public static void Main(string[] args)
         {
@@ -110,7 +107,7 @@ namespace ParseOptions
             }
         }
 
-        private static MarkupNode RenderParsedOptions(
+        private static Block RenderParsedOptions(
             IReadOnlyList<Option> options,
             OptionParseResult parsedOptions)
         {
@@ -121,7 +118,7 @@ namespace ParseOptions
                 true);
         }
 
-        private static MarkupNode RenderParsedOption(
+        private static Block RenderParsedOption(
             Option opt,
             OptionParseResult parsedOptions)
         {
@@ -132,13 +129,13 @@ namespace ParseOptions
             // its canonical display name. That keeps the output stable and
             // makes it obvious which spelling the example treats as the
             // primary one, even though the parser still accepts the others.
-            return new Sequence(
+            return new Paragraph(
                 DecorationSpan.MakeBold(opt.Forms[0].ToString()),
                 ": ",
                 ValueToMarkup(parsedOptions.GetValue<object>(opt)));
         }
 
-        private static MarkupNode ValueToMarkup(object value)
+        private static Inline ValueToMarkup(object value)
         {
             // Sequence options come back as enumerable values, so format them
             // as `{ a, b, c }` to make it clear that multiple arguments were

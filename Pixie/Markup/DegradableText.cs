@@ -6,7 +6,7 @@ namespace Pixie.Markup
     /// A text node that can be degraded gracefully to a fallback
     /// if the original text cannot be rendered.
     /// </summary>
-    public sealed class DegradableText : MarkupNode
+    public sealed class DegradableText : Inline
     {
         /// <summary>
         /// Creates a degradable text node from a main string
@@ -28,7 +28,7 @@ namespace Pixie.Markup
         /// <param name="fallback">
         /// The fallback node, which is rendered when the main string can't be rendered.
         /// </param>
-        public DegradableText(string text, MarkupNode fallback)
+        public DegradableText(string text, Inline fallback)
         {
             this.Contents = text;
             this.fallbackNode = fallback;
@@ -40,19 +40,15 @@ namespace Pixie.Markup
         /// <returns>A text string.</returns>
         public string Contents { get; private set; }
 
-        private MarkupNode fallbackNode;
+        private Inline fallbackNode;
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback => fallbackNode;
+        public Inline Fallback => fallbackNode;
 
         /// <inheritdoc/>
-        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
+        public override Inline Lower()
         {
-            var newFallback = mapping(fallbackNode);
-            if (newFallback == fallbackNode)
-                return this;
-            else
-                return new DegradableText(Contents, newFallback);
+            return fallbackNode;
         }
     }
 }

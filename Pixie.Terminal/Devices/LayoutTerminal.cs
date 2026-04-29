@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Pixie.Markup;
-using Pixie.Terminal.Render;
 
 namespace Pixie.Terminal.Devices
 {
@@ -179,42 +178,6 @@ namespace Pixie.Terminal.Devices
         {
             Flush();
             UnalignedTerminal.FinishOutput();
-        }
-
-        /// <summary>
-        /// Starts a layout box. Flushes any buffered output
-        /// in the render state to the output terminal, creates
-        /// a new render state based on this layout terminal and
-        /// appends a line separator.
-        /// </summary>
-        /// <param name="state">
-        /// The old render state to create a new box in.
-        /// </param>
-        /// <param name="writeLeadingSeparator">
-        /// Tells if the layout box should insert its usual leading separator.
-        /// </param>
-        /// <returns>A new render state for a layout box.</returns>
-        public RenderState StartLayoutBox(
-            RenderState state,
-            bool writeLeadingSeparator = true)
-        {
-            if (state.Terminal is LayoutTerminal)
-            {
-                ((LayoutTerminal)state.Terminal).Flush();
-            }
-            if (writeLeadingSeparator)
-            {
-                WriteSeparator(1);
-            }
-            return state.WithTerminal(this);
-        }
-
-        /// <summary>
-        /// Ends a layout box by appending a line separator.
-        /// </summary>
-        public void EndLayoutBox()
-        {
-            WriteSeparator(1);
         }
 
         /// <summary>

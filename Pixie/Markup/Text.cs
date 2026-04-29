@@ -1,11 +1,9 @@
-using System;
-
 namespace Pixie.Markup
 {
     /// <summary>
     /// A markup node that renders a string of text.
     /// </summary>
-    public sealed class Text : MarkupNode
+    public sealed class Text : Inline
     {
         /// <summary>
         /// Creates a text node from a string.
@@ -29,7 +27,7 @@ namespace Pixie.Markup
         /// <returns>
         /// <c>true</c> if the node is certainly an empty node; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsEmpty(MarkupNode node)
+        public static bool IsEmpty(Inline node)
         {
             if (node is Text)
             {
@@ -51,13 +49,5 @@ namespace Pixie.Markup
             }
         }
 
-        /// <inheritdoc/>
-        public override MarkupNode Fallback => null;
-
-        /// <inheritdoc/>
-        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
-        {
-            return this;
-        }
     }
 }

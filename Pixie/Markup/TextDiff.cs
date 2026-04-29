@@ -6,7 +6,7 @@ namespace Pixie.Markup
     /// <summary>
     /// A node that visualizes a diff of a pair of strings.
     /// </summary>
-    public sealed class TextDiff : MarkupNode
+    public sealed class TextDiff : Inline
     {
         /// <summary>
         /// Creates a text diff node.
@@ -46,11 +46,9 @@ namespace Pixie.Markup
         public IReadOnlyDictionary<DiffOperation, Color> OperationColors { get; private set; }
 
         /// <inheritdoc/>
-        public override MarkupNode Fallback
+        public override Inline Lower()
         {
-            get
-            {
-                var nodes = new List<MarkupNode>();
+            var nodes = new List<Inline>();
                 int elemCount = Diff.Elements.Count;
                 for (int i = 0; i < elemCount; i++)
                 {
@@ -68,14 +66,7 @@ namespace Pixie.Markup
                         nodes.Add(string.Concat<char>(elem.Values));
                     }
                 }
-                return new Sequence(nodes);
-            }
-        }
-
-        /// <inheritdoc/>
-        public override MarkupNode Map(Func<MarkupNode, MarkupNode> mapping)
-        {
-            return this;
+            return new Sequence(nodes);
         }
 
         /// <summary>

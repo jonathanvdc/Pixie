@@ -384,7 +384,7 @@ namespace Pixie.Tests
             Assert.AreEqual(1, result.ExitCode);
         }
 
-        private static string Render(MarkupNode node)
+        private static string Render(Block node)
         {
             return RenderTests.Render(node).Trim();
         }

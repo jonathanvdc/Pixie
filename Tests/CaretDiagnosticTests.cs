@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Pixie.Code;
 using Pixie.Terminal;
 using Pixie.Terminal.Devices;
 using Pixie.Markup;
-using Pixie.Terminal.Render;
 
 namespace Pixie.Tests
 {
@@ -27,9 +27,7 @@ namespace Pixie.Tests
         {
             var writer = new StringWriter();
             var terminal = new TextWriterTerminal(writer, terminalWidth, Encoding.ASCII);
-            var log = new TerminalLog(terminal).WithRenderers(
-                DiagnosticRenderer.Instance,
-                new HighlightedSourceRenderer(contextLineCount));
+            var log = new TerminalLog(terminal);
             log.Log(entry);
             return writer.ToString();
         }
@@ -41,9 +39,7 @@ namespace Pixie.Tests
         {
             var writer = new StringWriter();
             var terminal = new TextWriterTerminal(writer, terminalWidth, Encoding.ASCII);
-            var log = new TerminalLog(terminal).WithRenderers(
-                DiagnosticRenderer.Instance,
-                new HighlightedSourceRenderer(contextLineCount));
+            var log = new TerminalLog(terminal);
             log.Log(entry);
             return writer.ToString();
         }
@@ -52,19 +48,17 @@ namespace Pixie.Tests
             string title,
             SourceRegion highlightRegion,
             SourceRegion focusRegion,
-            params MarkupNode[] contents)
+            params Inline[] contents)
         {
             var highlightedSource = new HighlightedSource(highlightRegion, focusRegion);
-            var message = new MarkupNode[contents.Length + 1];
-            Array.Copy(contents, message, contents.Length);
-            message[message.Length - 1] = highlightedSource;
             return new LogEntry(
                 Severity.Error,
                 Diagnostic.FromSeverity(
                     Severity.Error,
                     new SourceReference(highlightedSource.HighlightedSpan),
                     title,
-                    new Sequence(message)));
+                    new Sequence(contents),
+                    highlightedSource));
         }
 
         [Test]
@@ -98,6 +92,39 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void CaretDiagnosticStylesFocusTextAndSquiggleWithDiagnosticSeverity()
+        {
+            var source = "warning here";
+            var doc = new StringDocument("warning.txt", source);
+            var focusRegion = new SourceRegion(new SourceSpan(doc, 0, 7));
+            var highlightedSource = new HighlightedSource(focusRegion);
+            var entry = new LogEntry(
+                Severity.Warning,
+                Diagnostic.FromSeverity(
+                    Severity.Warning,
+                    new SourceReference(highlightedSource.HighlightedSpan),
+                    "watch it",
+                    "body",
+                    highlightedSource));
+
+            var writer = new StringWriter();
+            var terminal = new TextWriterTerminal(
+                writer,
+                80,
+                new AnsiStyleManager(writer),
+                Encoding.UTF8);
+            new TerminalLog(terminal).Log(entry);
+
+            var lines = writer.ToString().Split('\n');
+            string sourceLine = lines.First(line => line.Contains("33m") && line.Contains("1m") && !line.Contains("^"));
+            string squiggleLine = lines.First(line => line.Contains("^"));
+
+            StringAssert.Contains("33m", sourceLine);
+            StringAssert.Contains("1m", sourceLine);
+            StringAssert.Contains("33m", squiggleLine);
+        }
+
+        [Test]
         public void RawHighlightedSourceLogEntryDoesNotRenderDocumentIdentifierHeader()
         {
             const string source = "<{%>";
@@ -106,7 +133,7 @@ namespace Pixie.Tests
             var highlightRegion = new SourceRegion(new SourceSpan(doc, errOffset, 1));
             var entry = new LogEntry(
                 Severity.Error,
-                new Text("Expected ending curly"),
+                new Paragraph("Expected ending curly"),
                 new HighlightedSource(highlightRegion));
 
             var rendered = RenderEntry(entry, 80, 1);

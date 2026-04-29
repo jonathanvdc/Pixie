@@ -106,19 +106,19 @@ namespace Pixie.Options
         /// Gets the summary used for generated help output.
         /// </summary>
         /// <returns>The summary.</returns>
-        public MarkupNode Summary { get; private set; }
+        public Block Summary { get; private set; }
 
         /// <summary>
         /// Gets the usage text used for generated help output.
         /// </summary>
         /// <returns>The usage text.</returns>
-        public MarkupNode Usage { get; private set; }
+        public Inline Usage { get; private set; }
 
         /// <summary>
         /// Gets the version text emitted by the generated version option.
         /// </summary>
         /// <returns>The version text.</returns>
-        public MarkupNode Version { get; private set; }
+        public Block Version { get; private set; }
 
         /// <summary>
         /// Gets the generated help option, if any.
@@ -144,8 +144,8 @@ namespace Pixie.Options
         /// </param>
         /// <returns>A new command line.</returns>
         public CommandLine WithHelp(
-            MarkupNode summary,
-            MarkupNode usage,
+            Block summary,
+            Inline usage,
             params string[] forms)
         {
             var result = new CommandLine(this);
@@ -175,7 +175,7 @@ namespace Pixie.Options
             string usage,
             params string[] forms)
         {
-            return WithHelp((MarkupNode)summary, usage, forms);
+            return WithHelp((Block)summary, usage, forms);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Pixie.Options
         /// </param>
         /// <returns>A new command line.</returns>
         public CommandLine WithVersion(
-            MarkupNode version,
+            Block version,
             params string[] forms)
         {
             var result = new CommandLine(this);
@@ -216,7 +216,7 @@ namespace Pixie.Options
             string version,
             params string[] forms)
         {
-            return WithVersion((MarkupNode)version, forms);
+            return WithVersion((Block)version, forms);
         }
 
         /// <summary>
