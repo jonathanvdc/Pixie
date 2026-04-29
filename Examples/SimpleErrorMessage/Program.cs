@@ -14,7 +14,7 @@ namespace SimpleErrorMessage
 
             // First acquire a log. You should do this only
             // once over the course of your program.
-            var log = TerminalLog.Acquire();
+            var log = TerminalLog.AcquireStandardOutput();
 
             // Compose an error message. We'll quote `Color.exe`
             // and `Main` and put them in bold.

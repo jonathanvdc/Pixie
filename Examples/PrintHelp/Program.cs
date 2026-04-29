@@ -37,7 +37,7 @@ namespace PrintHelp
         {
             // First, acquire a terminal log. You should acquire
             // a log once and then re-use it in your application.
-            var log = TerminalLog.Acquire();
+            var log = TerminalLog.AcquireStandardOutput();
             var commandLine = new CommandLine(
                 filesOption,
                 syntaxOnlyFlag,

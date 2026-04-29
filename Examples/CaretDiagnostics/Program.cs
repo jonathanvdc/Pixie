@@ -14,7 +14,7 @@ namespace CaretDiagnostics
             // First, acquire a terminal log. You should acquire
             // a log once and then re-use it in your application.
             //
-            ILog log = TerminalLog.Acquire();
+            ILog log = TerminalLog.AcquireStandardOutput();
 
             var doc = new StringDocument("code.cs", SourceCode);
             var ctorStartOffset = SourceCode.IndexOf("public Program()");
