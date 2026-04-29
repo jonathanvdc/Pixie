@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Pixie.Markup;
 
@@ -144,22 +143,24 @@ namespace Pixie.Terminal.Layout
                 ? (Inline)""
                 : new Sequence(diagnostic.Title, ": ");
 
-            Inline header =
+            var boldHeader =
+                new DecorationSpan(
+                    new Sequence(
+                        diagnostic.Origin,
+                        ": ",
+                        new ColorSpan(diagnostic.Kind + ": ", diagnostic.ThemeColor),
+                        titlePart),
+                    TextDecoration.Bold);
+
+            var header =
                 new Sequence(
-                    diagnostic.Origin,
-                    ": ",
-                    new ColorSpan(diagnostic.Kind + ": ", diagnostic.ThemeColor),
-                    titlePart,
+                    boldHeader,
                     diagnostic.Message ?? "");
 
             var blocks = new List<BlockLayout>();
             blocks.Add(
                 new FlowBlock(
-                    new StyledInline(
-                        CompileInline(header),
-                        Colors.Transparent,
-                        Colors.Transparent,
-                        TextDecoration.Bold),
+                    CompileInline(header),
                     diagnostic.Details == null
                         ? Margins.None
                         : new Margins(0, 1)));
