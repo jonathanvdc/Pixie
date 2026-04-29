@@ -7,13 +7,27 @@ namespace Pixie.Markup
     /// </summary>
     public class SourceReference : Inline
     {
+        /// <summary>
+        /// Creates a source reference.
+        /// </summary>
+        /// <param name="range">The referenced source span.</param>
         public SourceReference(SourceSpan range)
         {
             this.Range = range;
         }
 
+        /// <summary>
+        /// Gets the referenced source span.
+        /// </summary>
         public SourceSpan Range { get; private set; }
 
+        /// <summary>
+        /// Renders a source reference from resolved source coordinates.
+        /// </summary>
+        /// <param name="identifier">The source identifier.</param>
+        /// <param name="start">The start position.</param>
+        /// <param name="end">The end position.</param>
+        /// <returns>The rendered inline markup.</returns>
         protected virtual Inline Render(
             string identifier,
             LineAndColumnPosition start,
@@ -23,6 +37,10 @@ namespace Pixie.Markup
                 identifier + ":" + start.Line + ":" + start.Column);
         }
 
+        /// <summary>
+        /// Lowers this source reference to simpler inline markup.
+        /// </summary>
+        /// <returns>The lowered inline markup.</returns>
         public override Inline Lower()
         {
             if (!Range.IsKnown)
@@ -45,10 +63,21 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class SourceRangeReference : SourceReference
     {
+        /// <summary>
+        /// Creates a source range reference.
+        /// </summary>
+        /// <param name="range">The referenced source span.</param>
         public SourceRangeReference(SourceSpan range)
             : base(range)
         { }
 
+        /// <summary>
+        /// Renders a source range reference from resolved source coordinates.
+        /// </summary>
+        /// <param name="identifier">The source identifier.</param>
+        /// <param name="start">The start position.</param>
+        /// <param name="end">The end position.</param>
+        /// <returns>The rendered inline markup.</returns>
         protected override Inline Render(
             string identifier,
             LineAndColumnPosition start,

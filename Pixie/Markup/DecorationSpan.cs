@@ -5,7 +5,7 @@ namespace Pixie.Markup
     /// <summary>
     /// Describes an enumeration of text decorations.
     /// </summary>
-    [FlagsAttribute]
+    [Flags]
     public enum TextDecoration
     {
         /// <summary>

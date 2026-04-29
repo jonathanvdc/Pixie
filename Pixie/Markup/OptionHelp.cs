@@ -9,16 +9,31 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class OptionHelp : Block
     {
+        /// <summary>
+        /// Creates help markup for one command-line option.
+        /// </summary>
+        /// <param name="option">The option to document.</param>
+        /// <param name="printer">The option printer to use.</param>
         public OptionHelp(Option option, OptionPrinter printer)
         {
             this.Option = option;
             this.Printer = printer;
         }
 
+        /// <summary>
+        /// Gets the option being documented.
+        /// </summary>
         public Option Option { get; private set; }
 
+        /// <summary>
+        /// Gets the option printer used to render option names and arguments.
+        /// </summary>
         public OptionPrinter Printer { get; private set; }
 
+        /// <summary>
+        /// Lowers this option help block to simpler markup.
+        /// </summary>
+        /// <returns>The lowered block markup.</returns>
         public override Block Lower()
         {
             var forms = Option.Forms;

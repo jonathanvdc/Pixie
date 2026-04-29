@@ -8,10 +8,18 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class Sequence : Inline
     {
+        /// <summary>
+        /// Creates a sequence from a parameter list of inline nodes.
+        /// </summary>
+        /// <param name="contents">The inline contents.</param>
         public Sequence(params Inline[] contents)
             : this((IReadOnlyList<Inline>)contents)
         { }
 
+        /// <summary>
+        /// Creates a sequence of inline nodes.
+        /// </summary>
+        /// <param name="contents">The inline contents.</param>
         public Sequence(IReadOnlyList<Inline> contents)
         {
             this.Contents = contents;
@@ -25,6 +33,8 @@ namespace Pixie.Markup
         /// <summary>
         /// Maps a sequence without reallocating when no element changes.
         /// </summary>
+        /// <param name="elements">The elements to map.</param>
+        /// <param name="mapping">The mapping function to apply to each element.</param>
         public static IReadOnlyList<T> Map<T>(
             IReadOnlyList<T> elements,
             Func<T, T> mapping)

@@ -6,16 +6,31 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class PrefixBox : Block
     {
+        /// <summary>
+        /// Creates a prefixed block.
+        /// </summary>
+        /// <param name="prefix">The prefix applied to the first line.</param>
+        /// <param name="contents">The block contents.</param>
         public PrefixBox(Inline prefix, Block contents)
         {
             this.Prefix = prefix;
             this.Contents = contents;
         }
 
-        public Inline Prefix { get; private set; }
+        /// <summary>
+        /// Gets the prefix applied to the first line.
+        /// </summary>
+        public Inline Prefix { get; }
 
-        public Block Contents { get; private set; }
+        /// <summary>
+        /// Gets the block contents.
+        /// </summary>
+        public Block Contents { get; }
 
+        /// <summary>
+        /// Lowers this prefixed block to simpler markup.
+        /// </summary>
+        /// <returns>The lowered block markup.</returns>
         public override Block Lower()
         {
             return new Paragraph(Prefix);

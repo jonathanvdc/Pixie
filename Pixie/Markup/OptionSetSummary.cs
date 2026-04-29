@@ -8,16 +8,31 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class OptionSetSummary : Block
     {
+        /// <summary>
+        /// Creates summary markup for the forms of a set of command-line options grouped by category.
+        /// </summary>
+        /// <param name="options">The options to summarize.</param>
+        /// <param name="printer">The option printer to use.</param>
         public OptionSetSummary(IReadOnlyList<Option> options, OptionPrinter printer)
         {
             this.Options = options;
             this.Printer = printer;
         }
 
+        /// <summary>
+        /// Gets the options being summarized.
+        /// </summary>
         public IReadOnlyList<Option> Options { get; private set; }
 
+        /// <summary>
+        /// Gets the option printer used to render option names and arguments.
+        /// </summary>
         public OptionPrinter Printer { get; private set; }
 
+        /// <summary>
+        /// Lowers this option set summary block to simpler markup.
+        /// </summary>
+        /// <returns>The lowered block markup.</returns>
         public override Block Lower()
         {
             var grouped = SortAndGroupByCategory(Options);
@@ -49,6 +64,11 @@ namespace Pixie.Markup
             return new Stack(groupNodes);
         }
 
+        /// <summary>
+        /// Sorts options by their first form and groups them by documentation category.
+        /// </summary>
+        /// <param name="options">The options to sort and group.</param>
+        /// <returns>The options grouped by category.</returns>
         public static SortedDictionary<string, IReadOnlyList<Option>> SortAndGroupByCategory(
             IReadOnlyList<Option> options)
         {

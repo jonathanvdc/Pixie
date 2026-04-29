@@ -29,11 +29,19 @@ namespace Pixie.Markup
     /// </summary>
     public abstract class BlockContainer : Block
     {
+        /// <summary>
+        /// Creates a block container.
+        /// </summary>
+        /// <param name="contents">The contained block markup.</param>
         protected BlockContainer(Block contents)
         {
             this.Contents = contents;
         }
 
+        /// <summary>
+        /// Creates a block container from a sequence of blocks.
+        /// </summary>
+        /// <param name="contents">The contained block markup.</param>
         protected BlockContainer(IReadOnlyList<Block> contents)
             : this(new Stack(contents))
         { }

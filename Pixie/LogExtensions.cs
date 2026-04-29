@@ -96,9 +96,10 @@ namespace Pixie
         /// </summary>
         /// <param name="log">The log to write to.</param>
         /// <param name="severity">The diagnostic severity.</param>
-        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="origin">The diagnostic origin, such as a source location.</param>
         /// <param name="title">The diagnostic title.</param>
-        /// <param name="contents">The diagnostic body contents.</param>
+        /// <param name="message">The diagnostic message.</param>
+        /// <param name="details">Optional additional diagnostic details.</param>
         public static void Diagnostic(
             this ILog log,
             Severity severity,
@@ -122,9 +123,10 @@ namespace Pixie
         /// Logs an error as a compiler-style diagnostic entry.
         /// </summary>
         /// <param name="log">The log to write to.</param>
-        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="origin">The diagnostic origin, such as a source location.</param>
         /// <param name="title">The diagnostic title.</param>
-        /// <param name="contents">The diagnostic body contents.</param>
+        /// <param name="message">The diagnostic message.</param>
+        /// <param name="details">Optional additional diagnostic details.</param>
         public static void ErrorDiagnostic(
             this ILog log,
             Inline origin,
@@ -139,9 +141,10 @@ namespace Pixie
         /// Logs a warning as a compiler-style diagnostic entry.
         /// </summary>
         /// <param name="log">The log to write to.</param>
-        /// <param name="origin">The diagnostic origin.</param>
+        /// <param name="origin">The diagnostic origin, such as a source location.</param>
         /// <param name="title">The diagnostic title.</param>
-        /// <param name="contents">The diagnostic body contents.</param>
+        /// <param name="message">The diagnostic message.</param>
+        /// <param name="details">Optional additional diagnostic details.</param>
         public static void WarningDiagnostic(
             this ILog log,
             Inline origin,

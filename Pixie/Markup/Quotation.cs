@@ -62,6 +62,16 @@ namespace Pixie.Markup
             return new Quotation(newContents, NumberOfQuotes);
         }
 
+        /// <summary>
+        /// Builds an opening or closing quotation sign sequence.
+        /// </summary>
+        /// <param name="NumberOfQuotes">The number of quotation signs to include.</param>
+        /// <param name="SingleQuote">The single quotation mark to use.</param>
+        /// <param name="DoubleQuote">The double quotation mark to use.</param>
+        /// <param name="PutDoubleQuotesFirst">
+        /// Indicates whether double quotation marks should be emitted before single quotation marks.
+        /// </param>
+        /// <returns>The quotation sign sequence.</returns>
         private static string BuildQuotationSign(
             int NumberOfQuotes,
             char SingleQuote,

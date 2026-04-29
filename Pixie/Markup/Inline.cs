@@ -31,11 +31,19 @@ namespace Pixie.Markup
     /// </summary>
     public abstract class InlineContainer : Inline
     {
+        /// <summary>
+        /// Creates an inline container.
+        /// </summary>
+        /// <param name="contents">The contained inline markup.</param>
         protected InlineContainer(Inline contents)
         {
             this.Contents = contents;
         }
 
+        /// <summary>
+        /// Creates an inline container from a sequence of inline nodes.
+        /// </summary>
+        /// <param name="contents">The contained inline markup.</param>
         protected InlineContainer(IReadOnlyList<Inline> contents)
             : this(new Sequence(contents))
         { }

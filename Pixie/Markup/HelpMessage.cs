@@ -8,10 +8,23 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class HelpMessage : Block
     {
+        /// <summary>
+        /// Creates a help message that uses the default GNU-style option printer.
+        /// </summary>
+        /// <param name="summary">The program summary.</param>
+        /// <param name="usage">The program usage syntax.</param>
+        /// <param name="options">The supported command-line options.</param>
         public HelpMessage(Block summary, Inline usage, IReadOnlyList<Option> options)
             : this(summary, usage, options, GnuOptionPrinter.Instance)
         { }
 
+        /// <summary>
+        /// Creates a help message.
+        /// </summary>
+        /// <param name="summary">The program summary.</param>
+        /// <param name="usage">The program usage syntax.</param>
+        /// <param name="options">The supported command-line options.</param>
+        /// <param name="printer">The option printer to use.</param>
         public HelpMessage(
             Block summary,
             Inline usage,
@@ -24,14 +37,30 @@ namespace Pixie.Markup
             this.Printer = printer;
         }
 
-        public Block Summary { get; private set; }
+        /// <summary>
+        /// Gets the program summary.
+        /// </summary>
+        public Block Summary { get; }
 
-        public Inline Usage { get; private set; }
+        /// <summary>
+        /// Gets the program usage syntax.
+        /// </summary>
+        public Inline Usage { get; }
 
-        public IReadOnlyList<Option> Options { get; private set; }
+        /// <summary>
+        /// Gets the supported command-line options.
+        /// </summary>
+        public IReadOnlyList<Option> Options { get; }
 
-        public OptionPrinter Printer { get; private set; }
+        /// <summary>
+        /// Gets the option printer used to render option names and arguments.
+        /// </summary>
+        public OptionPrinter Printer { get; }
 
+        /// <summary>
+        /// Lowers this help message to simpler markup.
+        /// </summary>
+        /// <returns>The lowered block markup.</returns>
         public override Block Lower()
         {
             return WrapBox.WordWrap(

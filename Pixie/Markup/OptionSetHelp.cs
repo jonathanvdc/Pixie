@@ -8,16 +8,31 @@ namespace Pixie.Markup
     /// </summary>
     public sealed class OptionSetHelp : Block
     {
+        /// <summary>
+        /// Creates help markup for a set of command-line options grouped by category.
+        /// </summary>
+        /// <param name="options">The options to document.</param>
+        /// <param name="printer">The option printer to use.</param>
         public OptionSetHelp(IReadOnlyList<Option> options, OptionPrinter printer)
         {
             this.Options = options;
             this.Printer = printer;
         }
 
+        /// <summary>
+        /// Gets the options being documented.
+        /// </summary>
         public IReadOnlyList<Option> Options { get; private set; }
 
+        /// <summary>
+        /// Gets the option printer used to render option names and arguments.
+        /// </summary>
         public OptionPrinter Printer { get; private set; }
 
+        /// <summary>
+        /// Lowers this option set help block to simpler markup.
+        /// </summary>
+        /// <returns>The lowered block markup.</returns>
         public override Block Lower()
         {
             var grouped = OptionSetSummary.SortAndGroupByCategory(Options);
