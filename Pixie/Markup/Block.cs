@@ -49,7 +49,7 @@ namespace Pixie.Markup
         /// <summary>
         /// Gets the contained block markup.
         /// </summary>
-        public Block Contents { get; private set; }
+        public Block Contents { get; }
 
         /// <summary>
         /// Creates a copy of this node with new contents.
