@@ -198,21 +198,6 @@ public sealed class SourceRegion
     /// <returns>A new source region.</returns>
     public SourceRegion ExcludeCharacters(Predicate<char> exclude)
     {
-        return FilterCharacters(new NotPredicate<char>(exclude).Invoke);
-    }
-}
-
-internal sealed class NotPredicate<T>
-{
-    public NotPredicate(Predicate<T> predicate)
-    {
-        this.Predicate = predicate;
-    }
-
-    public Predicate<T> Predicate { get; private set; }
-
-    public bool Invoke(T value)
-    {
-        return !Predicate(value);
+        return FilterCharacters(c => !exclude(c));
     }
 }
