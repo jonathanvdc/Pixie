@@ -46,6 +46,7 @@ namespace Pixie.Markup
         /// <returns>The background color.</returns>
         public Color BackgroundColor { get; private set; }
 
+        /// <inheritdoc/>
         public override Inline Lower()
         {
             return Contents;
