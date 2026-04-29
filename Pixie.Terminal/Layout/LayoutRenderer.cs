@@ -1,5 +1,6 @@
 using Pixie.Markup;
 using Pixie.Terminal.Devices;
+using System;
 
 namespace Pixie.Terminal.Layout
 {
@@ -13,25 +14,26 @@ namespace Pixie.Terminal.Layout
 
         private void RenderBlock(BlockLayout block, TerminalBase terminal)
         {
-            if (block is BlockStack)
+            switch (block)
             {
-                RenderStack((BlockStack)block, terminal);
-            }
-            else if (block is FlowBlock)
-            {
-                RenderInline(((FlowBlock)block).Contents, terminal);
-            }
-            else if (block is LayoutBox)
-            {
-                RenderLayoutBox((LayoutBox)block, terminal);
-            }
-            else if (block is PrefixLayout)
-            {
-                RenderPrefix((PrefixLayout)block, terminal);
-            }
-            else if (block is FixedBlock)
-            {
-                ((FixedBlock)block).Render(terminal);
+                case BlockStack stack:
+                    RenderStack(stack, terminal);
+                    break;
+                case FlowBlock flow:
+                    RenderInline(flow.Contents, terminal);
+                    break;
+                case LayoutBox box:
+                    RenderLayoutBox(box, terminal);
+                    break;
+                case PrefixLayout prefix:
+                    RenderPrefix(prefix, terminal);
+                    break;
+                case FixedBlock fixedBlock:
+                    fixedBlock.Render(terminal);
+                    break;
+                default:
+                    throw new NotSupportedException(
+                        $"Unsupported block layout type: {block.GetType().FullName}");
             }
         }
 
@@ -62,42 +64,36 @@ namespace Pixie.Terminal.Layout
 
         private int GetFirstMarginBefore(BlockLayout block)
         {
-            if (block is BlockStack)
+            switch (block)
             {
-                var stack = (BlockStack)block;
-                return stack.Children.Count == 0
-                    ? 0
-                    : GetFirstMarginBefore(stack.Children[0]);
+                case BlockStack stack:
+                    return stack.Children.Count == 0
+                        ? 0
+                        : GetFirstMarginBefore(stack.Children[0]);
+                case LayoutBox box:
+                    return GetFirstMarginBefore(box.Contents);
+                case PrefixLayout prefix:
+                    return GetFirstMarginBefore(prefix.Contents);
+                default:
+                    return block.Margins.Before;
             }
-            if (block is LayoutBox)
-            {
-                return GetFirstMarginBefore(((LayoutBox)block).Contents);
-            }
-            if (block is PrefixLayout)
-            {
-                return GetFirstMarginBefore(((PrefixLayout)block).Contents);
-            }
-            return block.Margins.Before;
         }
 
         private int GetLastMarginAfter(BlockLayout block)
         {
-            if (block is BlockStack)
+            switch (block)
             {
-                var stack = (BlockStack)block;
-                return stack.Children.Count == 0
-                    ? 0
-                    : GetLastMarginAfter(stack.Children[stack.Children.Count - 1]);
+                case BlockStack stack:
+                    return stack.Children.Count == 0
+                        ? 0
+                        : GetLastMarginAfter(stack.Children[stack.Children.Count - 1]);
+                case LayoutBox box:
+                    return GetLastMarginAfter(box.Contents);
+                case PrefixLayout prefix:
+                    return GetLastMarginAfter(prefix.Contents);
+                default:
+                    return block.Margins.After;
             }
-            if (block is LayoutBox)
-            {
-                return GetLastMarginAfter(((LayoutBox)block).Contents);
-            }
-            if (block is PrefixLayout)
-            {
-                return GetLastMarginAfter(((PrefixLayout)block).Contents);
-            }
-            return block.Margins.After;
         }
 
         private void RenderLayoutBox(LayoutBox box, TerminalBase terminal)
@@ -116,9 +112,9 @@ namespace Pixie.Terminal.Layout
         {
             RenderInline(prefix.Prefix, terminal);
             int prefixLength = Measure(prefix.Prefix, terminal);
-            if (terminal is LayoutTerminal)
+            if (terminal is LayoutTerminal layoutTerminal)
             {
-                ((LayoutTerminal)terminal).Flush();
+                layoutTerminal.Flush();
             }
 
             var inner = LayoutTerminal.AddHorizontalMargin(terminal, prefixLength, 0);
@@ -129,79 +125,65 @@ namespace Pixie.Terminal.Layout
 
         private int Measure(InlineLayout inline, TerminalBase terminal)
         {
-            if (inline is EmptyInline)
+            switch (inline)
             {
-                return 0;
+                case EmptyInline:
+                    return 0;
+                case TextRun textRun:
+                    return textRun.Text.Length;
+                case InlineConcat concat:
+                    int result = 0;
+                    for (int i = 0; i < concat.Children.Count; i++)
+                    {
+                        result += Measure(concat.Children[i], terminal);
+                    }
+                    return result;
+                case StyledInline styled:
+                    return Measure(styled.Body, terminal);
+                case AlternativeInline alternative:
+                    return terminal.CanRender(alternative.Preferred)
+                        ? alternative.Preferred.Length
+                        : Measure(alternative.Fallback, terminal);
+                default:
+                    throw new NotSupportedException(
+                        $"Unsupported inline layout type: {inline.GetType().FullName}");
             }
-            if (inline is TextRun)
-            {
-                return ((TextRun)inline).Text.Length;
-            }
-            if (inline is InlineConcat)
-            {
-                var concat = (InlineConcat)inline;
-                int result = 0;
-                for (int i = 0; i < concat.Children.Count; i++)
-                {
-                    result += Measure(concat.Children[i], terminal);
-                }
-                return result;
-            }
-            if (inline is StyledInline)
-            {
-                return Measure(((StyledInline)inline).Body, terminal);
-            }
-            if (inline is AlternativeInline)
-            {
-                var alternative = (AlternativeInline)inline;
-                return terminal.CanRender(alternative.Preferred)
-                    ? alternative.Preferred.Length
-                    : Measure(alternative.Fallback, terminal);
-            }
-            return 0;
         }
 
         private void RenderInline(InlineLayout inline, TerminalBase terminal)
         {
-            if (inline is EmptyInline)
+            switch (inline)
             {
-                return;
-            }
-            if (inline is TextRun)
-            {
-                terminal.Write(((TextRun)inline).Text);
-                return;
-            }
-            if (inline is InlineConcat)
-            {
-                var concat = (InlineConcat)inline;
-                for (int i = 0; i < concat.Children.Count; i++)
-                {
-                    RenderInline(concat.Children[i], terminal);
-                }
-                return;
-            }
-            if (inline is StyledInline)
-            {
-                RenderStyled((StyledInline)inline, terminal);
-                return;
-            }
-            if (inline is AlternativeInline)
-            {
-                var alternative = (AlternativeInline)inline;
-                if (terminal.CanRender(alternative.Preferred))
-                {
-                    terminal.Write(alternative.Preferred);
-                }
-                else
-                {
-                    RenderInline(alternative.Fallback, terminal);
-                }
-                return;
-            }
-            if (inline is HardLine)
-            {
-                terminal.WriteLine();
+                case EmptyInline:
+                    return;
+                case TextRun textRun:
+                    terminal.Write(textRun.Text);
+                    return;
+                case InlineConcat concat:
+                    for (int i = 0; i < concat.Children.Count; i++)
+                    {
+                        RenderInline(concat.Children[i], terminal);
+                    }
+                    return;
+                case StyledInline styled:
+                    RenderStyled(styled, terminal);
+                    return;
+                case AlternativeInline alternative:
+                    if (terminal.CanRender(alternative.Preferred))
+                    {
+                        terminal.Write(alternative.Preferred);
+                    }
+                    else
+                    {
+                        RenderInline(alternative.Fallback, terminal);
+                    }
+                    return;
+                case HardLine:
+                    terminal.WriteLine();
+                    return;
+                default:
+                    throw new NotSupportedException(
+                        $"Unsupported inline layout type: {inline.GetType().FullName}");
             }
         }
 
