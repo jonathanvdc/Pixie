@@ -6,20 +6,11 @@ namespace Pixie
     /// <summary>
     /// Describes an RGBA color.
     /// </summary>
-    public readonly struct Color
+    /// <remarks>
+    /// Creates a new color instance from the given channels.
+    /// </remarks>
+    public readonly struct Color(double red, double green, double blue, double alpha)
     {
-        /// <summary>
-        /// Creates a new color instance from the given channels.
-        /// </summary>
-        public Color(double red, double green, double blue, double alpha)
-        {
-            this = default(Color);
-            this.Red = red;
-            this.Green = green;
-            this.Blue = blue;
-            this.Alpha = alpha;
-        }
-
         /// <summary>
         /// Creates a new color instance from the given RGB channels.
         /// Alpha is set to one.
@@ -46,22 +37,22 @@ namespace Pixie
         /// <summary>
         /// Gets the color's alpha channel.
         /// </summary>
-        public double Alpha { get; }
+        public double Alpha { get; } = alpha;
 
         /// <summary>
         /// Gets the color's red channel.
         /// </summary>
-        public double Red { get; }
+        public double Red { get; } = red;
 
         /// <summary>
         /// Gets the color's green channel.
         /// </summary>
-        public double Green { get; }
+        public double Green { get; } = green;
 
         /// <summary>
         /// Gets the color's blue channel.
         /// </summary>
-        public double Blue { get; }
+        public double Blue { get; } = blue;
 
         /// <summary>
         /// Gets the color's grayscale intensity. The alpha channel
