@@ -106,10 +106,14 @@ namespace Pixie
     }
 
     /// <summary>
-    /// Defines common colors.
+    /// Defines common colors using the traditional terminal ANSI palette.
     /// </summary>
     public static class Colors
     {
+        private const double NormalIntensity = 0.8;
+        private const double BrightBlackIntensity = 1.0 / 3.0;
+        private const double NormalWhiteIntensity = 0.9601849913597107;
+
         /// <summary>
         /// Gets the transparent color, which does nothing when merged on
         /// top of another color.
@@ -127,48 +131,48 @@ namespace Pixie
         /// Gets the color white.
         /// </summary>
         /// <returns>The color white.</returns>
-        public static Color White => new Color(1.0);
+        public static Color White => new Color(NormalWhiteIntensity);
 
         /// <summary>
         /// Gets the color gray.
         /// </summary>
         /// <returns>The color gray.</returns>
-        public static Color Gray => new Color(0.5);
+        public static Color Gray => new Color(BrightBlackIntensity);
 
         /// <summary>
         /// Gets the color red.
         /// </summary>
         /// <returns>The color red.</returns>
-        public static Color Red => new Color(1.0, 0.0, 0.0);
+        public static Color Red => new Color(NormalIntensity, 0.0, 0.0);
 
         /// <summary>
         /// Gets the color green.
         /// </summary>
         /// <returns>The color green.</returns>
-        public static Color Green => new Color(0.0, 1.0, 0.0);
+        public static Color Green => new Color(0.0, NormalIntensity, 0.0);
 
         /// <summary>
         /// Gets the color blue.
         /// </summary>
         /// <returns>The color blue.</returns>
-        public static Color Blue => new Color(0.0, 0.0, 1.0);
+        public static Color Blue => new Color(0.0, 0.0, NormalIntensity);
 
         /// <summary>
         /// Gets the color yellow.
         /// </summary>
         /// <returns>The color yellow.</returns>
-        public static Color Yellow => new Color(1.0, 1.0, 0.0);
+        public static Color Yellow => new Color(NormalIntensity, NormalIntensity, 0.0);
 
         /// <summary>
         /// Gets the color magenta.
         /// </summary>
         /// <returns>The color magenta.</returns>
-        public static Color Magenta => new Color(1.0, 0.0, 1.0);
+        public static Color Magenta => new Color(NormalIntensity, 0.0, NormalIntensity);
 
         /// <summary>
         /// Gets the color cyan.
         /// </summary>
         /// <returns>The color cyan.</returns>
-        public static Color Cyan => new Color(0.0, 1.0, 1.0);
+        public static Color Cyan => new Color(0.0, NormalIntensity, NormalIntensity);
     }
 }

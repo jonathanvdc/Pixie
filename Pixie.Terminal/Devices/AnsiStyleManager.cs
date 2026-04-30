@@ -152,6 +152,15 @@ namespace Pixie.Terminal.Devices
         BackgroundMagenta = 45,
         BackgroundCyan = 46,
         BackgroundWhite = 47,
+
+        ForegroundBrightBlack = 90,
+        ForegroundBrightRed = 91,
+        ForegroundBrightGreen = 92,
+        ForegroundBrightYellow = 93,
+        ForegroundBrightBlue = 94,
+        ForegroundBrightMagenta = 95,
+        ForegroundBrightCyan = 96,
+        ForegroundBrightWhite = 97,
     }
 
     internal sealed class AnsiStyle
@@ -203,15 +212,8 @@ namespace Pixie.Terminal.Devices
             // Write the foreground color.
             if (ForegroundColor.HasValue)
             {
-                bool isFaint;
                 commands.Add(ToForegroundColor(
-                    ConsoleStyle.ToConsoleColor(ForegroundColor.Value),
-                    out isFaint));
-
-                if (isFaint)
-                {
-                    commands.Add(AnsiControlCode.Faint);
-                }
+                    ConsoleStyle.ToConsoleColor(ForegroundColor.Value)));
             }
 
             // Write the background color.
@@ -261,59 +263,43 @@ namespace Pixie.Terminal.Devices
             }
         }
 
-        private static AnsiControlCode ToForegroundColor(ConsoleColor color, out bool isFaint)
+        private static AnsiControlCode ToForegroundColor(ConsoleColor color)
         {
             switch (color)
             {
                 case ConsoleColor.Black:
-                    isFaint = false;
                     return AnsiControlCode.ForegroundBlack;
-                case ConsoleColor.Blue:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundBlue;
-                case ConsoleColor.Cyan:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundCyan;
-                case ConsoleColor.Green:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundGreen;
-                case ConsoleColor.Magenta:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundMagenta;
-                case ConsoleColor.Red:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundRed;
-                case ConsoleColor.White:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundWhite;
-                case ConsoleColor.Yellow:
-                    isFaint = false;
-                    return AnsiControlCode.ForegroundYellow;
-
-                case ConsoleColor.Gray:
-                    isFaint = true;
-                    return AnsiControlCode.ForegroundWhite;
                 case ConsoleColor.DarkBlue:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundBlue;
                 case ConsoleColor.DarkCyan:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundCyan;
-                case ConsoleColor.DarkGray:
-                    isFaint = true;
-                    return AnsiControlCode.ForegroundBlack;
                 case ConsoleColor.DarkGreen:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundGreen;
                 case ConsoleColor.DarkMagenta:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundMagenta;
                 case ConsoleColor.DarkRed:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundRed;
                 case ConsoleColor.DarkYellow:
-                    isFaint = true;
                     return AnsiControlCode.ForegroundYellow;
+                case ConsoleColor.Gray:
+                    return AnsiControlCode.ForegroundWhite;
+
+                case ConsoleColor.DarkGray:
+                    return AnsiControlCode.ForegroundBrightBlack;
+                case ConsoleColor.Blue:
+                    return AnsiControlCode.ForegroundBrightBlue;
+                case ConsoleColor.Cyan:
+                    return AnsiControlCode.ForegroundBrightCyan;
+                case ConsoleColor.Green:
+                    return AnsiControlCode.ForegroundBrightGreen;
+                case ConsoleColor.Magenta:
+                    return AnsiControlCode.ForegroundBrightMagenta;
+                case ConsoleColor.Red:
+                    return AnsiControlCode.ForegroundBrightRed;
+                case ConsoleColor.White:
+                    return AnsiControlCode.ForegroundBrightWhite;
+                case ConsoleColor.Yellow:
+                    return AnsiControlCode.ForegroundBrightYellow;
 
                 default:
                     throw new NotSupportedException("Unsupported color " + color);
@@ -322,8 +308,7 @@ namespace Pixie.Terminal.Devices
 
         private static AnsiControlCode ToBackgroundColor(ConsoleColor color)
         {
-            bool isFaint;
-            return ToForegroundColor(color, out isFaint) + 10;
+            return ToForegroundColor(color) + 10;
         }
 
         private static bool QuantizedColorEquals(Color first, Color second)

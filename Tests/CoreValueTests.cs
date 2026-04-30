@@ -33,9 +33,11 @@ namespace Pixie.Tests
         public void NamedColorsExposeExpectedChannelValues()
         {
             Assert.AreEqual("a:0;r:0;g:0;b:0", Colors.Transparent.ToString());
-            Assert.AreEqual("a:1;r:1;g:1;b:0", Colors.Yellow.ToString());
-            Assert.AreEqual("a:1;r:1;g:0;b:1", Colors.Magenta.ToString());
-            Assert.AreEqual("a:1;r:0;g:1;b:1", Colors.Cyan.ToString());
+            Assert.AreEqual("a:1;r:0.8;g:0.8;b:0", Colors.Yellow.ToString());
+            Assert.AreEqual("a:1;r:0.8;g:0;b:0.8", Colors.Magenta.ToString());
+            Assert.AreEqual("a:1;r:0;g:0.8;b:0.8", Colors.Cyan.ToString());
+            Assert.AreEqual(0.9601849913597107, Colors.White.Red, 1e-9);
+            Assert.AreEqual(1.0 / 3.0, Colors.Gray.Red, 1e-9);
         }
 
         [Test]

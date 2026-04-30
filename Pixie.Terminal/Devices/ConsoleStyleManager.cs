@@ -139,35 +139,25 @@ namespace Pixie.Terminal.Devices
             colorMap = new Dictionary<ConsoleColor, Color>()
             {
                 { ConsoleColor.Black, Colors.Black },
-                { ConsoleColor.Blue, Colors.Blue },
-                { ConsoleColor.Cyan, Colors.Cyan },
-                { ConsoleColor.Gray, Colors.Gray },
-                { ConsoleColor.Green, Colors.Green },
-                { ConsoleColor.Magenta, Colors.Magenta },
-                { ConsoleColor.Red, Colors.Red },
-                { ConsoleColor.White, Colors.White },
-                { ConsoleColor.Yellow, Colors.Yellow },
-                { ConsoleColor.DarkBlue, MakeDark(Colors.Blue) },
-                { ConsoleColor.DarkCyan, MakeDark(Colors.Cyan) },
-                { ConsoleColor.DarkGray, MakeDark(Colors.Gray) },
-                { ConsoleColor.DarkGreen, MakeDark(Colors.Green) },
-                { ConsoleColor.DarkMagenta, MakeDark(Colors.Magenta) },
-                { ConsoleColor.DarkRed, MakeDark(Colors.Red) },
-                { ConsoleColor.DarkYellow, MakeDark(Colors.Yellow) }
+                { ConsoleColor.DarkBlue, Colors.Blue },
+                { ConsoleColor.DarkCyan, Colors.Cyan },
+                { ConsoleColor.DarkGreen, Colors.Green },
+                { ConsoleColor.DarkMagenta, Colors.Magenta },
+                { ConsoleColor.DarkRed, Colors.Red },
+                { ConsoleColor.DarkYellow, Colors.Yellow },
+                { ConsoleColor.Gray, Colors.White },
+                { ConsoleColor.DarkGray, Colors.Gray },
+                { ConsoleColor.Blue, new Color(0.0, 0.0, 1.0) },
+                { ConsoleColor.Cyan, new Color(0.0, 1.0, 1.0) },
+                { ConsoleColor.Green, new Color(0.0, 1.0, 0.0) },
+                { ConsoleColor.Magenta, new Color(1.0, 0.0, 1.0) },
+                { ConsoleColor.Red, new Color(1.0, 0.0, 0.0) },
+                { ConsoleColor.White, new Color(1.0) },
+                { ConsoleColor.Yellow, new Color(1.0, 1.0, 0.0) }
             };
         }
 
         private static Dictionary<ConsoleColor, Color> colorMap;
-
-        private static Color MakeDark(Color color)
-        {
-            double factor = 0.5;
-            return new Color(
-                factor * color.Red,
-                factor * color.Green,
-                factor * color.Blue,
-                color.Alpha);
-        }
 
         public static Color ToPixieColor(ConsoleColor color, Color fallbackResult)
         {

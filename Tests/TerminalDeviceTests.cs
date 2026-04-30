@@ -319,6 +319,19 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void AnsiStyleManagerDistinguishesNormalAndBrightPaletteColors()
+        {
+            var writer = new StringWriter();
+            var style = new AnsiStyleManager(writer, Colors.White, Colors.Black);
+
+            style.PushForegroundColor(Colors.Red);
+            style.PushForegroundColor(new Color(1.0, 0.0, 0.0));
+
+            Assert.That(writer.ToString(), Does.Contain("31"));
+            Assert.That(writer.ToString(), Does.Contain("91"));
+        }
+
+        [Test]
         public void NoStyleManagerAcceptsAllOperationsAsNoOps()
         {
             var style = NoStyleManager.Instance;
