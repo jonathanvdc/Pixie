@@ -78,6 +78,53 @@ namespace Pixie.Options
         }
 
         /// <summary>
+        /// Looks for the Boolean value that has been parsed for a flag option.
+        /// If there is no such value, then the flag's default value is produced.
+        /// </summary>
+        /// <param name="opt">A flag option to find a parsed value for.</param>
+        /// <param name="result">The resulting Boolean value.</param>
+        /// <returns>
+        /// <c>true</c> if a form of the flag has been parsed;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetValue(FlagOption opt, out bool result)
+        {
+            return TryGetValue<bool>(opt, out result);
+        }
+
+        /// <summary>
+        /// Looks for the value that has been parsed for a typed value option.
+        /// If there is no such value, then the option's default value is produced.
+        /// </summary>
+        /// <typeparam name="T">The option's value type.</typeparam>
+        /// <param name="opt">A typed value option to find a parsed value for.</param>
+        /// <param name="result">The resulting value.</param>
+        /// <returns>
+        /// <c>true</c> if a form of the option has been parsed;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetValue<T>(ValueOption<T> opt, out T result)
+        {
+            return TryGetValue<T>((Option)opt, out result);
+        }
+
+        /// <summary>
+        /// Looks for the values that have been parsed for a typed sequence option.
+        /// If there is no such value, then the option's default value is produced.
+        /// </summary>
+        /// <typeparam name="T">The option's element type.</typeparam>
+        /// <param name="opt">A typed sequence option to find parsed values for.</param>
+        /// <param name="result">The resulting sequence of values.</param>
+        /// <returns>
+        /// <c>true</c> if a form of the option has been parsed;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        public bool TryGetValue<T>(SequenceOption<T> opt, out IReadOnlyList<T> result)
+        {
+            return TryGetValue<IReadOnlyList<T>>((Option)opt, out result);
+        }
+
+        /// <summary>
         /// Gets the value that has been parsed for a particular
         /// option. If there is no such value, then the default
         /// value for that option is returned.
@@ -97,6 +144,41 @@ namespace Pixie.Options
             T result;
             TryGetValue<T>(opt, out result);
             return result;
+        }
+
+        /// <summary>
+        /// Gets the Boolean value that has been parsed for a flag option.
+        /// If there is no such value, then the flag's default value is returned.
+        /// </summary>
+        /// <param name="opt">A flag option to find a parsed value for.</param>
+        /// <returns>The parsed value or the flag's default value.</returns>
+        public bool GetValue(FlagOption opt)
+        {
+            return GetValue<bool>(opt);
+        }
+
+        /// <summary>
+        /// Gets the value that has been parsed for a typed value option.
+        /// If there is no such value, then the option's default value is returned.
+        /// </summary>
+        /// <typeparam name="T">The option's value type.</typeparam>
+        /// <param name="opt">A typed value option to find a parsed value for.</param>
+        /// <returns>The parsed value or the option's default value.</returns>
+        public T GetValue<T>(ValueOption<T> opt)
+        {
+            return GetValue<T>((Option)opt);
+        }
+
+        /// <summary>
+        /// Gets the values that have been parsed for a typed sequence option.
+        /// If there is no such value, then the option's default value is returned.
+        /// </summary>
+        /// <typeparam name="T">The option's element type.</typeparam>
+        /// <param name="opt">A typed sequence option to find parsed values for.</param>
+        /// <returns>The parsed values or the option's default value.</returns>
+        public IReadOnlyList<T> GetValue<T>(SequenceOption<T> opt)
+        {
+            return GetValue<IReadOnlyList<T>>((Option)opt);
         }
     }
 

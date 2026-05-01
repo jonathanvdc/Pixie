@@ -80,6 +80,55 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void TypedOptionAccessorsInferValueTypes()
+        {
+            var help = Option.Flag("-h", "--help");
+            var optimizationLevel = Option.Int32("-O");
+            var files = Option.StringSequence("--files");
+            var parser = new GnuOptionSetParser(
+                new Option[] { help, optimizationLevel, files },
+                files);
+
+            var parsedOpts = parser.Parse(
+                new[] { "input.cs", "-h", "-O2", "--files", "extra.cs" },
+                TestEnvironment.GlobalLog);
+
+            bool showHelp = parsedOpts.GetValue(help);
+            int optimization = parsedOpts.GetValue(optimizationLevel);
+            IReadOnlyList<string> parsedFiles = parsedOpts.GetValue(files);
+
+            Assert.IsTrue(showHelp);
+            Assert.AreEqual(2, optimization);
+            CollectionAssert.AreEqual(
+                new[] { "input.cs", "extra.cs" },
+                parsedFiles);
+        }
+
+        [Test]
+        public void TypedTryGetValueAccessorsInferValueTypes()
+        {
+            var color = Option.StringWithDefault("auto", "--color");
+            var files = Option.StringSequence("--files");
+            var parser = new GnuOptionSetParser(
+                new Option[] { color, files },
+                files);
+
+            var parsedOpts = parser.Parse(
+                new[] { "input.cs" },
+                TestEnvironment.GlobalLog);
+
+            string parsedColor;
+            IReadOnlyList<string> parsedFiles;
+            var foundColor = parsedOpts.TryGetValue(color, out parsedColor);
+            var foundFiles = parsedOpts.TryGetValue(files, out parsedFiles);
+
+            Assert.IsFalse(foundColor);
+            Assert.AreEqual("auto", parsedColor);
+            Assert.IsTrue(foundFiles);
+            CollectionAssert.AreEqual(new[] { "input.cs" }, parsedFiles);
+        }
+
+        [Test]
         public void ErrorOnMissingIntegerArgument()
         {
             var parser = new GnuOptionSetParser(new Option[] { OptimizationLevel });
@@ -305,10 +354,10 @@ namespace Pixie.Tests
             var result = commandLine.Parse(new[] { "a.txt", "-h", "b.txt" });
 
             Assert.IsTrue(result.IsSuccess);
-            Assert.IsTrue(result.GetValue<bool>(help));
+            Assert.IsTrue(result.GetValue(help));
             CollectionAssert.AreEqual(
                 new[] { "a.txt", "b.txt" },
-                result.GetValue<IReadOnlyList<string>>(files));
+                result.GetValue(files));
         }
 
         [Test]

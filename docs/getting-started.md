@@ -102,13 +102,16 @@ var commandLine = new CommandLine(
     filesOption);
 ```
 
-Once parsed, read typed values back through `OptionParseResult`:
+Once parsed, read typed values back through `OptionParseResult`. The option
+object carries the value type, so you do not need to repeat it at the call site:
 
 ```cs
+using System.Collections.Generic;
+
 var parsedArgs = commandLine.Parse(args, log);
 
-bool showHelp = parsedArgs.GetValue<bool>(helpFlag);
-string[] files = parsedArgs.GetValue<string[]>(filesOption);
+bool showHelp = parsedArgs.GetValue(helpFlag);
+IReadOnlyList<string> files = parsedArgs.GetValue(filesOption);
 ```
 
 If you want the common `--help` and `--version` flow handled automatically, add it once:

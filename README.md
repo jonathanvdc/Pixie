@@ -155,6 +155,7 @@ If you need full control, `log.Log(new LogEntry(...))` is still available. For e
 Pixie includes GNU-style option parsing. You define options once, then parse arguments and read back typed values.
 
 ```cs
+using System.Collections.Generic;
 using Pixie;
 using Pixie.Options;
 using Pixie.Terminal;
@@ -171,8 +172,8 @@ var commandLine = new CommandLine(
 
 var parsedArgs = commandLine.Parse(new[] { "input.cs", "-h" }, log);
 
-bool showHelp = parsedArgs.GetValue<bool>(helpFlag);
-string[] files = parsedArgs.GetValue<string[]>(filesOption);
+bool showHelp = parsedArgs.GetValue(helpFlag);
+IReadOnlyList<string> files = parsedArgs.GetValue(filesOption);
 
 if (!parsedArgs.IsSuccess)
 {

@@ -46,7 +46,7 @@ device assumptions into markup nodes.
 
 `Pixie` is the stable center of the library. Important areas:
 
-- `ILog`, `LogEntry`, `NullLog`, `RecordingLog`, and `TestLog`
+- `ILog`, `LogEntry`, `NullLog`, `RecordingLog`, and `ThrowingLog`
   define and exercise application-facing logging behavior.
 - `MarkupNode` and `Pixie.Markup`
   define the structured output tree.

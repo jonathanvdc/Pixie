@@ -101,7 +101,7 @@ namespace ParseOptions
                 return;
             }
 
-            if (!parsedOptions.GetValue<bool>(syntaxOnlyFlag))
+            if (!parsedOptions.GetValue(syntaxOnlyFlag))
             {
                 log.Info(RenderParsedOptions(allOptions, parsedOptions));
             }
