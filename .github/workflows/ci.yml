@@ -37,10 +37,10 @@ jobs:
           echo "PACKAGE_VERSION=${version}" >> "${GITHUB_ENV}"
 
       - name: Restore
-        run: dotnet restore Pixie.sln
+        run: dotnet restore Pixie.slnx
 
       - name: Build
-        run: dotnet build Pixie.sln --configuration Release --no-restore -p:Version=${{ env.PACKAGE_VERSION }}
+        run: dotnet build Pixie.slnx --configuration Release --no-restore -p:Version=${{ env.PACKAGE_VERSION }}
 
       - name: Run examples
         shell: bash
@@ -67,7 +67,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           dotnet pack Pixie/Pixie.csproj --configuration Release --no-build --output ./artifacts/packages -p:PackageVersion=${{ env.PACKAGE_VERSION }}
-          dotnet pack Pixie.Loyc/Pixie.Loyc.csproj --configuration Release --no-build --output ./artifacts/packages -p:PackageVersion=${{ env.PACKAGE_VERSION }}
 
       - name: Upload packages
         if: startsWith(github.ref, 'refs/tags/')

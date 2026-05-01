@@ -321,7 +321,7 @@ For a more guided tour, see [docs/examples.md](docs/examples.md).
 Build the solution:
 
 ```sh
-dotnet build Pixie.sln
+dotnet build Pixie.slnx
 ```
 
 Run the test suite:
@@ -358,7 +358,7 @@ Issues, questions, and pull requests are all welcome.
 If you want to contribute code:
 
 1. Open an issue first for larger changes so the direction is clear.
-2. Build the solution with `dotnet build Pixie.sln`.
+2. Build the solution with `dotnet build Pixie.slnx`.
 3. Run tests with `dotnet test Tests/Tests.csproj`.
 
 Bug reports and usage questions are also welcome in the issue tracker.

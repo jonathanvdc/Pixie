@@ -193,8 +193,8 @@ When changing behavior:
 Preferred validation commands:
 
 ```bash
-dotnet build Pixie.sln
-dotnet test Pixie.sln
+dotnet build Pixie.slnx
+dotnet test Pixie.slnx
 dotnet test Tests/Tests.csproj
 dotnet run --project Examples/CaretDiagnostics/CaretDiagnostics.csproj
 dotnet run --project Examples/ParseOptions/ParseOptions.csproj

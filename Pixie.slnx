@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Examples/">
+    <Project Path="Examples/CaretDiagnostics/CaretDiagnostics.csproj" />
+    <Project Path="Examples/FormattedList/FormattedList.csproj" />
+    <Project Path="Examples/ParseOptions/ParseOptions.csproj" />
+    <Project Path="Examples/PrintHelp/PrintHelp.csproj" />
+    <Project Path="Examples/SimpleErrorMessage/SimpleErrorMessage.csproj" />
+  </Folder>
+  <Project Path="Pixie.Terminal/Pixie.Terminal.csproj" />
+  <Project Path="Pixie/Pixie.csproj" />
+  <Project Path="Tests/Tests.csproj" />
+</Solution>
