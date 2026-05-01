@@ -95,9 +95,9 @@ namespace Pixie.Tests
                 new HelpMessage("brief summary", "tool [options]", new Option[] { option }))
                 .Replace("\r", "");
 
-            StringAssert.Contains("Description\n    brief summary", rendered);
-            StringAssert.Contains("Usage\n    tool [options]", rendered);
-            StringAssert.Contains("Option summary\n    Here is a summary", rendered);
+            StringAssert.Contains("DESCRIPTION\n    brief summary", rendered);
+            StringAssert.Contains("USAGE\n    tool [options]", rendered);
+            StringAssert.Contains("OPTION SUMMARY\n    Here is a summary", rendered);
             StringAssert.Contains("Overall options\n        -h", rendered);
             StringAssert.Contains("Overall options\n    -h  print help", rendered);
         }

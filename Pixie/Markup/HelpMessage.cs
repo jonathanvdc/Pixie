@@ -65,11 +65,11 @@ namespace Pixie.Markup
         {
             return WrapBox.WordWrap(
                 new Stack(
-                    new Div(DecorationSpan.MakeBold("Description")),
+                    new Div(DecorationSpan.MakeBold("DESCRIPTION")),
                     new IndentBox(Summary),
-                    new Div(DecorationSpan.MakeBold("Usage")),
+                    new Div(DecorationSpan.MakeBold("USAGE")),
                     new IndentBox(new Paragraph(Usage)),
-                    new Div(DecorationSpan.MakeBold("Option summary")),
+                    new Div(DecorationSpan.MakeBold("OPTION SUMMARY")),
                     new IndentBox(
                         new Paragraph(
                             "Here is a summary of all the options, grouped by type. "

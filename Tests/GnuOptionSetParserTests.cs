@@ -352,7 +352,7 @@ namespace Pixie.Tests
             Assert.IsTrue(result.WasHandled);
             Assert.AreEqual(0, result.ExitCode);
             Assert.IsTrue(result.WasHelpRequested);
-            StringAssert.Contains("Description", Render(log.RecordedEntries[0].Contents));
+            StringAssert.Contains("DESCRIPTION", Render(log.RecordedEntries[0].Contents));
             StringAssert.Contains("example [files-or-options]", Render(log.RecordedEntries[0].Contents));
         }
 
