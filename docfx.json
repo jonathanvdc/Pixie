@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": ".",
+          "files": [
+            "Pixie/bin/Release/netstandard2.0/Pixie.dll",
+            "Pixie.Terminal/bin/Release/netstandard2.0/Pixie.Terminal.dll"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/toc.yml"
+        ]
+      },
+      {
+        "src": "docs",
+        "files": [
+          "**/*.md",
+          "toc.yml"
+        ],
+        "dest": "."
+      }
+    ],
+    "resource": [
+      {
+        "src": "docs",
+        "files": [
+          "img/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Pixie",
+      "_appTitle": "Pixie Documentation",
+      "_enableSearch": true,
+      "_gitContribute": {
+        "repo": "https://github.com/jonathanvdc/Pixie"
+      }
+    }
+  }
+}

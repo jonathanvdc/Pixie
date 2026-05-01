@@ -183,6 +183,13 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
+#############
+## Generated documentation
+#############
+
+_site/
+api/
+
 
 #############
 ## Python

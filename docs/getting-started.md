@@ -57,7 +57,7 @@ Common building blocks:
 | `ColorSpan` and `DecorationSpan` | Styling. |
 | `HighlightedSource` | Source snippets with highlighted regions. |
 
-The [FormattedList example](../Examples/FormattedList/Program.cs) is a good reference for layout and wrapping.
+The [FormattedList example](https://github.com/jonathanvdc/Pixie/blob/master/Examples/FormattedList/Program.cs) is a good reference for layout and wrapping.
 
 ## Log diagnostics
 
@@ -84,7 +84,7 @@ log.ErrorDiagnostic(
 
 `HighlightedSource` renders the caret snippet. `SourceReference` tells the diagnostic header where the error came from. Ordinary `LogEntry` values remain ordinary output, which makes it straightforward to mix diagnostics with help text or status messages in the same command-line application.
 
-See the [CaretDiagnostics example](../Examples/CaretDiagnostics/Program.cs) for the full pattern.
+See the [CaretDiagnostics example](https://github.com/jonathanvdc/Pixie/blob/master/Examples/CaretDiagnostics/Program.cs) for the full pattern.
 
 ## Parse options and keep docs in sync
 
@@ -126,8 +126,8 @@ The same option definitions can still feed `HelpMessage` directly when you want 
 
 See:
 
-- [PrintHelp](../Examples/PrintHelp/Program.cs) for help generation.
-- [ParseOptions](../Examples/ParseOptions/Program.cs) for parsing and user-facing error reporting.
+- [PrintHelp](https://github.com/jonathanvdc/Pixie/blob/master/Examples/PrintHelp/Program.cs) for help generation.
+- [ParseOptions](https://github.com/jonathanvdc/Pixie/blob/master/Examples/ParseOptions/Program.cs) for parsing and user-facing error reporting.
 
 ## Decide how to handle parse failures
 
@@ -163,4 +163,4 @@ The default terminal acquisition methods are usually enough. Reach for lower-lev
 - console styling,
 - degraded rendering for limited terminals.
 
-The [FormattedList example](../Examples/FormattedList/Program.cs) shows how to build a custom `TextWriterTerminal` and pass it into `TerminalLog.Acquire(...)`.
+The [FormattedList example](https://github.com/jonathanvdc/Pixie/blob/master/Examples/FormattedList/Program.cs) shows how to build a custom `TextWriterTerminal` and pass it into `TerminalLog.Acquire(...)`.

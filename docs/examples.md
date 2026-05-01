@@ -4,13 +4,13 @@ Pixie ships with a small set of focused examples. Each one is meant to show one 
 
 ## SimpleErrorMessage
 
-Project: [`Examples/SimpleErrorMessage`](../Examples/SimpleErrorMessage)
+Project: [`Examples/SimpleErrorMessage`](https://github.com/jonathanvdc/Pixie/tree/master/Examples/SimpleErrorMessage)
 
 Use this when you want the smallest possible example of a diagnostic-like message with quoted and formatted text.
 
 ## FormattedList
 
-Project: [`Examples/FormattedList`](../Examples/FormattedList)
+Project: [`Examples/FormattedList`](https://github.com/jonathanvdc/Pixie/tree/master/Examples/FormattedList)
 
 Use this when you want to learn:
 
@@ -21,13 +21,13 @@ Use this when you want to learn:
 
 ## PrintHelp
 
-Project: [`Examples/PrintHelp`](../Examples/PrintHelp)
+Project: [`Examples/PrintHelp`](https://github.com/jonathanvdc/Pixie/tree/master/Examples/PrintHelp)
 
 Use this when you want to generate polished help output from the same `CommandLine` definition you use for parsing.
 
 ## ParseOptions
 
-Project: [`Examples/ParseOptions`](../Examples/ParseOptions)
+Project: [`Examples/ParseOptions`](https://github.com/jonathanvdc/Pixie/tree/master/Examples/ParseOptions)
 
 Use this when you want to see:
 
@@ -45,7 +45,7 @@ dotnet run --project Examples/ParseOptions/ParseOptions.csproj -- --helo file.cs
 
 ## CaretDiagnostics
 
-Project: [`Examples/CaretDiagnostics`](../Examples/CaretDiagnostics)
+Project: [`Examples/CaretDiagnostics`](https://github.com/jonathanvdc/Pixie/tree/master/Examples/CaretDiagnostics)
 
 Use this when you want:
 
