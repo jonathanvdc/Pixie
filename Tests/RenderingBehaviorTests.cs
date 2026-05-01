@@ -33,6 +33,17 @@ namespace Pixie.Tests
         }
 
         [Test]
+        public void DivDoesNotSeparateItsContentsFromNeighbors()
+        {
+            RenderTests.AssertRendersAs(
+                new Stack(
+                    new Div("before"),
+                    new Div("middle"),
+                    new Div("after")),
+                "before\nmiddle\nafter");
+        }
+
+        [Test]
         public void ColorAndDecorationSpansFallBackToContents()
         {
             RenderTests.AssertRendersAs(
@@ -63,6 +74,16 @@ namespace Pixie.Tests
 
             StringAssert.Contains("-c", rendered);
             StringAssert.Contains("compile only", rendered);
+        }
+
+        [Test]
+        public void LongOptionHelpKeepsDescriptionAdjacentToOptionName()
+        {
+            var option = Option.Flag("-Ofast").WithDescription("enable optimizations");
+
+            RenderTests.AssertRendersAs(
+                new OptionHelp(option, GnuOptionPrinter.Instance),
+                "-Ofast\n    enable optimizations");
         }
     }
 }

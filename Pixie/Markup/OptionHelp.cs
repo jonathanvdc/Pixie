@@ -69,7 +69,7 @@ namespace Pixie.Markup
             }
 
             return new Stack(
-                new Paragraph(new Sequence(formNodes)),
+                new Div(new Sequence(formNodes)),
                 new IndentBox(docs.Description));
         }
     }

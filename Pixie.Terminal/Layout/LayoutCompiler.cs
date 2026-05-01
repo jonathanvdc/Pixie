@@ -65,6 +65,10 @@ namespace Pixie.Terminal.Layout
             {
                 case null:
                     return new BlockStack(new BlockLayout[0]);
+                case Div div:
+                    return new FlowBlock(
+                        CompileInline(div.Contents),
+                        Margins.None);
                 case Paragraph paragraph:
                     return new FlowBlock(
                         CompileInline(paragraph.Contents),
