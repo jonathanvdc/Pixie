@@ -39,7 +39,7 @@ namespace Pixie.Markup
             var nodes = new List<Block>();
             foreach (var kvPair in grouped)
             {
-                nodes.Add(new Paragraph(DecorationSpan.MakeBold(kvPair.Key)));
+                nodes.Add(new Div(DecorationSpan.MakeBold(kvPair.Key)));
 
                 var optNodes = new List<Block>();
                 for (int i = 0; i < kvPair.Value.Count; i++)

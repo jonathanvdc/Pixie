@@ -58,7 +58,7 @@ namespace Pixie.Markup
 
                 groupNodes.Add(
                     new Stack(
-                        new Paragraph(DecorationSpan.MakeBold(kvPair.Key)),
+                        new Div(DecorationSpan.MakeBold(kvPair.Key)),
                         new IndentBox(new Paragraph(new Sequence(optionFormNodes)))));
             }
             return new Stack(groupNodes);

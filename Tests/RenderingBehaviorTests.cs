@@ -85,5 +85,21 @@ namespace Pixie.Tests
                 new OptionHelp(option, GnuOptionPrinter.Instance),
                 "-Ofast\n    enable optimizations");
         }
+
+        [Test]
+        public void HelpMessageKeepsSectionContentAdjacentToHeaders()
+        {
+            var option = Option.Flag("-h").WithDescription("print help");
+
+            var rendered = RenderTests.Render(
+                new HelpMessage("brief summary", "tool [options]", new Option[] { option }))
+                .Replace("\r", "");
+
+            StringAssert.Contains("Description\n    brief summary", rendered);
+            StringAssert.Contains("Usage\n    tool [options]", rendered);
+            StringAssert.Contains("Option summary\n    Here is a summary", rendered);
+            StringAssert.Contains("Overall options\n        -h", rendered);
+            StringAssert.Contains("Overall options\n    -h  print help", rendered);
+        }
     }
 }
